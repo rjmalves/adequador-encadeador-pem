@@ -44,13 +44,13 @@ def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     for r in modificacoes_usina:
         if isinstance(r, CFUGA):
             if (r.ano == ano) and (r.mes == mes):
-                if valor != np.nan:
+                if not np.isnan(valor):
                     print(f"Alterou nível CFUGA {mes}/{ano}: {valor}")
                     r.nivel = valor
                 else:
                     modif.deleta_registro(r)
                 return
-    if valor != np.nan:
+    if not np.isnan(valor):
         r = CFUGA()
         r.ano = ano
         r.mes = mes
@@ -64,13 +64,13 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     for r in modificacoes_usina:
         if isinstance(r, CMONT):
             if (r.ano == ano) and (r.mes == mes):
-                if valor != np.nan:
+                if not np.isnan(valor):
                     print(f"Alterou nível CMONT {mes}/{ano}: {valor}")
                     r.nivel = valor
                 else:
                     modif.deleta_registro(r)
                 return
-    if valor != np.nan:
+    if not np.isnan(valor):
         r = CMONT()
         r.ano = ano
         r.mes = mes
