@@ -26,6 +26,7 @@ def corrige_deficit_sistema(diretorio: str, arquivo: str):
 
     anodeck = int(diretorio.split(sep)[-2].split("_")[0])
     sistema = Sistema.le_arquivo(diretorio, arquivo)
+    sistema.numero_patamares_deficit = 1
     df_sistema = sistema.custo_deficit
 
     if (
