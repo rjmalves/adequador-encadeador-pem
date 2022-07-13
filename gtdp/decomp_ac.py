@@ -17,7 +17,6 @@ usinas_nposnw = df_nposnw["usinas_nposnw"].tolist()
 postos_nposnw = df_nposnw["postos_nposnw"].tolist()
 usinas_vertju = df_vertju["usinas_vertju"].tolist()
 
-
 def ajusta_acs(diretorio: str, arquivo: str):
     
     def deleta_ac(dadger: Dadger, u: int, tipo: classmethod):
