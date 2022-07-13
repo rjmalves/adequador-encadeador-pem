@@ -52,6 +52,7 @@ def ajusta_acs(diretorio: str, arquivo: str):
         usina = dadger.uh(codigo=u)
         print("DEGUG usina:",usina)
         print("DEBUG u",u)
+        print("DEGUG", type(u))
         if usina is not None:
             reg = dadger.ac(uhe=u, modificacao=ACNPOSNW)
             if reg is None:
