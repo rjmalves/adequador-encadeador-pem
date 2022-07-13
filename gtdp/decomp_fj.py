@@ -18,7 +18,7 @@ def ajusta_fj(diretorio: str, arquivo: str):
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
     # Consideração dos polinômios de jusante
-    if dadger.fj.arquivo is None:
+    if dadger.fj is None:
         fj_novo = FJ()
         fj_novo.arquivo = ARQUIVO_POLINJUS
         reg_anterior = dadger.lista_registros(CQ)[-1]
