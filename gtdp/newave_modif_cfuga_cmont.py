@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import pathlib
 import pandas as pd
 import numpy as np
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from inewave.newave.modelos.modif import USINA, CMONT, CFUGA
 from inewave.newave.modif import Modif
 
@@ -41,6 +43,10 @@ def adequa_usina(
 
 def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     modificacoes_usina = modif.modificacoes_usina(codigo)
+    mes_anterior = datetime(year=ano, month=mes, day=1) - relativedelta(
+        months=1
+    )
+    anterior = modif.usina(codigo=codigo)
     for r in modificacoes_usina:
         if isinstance(r, CFUGA):
             if (r.ano == ano) and (r.mes == mes):
@@ -50,17 +56,25 @@ def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
                 else:
                     modif.deleta_registro(r)
                 return
+            elif (r.ano == mes_anterior.year) and (
+                r.mes == mes_anterior.month
+            ):
+                anterior = r
     if not np.isnan(valor):
         r = CFUGA()
         r.ano = ano
         r.mes = mes
         r.nivel = valor
-        modif.cria_registro(modif.usina(codigo=codigo), r)
+        modif.cria_registro(anterior, r)
         print(f"Criou CFUGA {mes}/{ano}: {valor}")
 
 
 def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     modificacoes_usina = modif.modificacoes_usina(codigo)
+    mes_anterior = datetime(year=ano, month=mes, day=1) - relativedelta(
+        months=1
+    )
+    anterior = modif.usina(codigo=codigo)
     for r in modificacoes_usina:
         if isinstance(r, CMONT):
             if (r.ano == ano) and (r.mes == mes):
@@ -70,12 +84,16 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
                 else:
                     modif.deleta_registro(r)
                 return
+            elif (r.ano == mes_anterior.year) and (
+                r.mes == mes_anterior.month
+            ):
+                anterior = r
     if not np.isnan(valor):
         r = CMONT()
         r.ano = ano
         r.mes = mes
         r.nivel = valor
-        modif.cria_registro(modif.usina(codigo=codigo), r)
+        modif.cria_registro(anterior, r)
         print(f"Criou CMONT {mes}/{ano}: {valor}")
 
 
