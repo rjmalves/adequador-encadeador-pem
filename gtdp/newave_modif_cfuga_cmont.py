@@ -80,5 +80,5 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
     usinas = df["usina"].unique().tolist()
     for u in usinas:
         df_usina = df.loc[df["usina"] == u, :]
-        adequa_usina(df_usina, modif, anos_estudo)
+        adequa_usina(u, df_usina, modif, anos_estudo)
     modif.escreve_arquivo(diretorio, arquivo)
