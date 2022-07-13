@@ -1,6 +1,7 @@
 from typing import Callable, Optional
-from os.path import join
+from os.path import join, isfile
 from os import getenv
+from shutil import copyfile
 import time
 import pathlib
 from dotenv import load_dotenv
@@ -20,6 +21,7 @@ def itera_casos(
     programa: str,
     nome_arquivo: Callable,
     funcao_ajuste: Callable,
+    backup: bool = False,
 ):
 
     iniciou = True if caso_inicio is None else False
@@ -33,6 +35,12 @@ def itera_casos(
             continue
         diretorio = join(diretorio_casos, caso, programa)
         arquivo = nome_arquivo(caso)
+        arquivo_backup = f"backup_{arquivo}"
+        if backup and not isfile(join(diretorio, arquivo_backup)):
+            copyfile(
+                join(diretorio, arquivo), join(diretorio, arquivo_backup)
+            )
+
         converte_codificacao(
             join(diretorio, arquivo), SCRIPT_CONVERTE_CODIFICACAO
         )

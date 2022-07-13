@@ -8,7 +8,7 @@ from inewave.newave.curva import Curva
 
 DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = getenv("DIRETORIO_DADOS_ADEQUACAO")
+DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
 
 ARQ_VMINOP = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP_NEWAVE"))
 
@@ -31,26 +31,42 @@ def adequa_curva(diretorio: str, arq_curva: str):
 
 
 def adequa_penalizacao_curva(ree: int, penalizacao: float, curva: Curva):
-    df_penal = curva.custos_penalidades
-    if df_penal is None:
+    if curva.custos_penalidades is None:
         return
-    if df_penal.loc[df_penal["Sistema"] == ree, "Custo"].empty:
+    if curva.custos_penalidades.loc[
+        curva.custos_penalidades["Sistema"] == ree, "Custo"
+    ].empty:
         print(f"Adicionando penalização de {penalizacao} para REE {ree}")
-        curva.custos_penalidades.loc[df_penal.shape[0]] = [ree, penalizacao]
+        curva.custos_penalidades.loc[curva.custos_penalidades.shape[0]] = [
+            ree,
+            penalizacao,
+        ]
         curva.custos_penalidades.sort_values("Sistema", inplace=True)
+    curva.custos_penalidades.loc[
+        curva.custos_penalidades["Sistema"] == ree, :
+    ] = [
+        ree,
+        penalizacao,
+    ]
 
 
 def adequa_volumes_curva(ree: int, volume_minimo: float, curva: Curva):
-    df_curva = curva.curva_seguranca
-    if df_curva is None:
+    if curva.curva_seguranca is None:
         return
-    anos = df_curva["Ano"].unique().tolist()
-    num_linhas = df_curva.shape[0]
+    anos = curva.curva_seguranca["Ano"].unique().tolist()
+    num_linhas = curva.curva_seguranca.shape[0]
     for i, ano in enumerate(anos):
-        if df_curva.loc[
-            (df_curva["REE"] == ree) & (df_curva["Ano"] == ano), :
+        if curva.curva_seguranca.loc[
+            (curva.curva_seguranca["REE"] == ree)
+            & (curva.curva_seguranca["Ano"] == ano),
+            :,
         ].empty:
             print(f"Adicionando curva para REE {ree}/{ano}: {volume_minimo}")
-            curva.custos_penalidades.loc[num_linhas + i] = [ree, ano] + [
+            curva.curva_seguranca.loc[num_linhas + i] = [ree, ano] + [
                 volume_minimo
             ] * 12
+        curva.curva_seguranca.loc[
+            (curva.curva_seguranca["REE"] == ree)
+            & (curva.curva_seguranca["Ano"] == ano),
+            :,
+        ] = [ree, ano] + [volume_minimo] * 12

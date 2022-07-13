@@ -6,7 +6,7 @@ import pathlib
 
 DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = getenv("DIRETORIO_DADOS_ADEQUACAO")
+DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
 
 DIR_VAZOES = join(DIRETORIO_DADOS_ADEQUACAO, getenv("DIRETORIO_VAZOES"))
 

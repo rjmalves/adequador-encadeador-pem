@@ -105,6 +105,7 @@ for ajuste in ajustes:
         programa="newave",
         nome_arquivo=ajuste[1],
         funcao_ajuste=ajuste[0],
+        backup=True,
     )
 
 
@@ -126,4 +127,5 @@ for ajuste in ajustes:
         programa="decomp",
         nome_arquivo=ajuste[1],
         funcao_ajuste=ajuste[0],
+        backup=True,
     )
