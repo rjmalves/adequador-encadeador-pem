@@ -33,10 +33,10 @@ def adequa_usina(
     df_ordenado = df_usina.sort_values("mes", ascending=False)
     for ano in anos_estudo:
         for _, linha in df_ordenado.iterrows():
-            if linha["cfuga"] is not None:
-                adequa_cfuga(modif, codigo, ano, linha["mes"], linha["cfuga"])
-            if linha["cmont"] is not None:
-                adequa_cmont(modif, codigo, ano, linha["mes"], linha["cmont"])
+            if linha["cfuga"] != np.nan:
+                adequa_cfuga(modif, codigo, ano, int(linha["mes"]), linha["cfuga"])
+            if linha["cmont"] != np.nan:
+                adequa_cmont(modif, codigo, ano, int(linha["mes"]), linha["cmont"])
 
 
 def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
