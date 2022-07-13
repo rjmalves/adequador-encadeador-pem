@@ -1,14 +1,22 @@
-from os.path import join, isdir
-from os import listdir
+from os.path import join
+from os import getenv, sep
+from dotenv import load_dotenv
+import pathlib
 import pandas as pd
 import numpy as np
 from inewave.newave.modelos.modif import USINA, CMONT, CFUGA
 from inewave.newave.modif import Modif
 
-DIR_CASOS = "/home/exemplo/backtest"
-ARQ_CFUGA_CMONT = "cfuga_cmont.csv"
-ARQ_MODIF = "modif.dat"
+
 NUM_ANOS_ESTUDO = 5
+
+DIR_BASE = pathlib.Path().resolve()
+load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
+DIRETORIO_DADOS_ADEQUACAO = getenv("DIRETORIO_DADOS_ADEQUACAO")
+
+ARQ_CFUGA_CMONT = join(
+    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_CFUGA_CMONT_NEWAVE")
+)
 
 
 def adequa_usina(
@@ -63,26 +71,14 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     print(f"Criou CMONT {mes}/{ano}: {valor}")
 
 
-def adequa_cfuga_cmont(diretorio: str, anos_estudo: np.ndarray, arquivo: str):
+def adequa_cfuga_cmont(diretorio: str, arquivo: str):
 
-    df = pd.read_csv("cfuga_cmont.csv", sep=";")
+    df = pd.read_csv(ARQ_CFUGA_CMONT, sep=";")
+    ano_caso = int(diretorio.split(sep)[-2].split("_")[0])
+    anos_estudo = np.arange(ano_caso, ano_caso + NUM_ANOS_ESTUDO)
     modif = Modif.le_arquivo(diretorio, arquivo)
     usinas = df["usina"].unique().tolist()
     for u in usinas:
         df_usina = df.loc[df["usina"] == u, :]
         adequa_usina(df_usina, modif, anos_estudo)
     modif.escreve_arquivo(diretorio, arquivo)
-
-
-pastas_rv0 = [
-    d for d in listdir(DIR_CASOS) if isdir(join(DIR_CASOS, d)) and "_rv0" in d
-]
-
-# TODO - adequar para não precisar receber mais o ano de estudo. da pra extrair do diretório.
-
-for p in pastas_rv0:
-    print(f"Adequando: {p} ...")
-    ano = int(p.split("_")[0])
-    anos_estudo = np.arange(ano + NUM_ANOS_ESTUDO, ano - 1, -1)
-    diretorio = join(DIR_CASOS, p, "newave")
-    adequa_cfuga_cmont(diretorio, anos_estudo, ARQ_MODIF)

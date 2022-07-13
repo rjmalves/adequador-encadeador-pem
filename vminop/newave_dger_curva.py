@@ -1,13 +1,16 @@
-from os.path import join, isdir
-from os import listdir, getenv
+import pathlib
+from dotenv import load_dotenv
+from os import getenv
+from os.path import join
 import pandas as pd
 from inewave.newave.dger import DGer
 from inewave.newave.curva import Curva
 
-DIR_CASOS = "/home/exemplo/backtest"
-ARQ_VMINOP = getenv("ARQUIVO_VMINOP_NEWAVE")
-ARQ_DGER = "dger.dat"
-ARQ_CURVA = "curva.dat"
+DIR_BASE = pathlib.Path().resolve()
+load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
+DIRETORIO_DADOS_ADEQUACAO = getenv("DIRETORIO_DADOS_ADEQUACAO")
+
+ARQ_VMINOP = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP_NEWAVE"))
 
 
 def adequa_dger(diretorio: str, arq_dger: str):
@@ -17,8 +20,9 @@ def adequa_dger(diretorio: str, arq_dger: str):
     dger.escreve_arquivo(diretorio, arq_dger)
 
 
-def adequa_curva(df: pd.DataFrame, diretorio: str, arq_curva: str):
+def adequa_curva(diretorio: str, arq_curva: str):
     print(f"Adequando {arq_curva} ...")
+    df = pd.read_csv(ARQ_VMINOP, sep=";")
     curva = Curva.le_arquivo(diretorio, arq_curva)
     curva.configuracoes_penalizacao = [1, 11, 1]
     for _, linha in df.iterrows():
@@ -50,22 +54,3 @@ def adequa_volumes_curva(ree: int, volume_minimo: float, curva: Curva):
             curva.custos_penalidades.loc[num_linhas + i] = [ree, ano] + [
                 volume_minimo
             ] * 12
-
-
-def adequa_dger_curva(
-    df: pd.DataFrame, diretorio: str, arq_dger: str, arq_curva: str
-):
-    adequa_dger(diretorio, arq_dger)
-    adequa_curva(df, diretorio, arq_curva)
-
-
-pastas_rv0 = [
-    d for d in listdir(DIR_CASOS) if isdir(join(DIR_CASOS, d)) and "_rv0" in d
-]
-
-df = pd.read_csv("cfuga_cmont.csv", sep=";")
-
-for p in pastas_rv0:
-    print(f"Adequando: {p} ...")
-    diretorio = join(DIR_CASOS, p, "newave")
-    adequa_dger_curva(df, diretorio, ARQ_DGER, ARQ_CURVA)
