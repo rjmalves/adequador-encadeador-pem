@@ -6,7 +6,7 @@ import pandas as pd
 
 # Dados de entrada:
 
-df = pd.read_csv(join(".\\vminop","dados_rhe.csv"), sep=";")
+df = pd.read_csv(join(".\\vminop","dados_vminop.csv"), sep=";")
 
 v = df.loc[df["mes"]==999,"vminop"].tolist()
 v_aux = []
