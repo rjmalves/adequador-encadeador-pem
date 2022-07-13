@@ -1,24 +1,23 @@
 from os.path import join
+from os import getenv
 from shutil import copyfile
+from dotenv import load_dotenv
+import pathlib
 
 # Dados de entrada
-DIR_HIDR = "/home/pem/estudos/CPAMP/Ciclo_2021-2022/consistencia_decks/dados_gtdp/hidr.dat"
-DIR_POLINJUS = "/home/pem/estudos/CPAMP/Ciclo_2021-2022/consistencia_decks/dados_gtdp/polinjus.dat"
+DIR_BASE = pathlib.Path().resolve()
+load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
+DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
+
+ARQ_HIDR = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_HIDR"))
+ARQ_POLINJUS = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_POLINJUS"))
 
 
-def copia_arquivos_gtdp(caso: str,diretorio: str,DIR_HIDR,DIR_POLINJUS):
-
-    rv = caso.split("_rv")[1]
-
-    arq_destino_hidr = join(diretorio,"decomp", "hidr.dat")
-    arq_destino_polinjus = join(diretorio,"decomp" "polinjus.dat")
-    # copia para a pasta do deck
-    copyfile(DIR_HIDR, arq_destino_hidr)
-    copyfile(DIR_POLINJUS, arq_destino_polinjus)
-
-    if rv == 0:
-        arq_destino_hidr = join(diretorio,"newave", "hidr.dat")
-        # copia para a pasta do deck
-        copyfile(DIR_HIDR, arq_destino_hidr)
+def copia_hidr(diretorio: str, arquivo: str):
+    arq_destino_hidr = join(diretorio, arquivo)
+    copyfile(ARQ_HIDR, arq_destino_hidr)
 
 
+def copia_polinjus(diretorio: str, arquivo: str):
+    arq_destino_polinjus = join(diretorio, arquivo)
+    copyfile(ARQ_POLINJUS, arq_destino_polinjus)

@@ -1,18 +1,26 @@
 from idecomp.decomp.dadger import Dadger
 import pandas as pd
-from os import listdir, curdir, sep
-from os.path import isfile, isdir, join, normpath
-import datetime, time
+from os import sep, getenv
+from os.path import join, normpath
+import pathlib
+from dotenv import load_dotenv
+
 
 # Dados de entrada:
-arquivo_ve = "/home/pem/estudos/CPAMP/Ciclo_2021-2022/Backtest/casos/novos_volumes_espera.csv"
+DIR_BASE = pathlib.Path().resolve()
+load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
+DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
+
+ARQUIVO_VOLUMES_ESPERA = join(
+    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VOLUMES_ESPERA")
+)
 
 
-def ajusta_volume_espera(diretorio: str, arquivo: str, arquivo_ve):
-    
+def ajusta_volume_espera(diretorio: str, arquivo: str):
+
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
-    df_ve = pd.read_csv(arquivo_ve, index_col="data")
+    df_ve = pd.read_csv(ARQUIVO_VOLUMES_ESPERA, index_col="data")
 
     caso = normpath(diretorio).split(sep)[-2]
     ano, mes, _ = caso.split("_")
@@ -21,8 +29,8 @@ def ajusta_volume_espera(diretorio: str, arquivo: str, arquivo_ve):
     mes_seguinte = mes % 12 + 1
     ano_seguinte = ano if mes != 12 else ano + 1
 
-    # Acessa o VE de CAMARGOS para saber quantas semanas a frente  
-    num_casos_a_frente = len(dadger.ve(codigo=1).volumes)-1
+    # Acessa o VE de CAMARGOS para saber quantas semanas a frente
+    num_casos_a_frente = len(dadger.ve(codigo=1).volumes) - 1
 
     # Extrai somente as informações que serão utilizadas para atualizar os VE
     indices = list(df_ve.index)
@@ -33,16 +41,12 @@ def ajusta_volume_espera(diretorio: str, arquivo: str, arquivo_ve):
     ve_mes = df_ve.loc[df_ve.index.str.contains(s), :]
 
     # Atualiza os registros VE com os respectivos valores de volume de espera
-
     usinas = [int(i) for i in list(df_ve)]
 
     for c in usinas:
         co = str(c)
         dados_ve = linhas_ve[co].tolist() + [ve_mes[co].tolist()[-1]]
-        if dadger.ve(codigo = c) is not None:
-            dadger.ve(codigo = c).volumes = dados_ve
+        if dadger.ve(codigo=c) is not None:
+            dadger.ve(codigo=c).volumes = dados_ve
 
     dadger.escreve_arquivo(diretorio, arquivo)
-
-  
-
