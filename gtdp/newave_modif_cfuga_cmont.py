@@ -24,10 +24,8 @@ ARQ_CFUGA_CMONT = join(
 def adequa_usina(
     codigo: int, df_usina: pd.DataFrame, modif: Modif, anos_estudo: np.ndarray
 ):
-    print(f"Usina: {codigo}")
     r_usina = modif.usina(codigo=codigo)
     if r_usina is None:
-        print("Criou registro USINA")
         r_usina = USINA()
         r_usina.codigo = codigo
         modif.append_registro(r_usina)
@@ -61,7 +59,6 @@ def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
         r.mes = mes
         r.nivel = valor
         modif.cria_registro(anterior, r)
-        print(f"Criou CFUGA {mes}/{ano}: {valor}")
 
 
 def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
@@ -84,7 +81,6 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
         r.mes = mes
         r.nivel = valor
         modif.cria_registro(anterior, r)
-        print(f"Criou CMONT {mes}/{ano}: {valor}")
 
 
 def adequa_cfuga_cmont(diretorio: str, arquivo: str):
