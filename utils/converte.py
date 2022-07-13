@@ -47,15 +47,8 @@ def executa_terminal(
 
 
 def converte_codificacao(caminho: str, script_converte: str):
-    print(f"Convertendo codificação do caso {caminho}")
-    arqs = [
-        a
-        for a in listdir(caminho)
-        if (".dat" in a or "dadger.rv" in a) and isfile(a)
-    ]
-    for a in arqs:
-        _, out = executa_terminal([f"file -i {a}"])
-        cod = out[0].split("charset=")[1].strip()
-        if all([cod != "utf-8", cod != "us-ascii", cod != "binary"]):
-            cod = cod.upper()
-            c, _ = executa_terminal([f"{script_converte}" + f" {a} {cod}"])
+    _, out = executa_terminal([f"file -i {caminho}"])
+    cod = out[0].split("charset=")[1].strip()
+    if all([cod != "utf-8", cod != "us-ascii", cod != "binary"]):
+        cod = cod.upper()
+        c, _ = executa_terminal([f"{script_converte}" + f" {caminho} {cod}"])
