@@ -42,8 +42,8 @@ def ajusta_dados_gerais(diretorio: str, arquivo: str):
     registro_es = dadger.lista_registros(ES)
     registro_qi = dadger.lista_registros(QI)
 
-    exclui_registros(registro_ea)
-    exclui_registros(registro_es)
-    exclui_registros(registro_qi)
+    exclui_registros(dadger,registro_ea)
+    exclui_registros(dadger,registro_es)
+    exclui_registros(dadger,registro_qi)
 
     dadger.escreve_arquivo(diretorio, arquivo)
