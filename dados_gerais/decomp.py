@@ -35,7 +35,7 @@ def ajusta_dados_gerais(diretorio: str, arquivo: str):
 
     def exclui_registros(dadger: Dadger, registros):
         if len(registros) > 0:
-            for reg in registro_ea:
+            for reg in registros:
                 dadger.deleta_registro(reg)
 
     registro_ea = dadger.lista_registros(EA)
