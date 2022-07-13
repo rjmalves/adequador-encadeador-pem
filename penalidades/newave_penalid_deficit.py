@@ -118,8 +118,8 @@ def corrige_penalid(diretorio: str, arquivo: str):
                 df_pen.loc[df_pen.shape[0]] = linha_nova
             else:
                 df_pen.loc[
-                    (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN")
+                    (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN"),
+                    "Penalidade 1",
                 ] = penalidade
-
     penalid.penalidades = df_pen
     penalid.escreve_arquivo(diretorio, arquivo)
