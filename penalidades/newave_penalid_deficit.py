@@ -1,50 +1,72 @@
-from inewave.newave.dger import DGer
 from inewave.newave.sistema import Sistema
 from inewave.newave.penalid import Penalid
 import pandas as pd
 import numpy as np
+import pathlib
+from dotenv import load_dotenv
+from os import getenv, sep
+from os.path import join
 
-df_deficit = pd.read_csv(".\\penalidades\\custos_deficit.csv",sep=";")
 
-anos = df_deficit["ano"].tolist()
-custo = df_deficit["custo"].tolist()
+# Dados de entrada:
+DIR_BASE = pathlib.Path().resolve()
+load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
+DIRETORIO_DADOS_ADEQUACAO = getenv("DIRETORIO_DADOS_ADEQUACAO")
 
-arquivo_dger = "DGER.DAT"
-arquivo_sistema = "SISTEMA.DAT"
-arquivo_penalid = "PENALID.DAT"
+ARQUIVO_CUSTOS_DEFICIT = join(
+    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_CUSTOS_DEFICIT")
+)
 
-def corrige_deficit_sistema(diretorio: str, arquivo_dger: str, arquivo_sistema: str):
 
-    dger = DGer.le_arquivo(diretorio,arquivo_dger)
-    anodeck = dger.ano_inicio_estudo
+def corrige_deficit_sistema(diretorio: str, arquivo: str):
 
-    sistema = Sistema.le_arquivo(diretorio,arquivo_sistema)
+    df_deficit = pd.read_csv(ARQUIVO_CUSTOS_DEFICIT, sep=";")
+    anos = df_deficit["ano"].tolist()
+    custo = df_deficit["custo"].tolist()
+
+    anodeck = int(diretorio.split(sep)[-2].split("_")[0])
+    sistema = Sistema.le_arquivo(diretorio, arquivo)
     df_sistema = sistema.custo_deficit
 
-    if anodeck in anos: # checa se faz parte dos anos com mais de 1 patamar de deficit
+    if (
+        anodeck in anos
+    ):  # checa se faz parte dos anos com mais de 1 patamar de deficit
         ind = anos.index(anodeck)
         # se existir, corrige
-        for s in [1,2,3,4]:
-            for i in [2,3,4]:
-                df_sistema.loc[df_sistema["Num. Subsistema"] == s,"Corte Pat. " + str(i)] = 0.00
-                df_sistema.loc[df_sistema["Num. Subsistema"] == s,"Custo Pat. " + str(i)] = 0.00
+        for s in [1, 2, 3, 4]:
+            for i in [2, 3, 4]:
+                df_sistema.loc[
+                    df_sistema["Num. Subsistema"] == s, "Corte Pat. " + str(i)
+                ] = 0.00
+                df_sistema.loc[
+                    df_sistema["Num. Subsistema"] == s, "Custo Pat. " + str(i)
+                ] = 0.00
             i = 1
-            df_sistema.loc[df_sistema["Num. Subsistema"] == s,"Corte Pat. " + str(i)] = 1.00
-            df_sistema.loc[df_sistema["Num. Subsistema"] == s,"Custo Pat. " + str(i)] = custo[ind]
+            df_sistema.loc[
+                df_sistema["Num. Subsistema"] == s, "Corte Pat. " + str(i)
+            ] = 1.00
+            df_sistema.loc[
+                df_sistema["Num. Subsistema"] == s, "Custo Pat. " + str(i)
+            ] = custo[ind]
 
     sistema.custo_deficit = df_sistema
+    sistema.escreve_arquivo(diretorio, arquivo)
 
-    dger.escreve_arquivo(diretorio,arquivo_dger)
 
+def corrige_penalid(diretorio: str, arquivo: str):
 
-def corrige_penalid(diretorio: str, arquivo_dger: str, arquivo_penalid: str):
-    dger = DGer.le_arquivo(diretorio,arquivo_dger)
-    anodeck = dger.ano_inicio_estudo
-    
-    penalid = Penalid.le_arquivo(diretorio,arquivo_penalid)
+    df_deficit = pd.read_csv(ARQUIVO_CUSTOS_DEFICIT, sep=";")
+    anos = df_deficit["ano"].tolist()
+    custo = df_deficit["custo"].tolist()
+
+    anodeck = int(diretorio.split(sep)[-2].split("_")[0])
+
+    penalid = Penalid.le_arquivo(diretorio, arquivo)
     df_pen = penalid.penalidades
 
-    if anodeck in anos: # checa se faz parte dos anos com mais de 1 patamar de deficit
+    if (
+        anodeck in anos
+    ):  # checa se faz parte dos anos com mais de 1 patamar de deficit
         ind = anos.index(anodeck)
         penalidade = custo[ind]
 
@@ -52,56 +74,52 @@ def corrige_penalid(diretorio: str, arquivo_dger: str, arquivo_penalid: str):
         rees_ghmin = [4, 5]
         penalidade_desvio = np.ceil(penalidade * 1.001)
 
-        indices_deletar = df_pen.loc[df_pen["Chave"] == "VOLMIN"].index.tolist()
+        indices_deletar = df_pen.loc[
+            df_pen["Chave"] == "VOLMIN"
+        ].index.tolist()
         df_pen = df_pen.drop(indices_deletar)
 
-        df_pen.loc[df_pen["Chave"] == "DESVIO","Penalidade 1"] = penalidade_desvio
+        df_pen.loc[
+            df_pen["Chave"] == "DESVIO", "Penalidade 1"
+        ] = penalidade_desvio
 
         for r in rees_vazmin:
-            filtro_vazmin = df_pen.loc[(df_pen["Subsistema"] == r) & (df_pen["Chave"] == "VAZMIN")] 
+            filtro_vazmin = df_pen.loc[
+                (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "VAZMIN")
+            ]
             if len(filtro_vazmin) == 0:
                 # necessario criar linha
-                linha_nova = ({"Chave": "VAZMIN",
-                                "Penalidade 1": penalidade,
-                                "Penalidade 2": np.nan,
-                                "Subsistema": r})
-                df_pen.append(linha_nova,ignore_index=True)
+                linha_nova = {
+                    "Chave": "VAZMIN",
+                    "Penalidade 1": penalidade,
+                    "Penalidade 2": np.nan,
+                    "Subsistema": r,
+                }
+                df_pen.append(linha_nova, ignore_index=True)
             else:
-                df_pen.loc[(df_pen["Subsistema"] == r) & (df_pen["Chave"] == "VAZMIN"),"Penalidade 1"] = penalidade
+                df_pen.loc[
+                    (df_pen["Subsistema"] == r)
+                    & (df_pen["Chave"] == "VAZMIN"),
+                    "Penalidade 1",
+                ] = penalidade
 
         for r in rees_ghmin:
-            filtro_ghmin = df_pen.loc[(df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN")] 
+            filtro_ghmin = df_pen.loc[
+                (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN")
+            ]
             if len(filtro_ghmin) == 0:
                 # necessario criar linha
-                linha_nova = ({"Chave": "GHMIN",
-                                "Penalidade 1": penalidade,
-                                "Penalidade 2": np.nan,
-                                "Subsistema": r})
-                df_pen.append(linha_nova,ignore_index=True)
+                linha_nova = {
+                    "Chave": "GHMIN",
+                    "Penalidade 1": penalidade,
+                    "Penalidade 2": np.nan,
+                    "Subsistema": r,
+                }
+                df_pen.append(linha_nova, ignore_index=True)
             else:
-                df_pen.loc[(df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN")] = penalidade
+                df_pen.loc[
+                    (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN")
+                ] = penalidade
 
     penalid.penalidades = df_pen
-
-    penalid.escreve_arquivo(diretorio,arquivo_penalid)
-
-
-
-
-
-
-
-
-
-        
-
-    
-
-
-
-
-
-
-
-
-
+    penalid.escreve_arquivo(diretorio, arquivo)

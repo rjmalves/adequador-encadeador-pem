@@ -11,10 +11,12 @@ from utils.nomes import (
     nome_arquivo_curva,
     nome_arquivo_sistema,
     nome_arquivo_penalid,
+    nome_arquivo_vazoes,
     nome_arquivo_hidr,
     nome_arquivo_polinjus,
     nome_arquivo_dger,
 )
+from arquivos_entrada.atualiza_vazoes import atualiza_vazoes
 from compatibilizacao_rees.decomp import ajusta_dados_rees
 from dados_gerais.decomp import ajusta_dados_gerais as ajusta_dados_gerais_dc
 from dados_gerais.newave import ajusta_dados_gerais as ajusta_dados_gerais_nw
@@ -26,6 +28,11 @@ from gtdp.decomp_cfuga_cmont import adequa_cfuga_cmont as adequa_cfuga_cmont_dc
 from gtdp.decomp_ac import ajusta_acs
 from gtdp.decomp_fj import ajusta_fj
 from gtdp.copia_hidr_polinjus import copia_hidr, copia_polinjus
+from penalidades.decomp_deficit import ajusta_deficit
+from penalidades.newave_penalid_deficit import (
+    corrige_deficit_sistema,
+    corrige_penalid,
+)
 from restricoes.decomp_volume_espera import ajusta_volume_espera
 from vminop.decomp_rhe import ajusta_rhe
 from vminop.newave_dger_curva import adequa_dger as adequa_dger_vminop
@@ -45,20 +52,26 @@ AJUSTES_DECOMP = [a for a in getenv("AJUSTES_DECOMP").split(",") if len(a) > 0]
 
 
 CODIGOS_AJUSTES_NEWAVE: Dict[Tuple[Callable, Callable]] = {
+    "VAZOES": (atualiza_vazoes, nome_arquivo_vazoes),
+    "REES": (None, None),
     "DADOSGERAIS": (ajusta_dados_gerais_nw, nome_arquivo_dger),
     "CVAR": (ajusta_cvar, nome_arquivo_cvar),
     "GTDP_CFUGA_CMONT": (adequa_cfuga_cmont_nw, nome_arquivo_modif),
+    "DEFICIT": (corrige_deficit_sistema, nome_arquivo_sistema),
+    "PENALIDADES": (corrige_penalid, nome_arquivo_penalid),
     "VMINOP_DGER": (adequa_dger_vminop, nome_arquivo_dger),
     "VMINOP_CURVA": (adequa_curva_vminop, nome_arquivo_curva),
     "HIDR": (copia_hidr, nome_arquivo_hidr),
 }
 
 CODIGOS_AJUSTES_DECOMP: Dict[Tuple[Callable, Callable]] = {
+    "VAZOES": (atualiza_vazoes, nome_arquivo_vazoes),
     "REES": (ajusta_dados_rees, nome_arquivo_dadger),
     "DADOSGERAIS": (ajusta_dados_gerais_dc, nome_arquivo_dadger),
     "GTDP_CFUGA_CMONT": (adequa_cfuga_cmont_dc, nome_arquivo_dadger),
     "GTDP_FJ": (ajusta_fj, nome_arquivo_dadger),
     "GTDP_AC": (ajusta_acs, nome_arquivo_dadger),
+    "DEFICIT": (ajusta_deficit, nome_arquivo_dadger),
     "VOLUMES_ESPERA": (ajusta_volume_espera, nome_arquivo_dadger),
     "VMINOP": (ajusta_rhe, nome_arquivo_dadger),
     "HIDR": (copia_hidr, nome_arquivo_hidr),

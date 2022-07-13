@@ -1,19 +1,19 @@
 from idecomp.decomp.dadger import Dadger
 from idecomp.decomp.modelos.dadger import TE, EV, SB, CQ, EA, ES, QI
 
-# Dados de entrada:
-nome_arq_polinjus = "polinjus.dat"
 
 def ajusta_dados_gerais(diretorio: str, arquivo: str):
-    
+
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
     # Certifica que existe registro TE
     if dadger.te.titulo is None:
         te_novo = TE()
-        te_novo.titulo = "PMO" # Título provisório depois será alterado pelo encadeador
+        te_novo.titulo = (
+            "PMO"  # Título provisório depois será alterado pelo encadeador
+        )
         reg_anterior = dadger.lista_registros(SB)[0]
-        dadger.cria_registro(reg_anterior,te_novo)
+        dadger.cria_registro(reg_anterior, te_novo)
 
     # Consideração de evaporação linear com base no volume inicial
     if dadger.ev is None:
@@ -21,17 +21,16 @@ def ajusta_dados_gerais(diretorio: str, arquivo: str):
         ev_novo.modelo = 1
         ev_novo.volume_referencia = "INI"
         reg_anterior = dadger.lista_registros(CQ)[-1]
-        dadger.cria_registro(reg_anterior,ev_novo)
+        dadger.cria_registro(reg_anterior, ev_novo)
     else:
         dadger.ev.modelo = 1
         dadger.ev.volume_referencia = "INI"
 
-
     # Exclusão de registros antigos
-    # Registro EA e ES, referentes a energia afluente passada mensal e semanal, foram descontinuados 
+    # Registro EA e ES, referentes a energia afluente passada mensal e semanal, foram descontinuados
     # nos casos atuais, pois as informações passaram a ser lidas no arquivo vazoes.xx.
-    # Registro QI, referente a vazões incrementais passadas necessárias para consideração do 
-    # tempo de viagem no cálculo da energia natural afluente, foi descontinuado nos casos atuais, 
+    # Registro QI, referente a vazões incrementais passadas necessárias para consideração do
+    # tempo de viagem no cálculo da energia natural afluente, foi descontinuado nos casos atuais,
     # pois a informação agora é lida pelo vazoes.xx.
 
     def exclui_registros(dadger: Dadger, registros):
@@ -48,6 +47,3 @@ def ajusta_dados_gerais(diretorio: str, arquivo: str):
     exclui_registros(registro_qi)
 
     dadger.escreve_arquivo(diretorio, arquivo)
-
-
-  
