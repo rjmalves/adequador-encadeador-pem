@@ -13,14 +13,14 @@ DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
 DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
 
-ARQUIVO_VMINOP_DECOMP = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP_DECOMP")
+ARQ_VMINOP = join(
+    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP")
 )
 
 
 def ajusta_rhe(diretorio: str, arquivo: str):
 
-    df = pd.read_csv(ARQUIVO_VMINOP_DECOMP, sep=";")
+    df = pd.read_csv(ARQ_VMINOP, sep=";")
 
     v = df.loc[df["mes"] == 999, "vminop"].tolist()
     v_aux = []

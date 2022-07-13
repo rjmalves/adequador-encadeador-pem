@@ -5,12 +5,29 @@ from os.path import join
 import pandas as pd
 from inewave.newave.dger import DGer
 from inewave.newave.curva import Curva
+from inewave.newave.clast import ClasT
 
 DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
 DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
 
-ARQ_VMINOP = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP_NEWAVE"))
+ARQ_VMINOP = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP"))
+
+ARQUIVO_CLAST = "clast.dat"
+MESES = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+]
 
 
 def adequa_dger(diretorio: str, arq_dger: str):
@@ -25,9 +42,22 @@ def adequa_curva(diretorio: str, arq_curva: str):
     df = pd.read_csv(ARQ_VMINOP, sep=";")
     curva = Curva.le_arquivo(diretorio, arq_curva)
     curva.configuracoes_penalizacao = [1, 11, 1]
+
+    # obtem maior CVU e calcula penalidade
+    clast = ClasT.le_arquivo(diretorio, ARQUIVO_CLAST)
+    df_clast = clast.usinas
+    max_cvu = (
+        df_clast[["Custo 1", "Custo 2", "Custo 3", "Custo 4", "Custo 5"]]
+        .max()
+        .max()
+    )
+    penalizacao = max_cvu * (1 + 0.12) ** (11 / 12)
+
     for _, linha in df.iterrows():
-        adequa_penalizacao_curva(linha["ree"], linha["penalizacao"], curva)
-        adequa_volumes_curva(linha["ree"], linha["vminop"], curva)
+        adequa_penalizacao_curva(linha["ree"], penalizacao, curva)
+        adequa_volumes_curva(
+            linha["ree"], linha["mes"], linha["vminop"], curva
+        )
 
 
 def adequa_penalizacao_curva(ree: int, penalizacao: float, curva: Curva):
@@ -50,9 +80,12 @@ def adequa_penalizacao_curva(ree: int, penalizacao: float, curva: Curva):
     ]
 
 
-def adequa_volumes_curva(ree: int, volume_minimo: float, curva: Curva):
+def adequa_volumes_curva(
+    ree: int, mes: int, volume_minimo: float, curva: Curva
+):
     if curva.curva_seguranca is None:
         return
+
     anos = curva.curva_seguranca["Ano"].unique().tolist()
     num_linhas = curva.curva_seguranca.shape[0]
     for i, ano in enumerate(anos):
@@ -65,8 +98,17 @@ def adequa_volumes_curva(ree: int, volume_minimo: float, curva: Curva):
             curva.curva_seguranca.loc[num_linhas + i] = [ree, ano] + [
                 volume_minimo
             ] * 12
-        curva.curva_seguranca.loc[
-            (curva.curva_seguranca["REE"] == ree)
-            & (curva.curva_seguranca["Ano"] == ano),
-            :,
-        ] = [ree, ano] + [volume_minimo] * 12
+        if mes == 999:
+            curva.curva_seguranca.loc[
+                (curva.curva_seguranca["REE"] == ree)
+                & (curva.curva_seguranca["Ano"] == ano),
+                :,
+            ] = [ree, ano] + [volume_minimo] * 12
+        else:
+            curva.curva_seguranca.loc[
+                (curva.curva_seguranca["REE"] == ree)
+                & (curva.curva_seguranca["Ano"] == ano),
+                MESES.index(mes - 1),
+            ] = volume_minimo
+    # adicionar aqui, conferir o mês, se é 999 ou se tem variação por mês, para pegar o caso de dezembro do Norte
+    # tem que em algum lugar excluir os VMINPs do modif também
