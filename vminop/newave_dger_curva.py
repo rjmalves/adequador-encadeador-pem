@@ -116,6 +116,9 @@ def adequa_volumes_curva(
 def remove_vminp_modif(diretorio: str, arquivo: str):
     modif = Modif.le_arquivo(diretorio, arquivo)
     vminps = modif.vminp()
-    for r in vminps:
-        modif.deleta_registro(r)
+    if isinstance(vminps, list):
+        for r in vminps:
+            modif.deleta_registro(r)
+    elif vminps is not None:
+        modif.deleta_registro(vminps)
     modif.escreve_arquivo(diretorio, arquivo)
