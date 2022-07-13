@@ -35,7 +35,10 @@ from penalidades.newave_penalid_deficit import (
 )
 from restricoes.decomp_volume_espera import ajusta_volume_espera
 from vminop.decomp_rhe import ajusta_rhe
-from vminop.newave_dger_curva import adequa_dger as adequa_dger_vminop
+from vminop.newave_dger_curva import (
+    adequa_dger as adequa_dger_vminop,
+    remove_vminp_modif,
+)
 from vminop.newave_dger_curva import adequa_curva as adequa_curva_vminop
 
 
@@ -61,6 +64,7 @@ CODIGOS_AJUSTES_NEWAVE: Dict[Tuple[Callable, Callable]] = {
     "PENALIDADES": (corrige_penalid, nome_arquivo_penalid),
     "VMINOP_DGER": (adequa_dger_vminop, nome_arquivo_dger),
     "VMINOP_CURVA": (adequa_curva_vminop, nome_arquivo_curva),
+    "VMINOP_MODIF": (remove_vminp_modif, nome_arquivo_modif),
     "HIDR": (copia_hidr, nome_arquivo_hidr),
 }
 
@@ -77,13 +81,6 @@ CODIGOS_AJUSTES_DECOMP: Dict[Tuple[Callable, Callable]] = {
     "HIDR": (copia_hidr, nome_arquivo_hidr),
     "POLINJUS": (copia_polinjus, nome_arquivo_polinjus),
 }
-
-# MARIANA: Falta o script de Deficit para o DECOMP
-# MARIANA: Pq o valor de penalidade do VminOp para o NEWAVE é fixo? TODO
-# MARIANA: Onde são definidos os arquivos csv de dados de entrada? Colocar como opção no .cfg
-# MARIANA: Falta ajustar o script decomp_rhe para ler do csv -- OK
-# MARIANA: E os scrpts de cópia de arquivos, conversão, entram aonde? -- Junto com os outros.
-
 
 # ------- NEWAVE --------
 ajustes = []

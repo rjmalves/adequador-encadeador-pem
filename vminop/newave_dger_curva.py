@@ -6,6 +6,7 @@ import pandas as pd
 from inewave.newave.dger import DGer
 from inewave.newave.curva import Curva
 from inewave.newave.clast import ClasT
+from inewave.newave.modif import Modif
 
 DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
@@ -110,5 +111,11 @@ def adequa_volumes_curva(
                 & (curva.curva_seguranca["Ano"] == ano),
                 MESES.index(mes - 1),
             ] = volume_minimo
-    # adicionar aqui, conferir o mês, se é 999 ou se tem variação por mês, para pegar o caso de dezembro do Norte
-    # tem que em algum lugar excluir os VMINPs do modif também
+
+
+def remove_vminp_modif(diretorio: str, arquivo: str):
+    modif = Modif.le_arquivo(diretorio, arquivo)
+    vminps = modif.vminp()
+    for r in vminps:
+        modif.deleta_registro(r)
+    modif.escreve_arquivo(diretorio, arquivo)
