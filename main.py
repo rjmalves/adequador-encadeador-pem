@@ -54,7 +54,7 @@ AJUSTES_NEWAVE = [a for a in getenv("AJUSTES_NEWAVE").split(",") if len(a) > 0]
 AJUSTES_DECOMP = [a for a in getenv("AJUSTES_DECOMP").split(",") if len(a) > 0]
 
 
-CODIGOS_AJUSTES_NEWAVE: Dict[Tuple[Callable, Callable]] = {
+CODIGOS_AJUSTES_NEWAVE: Dict[str, Tuple[Callable, Callable]] = {
     "VAZOES": (atualiza_vazoes, nome_arquivo_vazoes),
     "REES": (None, None),
     "DADOSGERAIS": (ajusta_dados_gerais_nw, nome_arquivo_dger),
@@ -68,7 +68,7 @@ CODIGOS_AJUSTES_NEWAVE: Dict[Tuple[Callable, Callable]] = {
     "HIDR": (copia_hidr, nome_arquivo_hidr),
 }
 
-CODIGOS_AJUSTES_DECOMP: Dict[Tuple[Callable, Callable]] = {
+CODIGOS_AJUSTES_DECOMP: Dict[str, Tuple[Callable, Callable]] = {
     "VAZOES": (atualiza_vazoes, nome_arquivo_vazoes),
     "REES": (ajusta_dados_rees, nome_arquivo_dadger),
     "DADOSGERAIS": (ajusta_dados_gerais_dc, nome_arquivo_dadger),
