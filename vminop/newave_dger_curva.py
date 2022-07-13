@@ -109,7 +109,7 @@ def adequa_volumes_curva(
             curva.curva_seguranca.loc[
                 (curva.curva_seguranca["REE"] == ree)
                 & (curva.curva_seguranca["Ano"] == ano),
-                MESES.index(mes - 1),
+                MESES[int(mes - 1)],
             ] = volume_minimo
 
 
