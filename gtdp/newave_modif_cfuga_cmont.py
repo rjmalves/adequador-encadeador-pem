@@ -39,7 +39,6 @@ def adequa_usina(
             adequa_cmont(modif, codigo, ano, int(linha["mes"]), linha["cmont"])
 
 
-
 def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     modificacoes_usina = modif.modificacoes_usina(codigo)
     for r in modificacoes_usina:
@@ -51,12 +50,13 @@ def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
                 else:
                     modif.deleta_registro(r)
                 return
-    r = CFUGA()
-    r.ano = ano
-    r.mes = mes
-    r.nivel = valor
-    modif.cria_registro(modif.usina(codigo=codigo), r)
-    print(f"Criou CFUGA {mes}/{ano}: {valor}")
+    if valor != np.nan:
+        r = CFUGA()
+        r.ano = ano
+        r.mes = mes
+        r.nivel = valor
+        modif.cria_registro(modif.usina(codigo=codigo), r)
+        print(f"Criou CFUGA {mes}/{ano}: {valor}")
 
 
 def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
@@ -70,12 +70,13 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
                 else:
                     modif.deleta_registro(r)
                 return
-    r = CMONT()
-    r.ano = ano
-    r.mes = mes
-    r.nivel = valor
-    modif.cria_registro(modif.usina(codigo=codigo), r)
-    print(f"Criou CMONT {mes}/{ano}: {valor}")
+    if valor != np.nan:
+        r = CMONT()
+        r.ano = ano
+        r.mes = mes
+        r.nivel = valor
+        modif.cria_registro(modif.usina(codigo=codigo), r)
+        print(f"Criou CMONT {mes}/{ano}: {valor}")
 
 
 def adequa_cfuga_cmont(diretorio: str, arquivo: str):
