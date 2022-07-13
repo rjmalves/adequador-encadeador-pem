@@ -50,11 +50,11 @@ def ajusta_acs(diretorio: str, arquivo: str):
 
     def adiciona_ac_nposnw(dadger: Dadger, u: int, p: int):
         usina = dadger.uh(codigo=u)
+        print("DEGUG usina:",usina)
+        print("DEBUG u",u)
         if usina is not None:
-            print("DEBUG Usina: ",usina)
             reg = dadger.ac(uhe=u, modificacao=ACNPOSNW)
             if reg is None:
-                print("DEBUG Cria AC: ",usina)
                 # se não existir AC NPOSNW para esta usina, cria
                 posicao = dadger.lista_registros(ACVAZMIN)[
                     -1
@@ -64,7 +64,6 @@ def ajusta_acs(diretorio: str, arquivo: str):
                 ac_novo.posto = p
                 dadger.cria_registro(posicao, ac_novo)
             else:
-                print("DEBUG Altera AC: ",usina)
                 # se ja existe AC NPOSNW para esta usina, coloca valor correto
                 dadger.ac(uhe=u, modificacao=ACNPOSNW).posto = p
 
@@ -135,7 +134,6 @@ def ajusta_acs(diretorio: str, arquivo: str):
     ano_caso = (dataini + datetime.timedelta(days=7)).year  # ano do PMO
 
     if ano_caso < 2017:
-        print("DEBUG Ano caso: ",ano_caso)
         for u, p in zip(usinas_nposnw, postos_nposnw):
             adiciona_ac_nposnw(dadger, u, p)
 
