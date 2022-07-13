@@ -32,7 +32,7 @@ def adequa_usina(
         r_usina.codigo = codigo
         modif.append_registro(r_usina)
 
-    df_ordenado = df_usina.sort_values("mes", ascending=False)
+    df_ordenado = df_usina.sort_values("mes")
     for ano in anos_estudo:
         for _, linha in df_ordenado.iterrows():
             adequa_cfuga(modif, codigo, ano, int(linha["mes"]), linha["cfuga"])
@@ -50,12 +50,7 @@ def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     for r in modificacoes_usina:
         if isinstance(r, CFUGA):
             if (r.ano == ano) and (r.mes == mes):
-                if not np.isnan(valor):
-                    print(f"Alterou nível CFUGA {mes}/{ano}: {valor}")
-                    r.nivel = valor
-                else:
-                    modif.deleta_registro(r)
-                return
+                modif.deleta_registro(r)
             elif (r.ano == mes_anterior.year) and (
                 r.mes == mes_anterior.month
             ):
@@ -78,12 +73,7 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     for r in modificacoes_usina:
         if isinstance(r, CMONT):
             if (r.ano == ano) and (r.mes == mes):
-                if not np.isnan(valor):
-                    print(f"Alterou nível CMONT {mes}/{ano}: {valor}")
-                    r.nivel = valor
-                else:
-                    modif.deleta_registro(r)
-                return
+                modif.deleta_registro(r)
             elif (r.ano == mes_anterior.year) and (
                 r.mes == mes_anterior.month
             ):
