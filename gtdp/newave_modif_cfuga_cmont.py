@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import pathlib
 import pandas as pd
 import numpy as np
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from inewave.newave.modelos.modif import USINA, CMONT, CFUGA
 from inewave.newave.modif import Modif
 
@@ -22,15 +24,13 @@ ARQ_CFUGA_CMONT = join(
 def adequa_usina(
     codigo: int, df_usina: pd.DataFrame, modif: Modif, anos_estudo: np.ndarray
 ):
-    print(f"Usina: {codigo}")
     r_usina = modif.usina(codigo=codigo)
     if r_usina is None:
-        print("Criou registro USINA")
         r_usina = USINA()
         r_usina.codigo = codigo
         modif.append_registro(r_usina)
 
-    df_ordenado = df_usina.sort_values("mes", ascending=False)
+    df_ordenado = df_usina.sort_values("mes")
     for ano in anos_estudo:
         for _, linha in df_ordenado.iterrows():
             adequa_cfuga(modif, codigo, ano, int(linha["mes"]), linha["cfuga"])
@@ -41,42 +41,46 @@ def adequa_usina(
 
 def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     modificacoes_usina = modif.modificacoes_usina(codigo)
+    mes_anterior = datetime(year=ano, month=mes, day=1) - relativedelta(
+        months=1
+    )
+    anterior = modif.usina(codigo=codigo)
     for r in modificacoes_usina:
         if isinstance(r, CFUGA):
             if (r.ano == ano) and (r.mes == mes):
-                if not np.isnan(valor):
-                    print(f"Alterou nível CFUGA {mes}/{ano}: {valor}")
-                    r.nivel = valor
-                else:
-                    modif.deleta_registro(r)
-                return
+                modif.deleta_registro(r)
+            elif (r.ano == mes_anterior.year) and (
+                r.mes == mes_anterior.month
+            ):
+                anterior = r
     if not np.isnan(valor):
         r = CFUGA()
         r.ano = ano
         r.mes = mes
         r.nivel = valor
-        modif.cria_registro(modif.usina(codigo=codigo), r)
-        print(f"Criou CFUGA {mes}/{ano}: {valor}")
+        modif.cria_registro(anterior, r)
 
 
 def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     modificacoes_usina = modif.modificacoes_usina(codigo)
+    mes_anterior = datetime(year=ano, month=mes, day=1) - relativedelta(
+        months=1
+    )
+    anterior = modif.usina(codigo=codigo)
     for r in modificacoes_usina:
         if isinstance(r, CMONT):
             if (r.ano == ano) and (r.mes == mes):
-                if not np.isnan(valor):
-                    print(f"Alterou nível CMONT {mes}/{ano}: {valor}")
-                    r.nivel = valor
-                else:
-                    modif.deleta_registro(r)
-                return
+                modif.deleta_registro(r)
+            elif (r.ano == mes_anterior.year) and (
+                r.mes == mes_anterior.month
+            ):
+                anterior = r
     if not np.isnan(valor):
         r = CMONT()
         r.ano = ano
         r.mes = mes
         r.nivel = valor
-        modif.cria_registro(modif.usina(codigo=codigo), r)
-        print(f"Criou CMONT {mes}/{ano}: {valor}")
+        modif.cria_registro(anterior, r)
 
 
 def adequa_cfuga_cmont(diretorio: str, arquivo: str):

@@ -29,6 +29,7 @@ def ajusta_dados_gerais(diretorio: str, arquivo: str):
     dger.num_max_iteracoes = int(df["maxiter"])
     dger.delta_zinf = float(df["deltazinf"])
     dger.deltas_consecutivos = int(df["deltaconsecutivo"])
+    dger.cvar = 1
 
     dger.escreve_arquivo(diretorio, arquivo)
 
