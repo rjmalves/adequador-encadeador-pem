@@ -95,7 +95,7 @@ def corrige_penalid(diretorio: str, arquivo: str):
                     "Penalidade 2": np.nan,
                     "Subsistema": r,
                 }
-                df_pen = df_pen.append(linha_nova, ignore_index=True)
+                df_pen.loc[df_pen.shape[0]] = linha_nova
             else:
                 df_pen.loc[
                     (df_pen["Subsistema"] == r)
@@ -115,7 +115,7 @@ def corrige_penalid(diretorio: str, arquivo: str):
                     "Penalidade 2": np.nan,
                     "Subsistema": r,
                 }
-                df_pen = df_pen.append(linha_nova, ignore_index=True)
+                df_pen.loc[df_pen.shape[0]] = linha_nova
             else:
                 df_pen.loc[
                     (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN")
