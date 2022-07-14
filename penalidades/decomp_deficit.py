@@ -42,5 +42,5 @@ def ajusta_deficit(diretorio: str, arquivo: str):
                 if reg.numero_curva > 1:
                     dadger.deleta_registro(reg)
                 else:
-                    reg.custos = custo[ind]
+                    reg.custos = 3*[custo[ind]]
                     reg.limites_superiores = [100, 100, 100]
