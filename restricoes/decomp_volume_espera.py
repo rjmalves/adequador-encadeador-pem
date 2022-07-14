@@ -48,5 +48,6 @@ def ajusta_volume_espera(diretorio: str, arquivo: str):
         dados_ve = linhas_ve[co].tolist() + [ve_mes[co].tolist()[-1]]
         if dadger.ve(codigo=c) is not None:
             dadger.ve(codigo=c).volumes = dados_ve
+            print("DEBUG",c, dados_ve)
 
     dadger.escreve_arquivo(diretorio, arquivo)
