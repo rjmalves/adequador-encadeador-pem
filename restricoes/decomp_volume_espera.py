@@ -37,8 +37,10 @@ def ajusta_volume_espera(diretorio: str, arquivo: str):
     idx = indices.index(caso)
     idx_linhas = list(range(idx, idx + num_casos_a_frente))
     linhas_ve = df_ve.iloc[idx_linhas, :]
+    linhas_ve = linhas_ve.loc[:].astype(float)
     s = f"{ano_seguinte}_{str(mes_seguinte).zfill(2)}"
     ve_mes = df_ve.loc[df_ve.index.str.contains(s), :]
+    ve_mes = ve_mes.loc[:].astype(float)
 
     # Atualiza os registros VE com os respectivos valores de volume de espera
     usinas = [int(i) for i in list(df_ve)]
