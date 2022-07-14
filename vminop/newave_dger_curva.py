@@ -114,6 +114,12 @@ def adequa_volumes_curva(
 
 def remove_vminp_modif(diretorio: str, arquivo: str):
     modif = Modif.le_arquivo(diretorio, arquivo)
+    # Apaga VOLMAX vazios
+    volmax = modif.volmax()
+    if isinstance(volmax, list):
+        for v in volmax:
+            if v.volume is None:
+                modif.deleta_registro(v)
     vminps = modif.vminp()
     if isinstance(vminps, list):
         for r in vminps:

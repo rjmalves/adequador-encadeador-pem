@@ -91,6 +91,13 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
     ano_caso = int(diretorio.split(sep)[-2].split("_")[0])
     anos_estudo = np.arange(ano_caso, ano_caso + NUM_ANOS_ESTUDO)
     modif = Modif.le_arquivo(diretorio, arquivo)
+    # Apaga VOLMAX vazios
+    volmax = modif.volmax()
+    if isinstance(volmax, list):
+        for v in volmax:
+            if v.volume is None:
+                modif.deleta_registro(v)
+
     usinas = df["usina"].unique().tolist()
     for u in usinas:
         df_usina = df.loc[df["usina"] == u, :]
