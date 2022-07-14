@@ -36,7 +36,7 @@ def itera_casos(
         diretorio = join(diretorio_casos, caso, programa)
         arquivo = nome_arquivo(caso)
         arquivo_backup = f"backup_{arquivo}"
-        if backup and not isfile(join(diretorio, arquivo_backup)):
+        if backup and not isfile(join(diretorio, arquivo_backup)) and isfile(join(diretorio, arquivo)):
             copyfile(
                 join(diretorio, arquivo), join(diretorio, arquivo_backup)
             )
