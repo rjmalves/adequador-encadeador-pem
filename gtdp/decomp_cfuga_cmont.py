@@ -164,7 +164,7 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
                     semana=periodo,
                 )
             else:  # se 2º mês
-                print("DEBUG ",usina,meses[inds[m]])
+
                 periodo = 1
                 reg_cotvol = dadger.ac(
                     uhe=usina,
