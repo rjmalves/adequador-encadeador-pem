@@ -3,6 +3,7 @@ from os import getenv
 from shutil import copyfile
 from dotenv import load_dotenv
 import pathlib
+from utils.log import Log
 
 # Dados de entrada
 DIR_BASE = pathlib.Path().resolve()
@@ -14,10 +15,12 @@ ARQ_POLINJUS = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_POLINJUS"))
 
 
 def copia_hidr(diretorio: str, arquivo: str):
+    Log.log().info(f"Copiando hidr.dat para {join(diretorio, arquivo)}")
     arq_destino_hidr = join(diretorio, arquivo)
     copyfile(ARQ_HIDR, arq_destino_hidr)
 
 
 def copia_polinjus(diretorio: str, arquivo: str):
+    Log.log().info(f"Copiando polinjus.dat para {join(diretorio, arquivo)}")
     arq_destino_polinjus = join(diretorio, arquivo)
     copyfile(ARQ_POLINJUS, arq_destino_polinjus)

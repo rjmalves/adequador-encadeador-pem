@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from os import getenv
 import pandas as pd
 from os.path import join
+from utils.log import Log
 
 # ======================== Dados GTDP - CFUGA e CMONT
 
@@ -27,6 +28,8 @@ ARQUIVO_CFUGA_CMONT = join(
 
 
 def adequa_cfuga_cmont(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando CFUGA e CMONT...")
 
     df_cmont_historico = pd.read_csv(ARQUIVO_CFUGA_CMONT_HISTORICO, sep=";")
     df_cmont_historico = df_cmont_historico.loc[
@@ -164,7 +167,6 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
                     semana=periodo,
                 )
             else:  # se 2º mês
-                print("DEBUG ",usina,meses[inds[m]])
                 periodo = 1
                 reg_cotvol = dadger.ac(
                     uhe=usina,
@@ -226,8 +228,6 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
                     cfuga_alterado,
                 )
 
-
-
     # ======================== REALIZA ALTERACOES POR USINA ====================
     for usina in usinas_cmont_cfuga:
         if usina not in usinas_cmont_historico:
@@ -236,9 +236,7 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
             cfuga = df_cmont_cfuga.loc[
                 df_cmont_cfuga["usina"] == usina, "cfuga"
             ].tolist()
-            altera_jusmed_usina(
-                dadger, usina, meses, anos, inds, cfuga
-            )
+            altera_jusmed_usina(dadger, usina, meses, anos, inds, cfuga)
         else:
             # ------ Jirau e Santo Antônio:
             # identifica dados do ciclo GTDP passado a serem utilizados para comparação

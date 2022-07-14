@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import pathlib
 import datetime
 import pandas as pd
+from utils.log import Log
 
 # Dados de entrada:
 
@@ -13,12 +14,12 @@ DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
 DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
 
-ARQ_VMINOP = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP")
-)
+ARQ_VMINOP = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP"))
 
 
 def ajusta_rhe(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando VMINOP (RHE)...")
 
     df = pd.read_csv(ARQ_VMINOP, sep=";")
 
@@ -165,9 +166,9 @@ def ajusta_rhe(diretorio: str, arquivo: str):
             codigo = hes_codigos[ind_cod]
 
             dadger.he(codigo=codigo, estagio=estagio).tipo_limite = 2
-            dadger.he(codigo=codigo, estagio=estagio).limite = vminop_rhe[
-                r
-            ][estagio - 1]
+            dadger.he(codigo=codigo, estagio=estagio).limite = vminop_rhe[r][
+                estagio - 1
+            ]
             dadger.he(codigo=codigo, estagio=estagio).penalidade = penalidade
             dadger.he(codigo=codigo, estagio=estagio).tipo_penalidade = tipo
         else:

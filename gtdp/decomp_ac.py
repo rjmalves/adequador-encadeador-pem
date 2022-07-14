@@ -18,6 +18,7 @@ import pathlib
 from dotenv import load_dotenv
 import datetime
 import pandas as pd
+from utils.log import Log
 
 # Dados de entrada:
 
@@ -43,6 +44,9 @@ ARQUIVO_AC_VERTJU = join(
 
 
 def ajusta_acs(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando ACs...")
+
     def deleta_ac(dadger: Dadger, u: int, tipo: classmethod):
         reg = dadger.ac(uhe=u, modificacao=tipo)
         if reg is not None:

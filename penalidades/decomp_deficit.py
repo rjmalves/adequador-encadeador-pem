@@ -6,6 +6,7 @@ from os.path import join
 from os import getenv
 import pathlib
 from dotenv import load_dotenv
+from utils.log import Log
 
 # Dados de entrada:
 DIR_BASE = pathlib.Path().resolve()
@@ -18,6 +19,8 @@ ARQUIVO_CUSTOS_DEFICIT = join(
 
 
 def ajusta_deficit(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando déficit...")
 
     df_deficit = pd.read_csv(ARQUIVO_CUSTOS_DEFICIT, sep=";")
 
@@ -42,7 +45,7 @@ def ajusta_deficit(diretorio: str, arquivo: str):
                 if reg.numero_curva > 1:
                     dadger.deleta_registro(reg)
                 else:
-                    reg.custos = 3*[custo[ind]]
+                    reg.custos = 3 * [custo[ind]]
                     reg.limites_superiores = [100, 100, 100]
 
     dadger.escreve_arquivo(diretorio, arquivo)

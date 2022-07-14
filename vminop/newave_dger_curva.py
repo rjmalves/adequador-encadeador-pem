@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from os import getenv
 from os.path import join
 import pandas as pd
+from utils.log import Log
 from inewave.newave.dger import DGer
 from inewave.newave.curva import Curva
 from inewave.newave.clast import ClasT
@@ -32,14 +33,14 @@ MESES = [
 
 
 def adequa_dger(diretorio: str, arq_dger: str):
-    print(f"Adequando {arq_dger} ...")
+    Log.log().info(f"Ajustando VMINOP no dger...")
     dger = DGer.le_arquivo(diretorio, arq_dger)
     dger.curva_aversao = 1
     dger.escreve_arquivo(diretorio, arq_dger)
 
 
 def adequa_curva(diretorio: str, arq_curva: str):
-    print(f"Adequando {arq_curva} ...")
+    Log.log().info(f"Adequando VMINOP no curva...")
     df = pd.read_csv(ARQ_VMINOP, sep=";")
     curva = Curva.le_arquivo(diretorio, arq_curva)
     curva.configuracoes_penalizacao = [1, 11, 1]
@@ -67,7 +68,6 @@ def adequa_penalizacao_curva(ree: int, penalizacao: float, curva: Curva):
     if curva.custos_penalidades.loc[
         curva.custos_penalidades["Sistema"] == ree, "Custo"
     ].empty:
-        print(f"Adicionando penalização de {penalizacao} para REE {ree}")
         curva.custos_penalidades.loc[curva.custos_penalidades.shape[0]] = [
             ree,
             penalizacao,
@@ -95,7 +95,6 @@ def adequa_volumes_curva(
             & (curva.curva_seguranca["Ano"] == ano),
             :,
         ].empty:
-            print(f"Adicionando curva para REE {ree}/{ano}: {volume_minimo}")
             curva.curva_seguranca.loc[num_linhas + i] = [ree, ano] + [
                 volume_minimo
             ] * 12

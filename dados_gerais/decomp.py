@@ -1,8 +1,12 @@
 from idecomp.decomp.dadger import Dadger
 from idecomp.decomp.modelos.dadger import TE, EV, SB, CQ, EA, ES, QI
 
+from utils.log import Log
+
 
 def ajusta_dados_gerais(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Adequando Dados Gerais...")
 
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
@@ -42,8 +46,8 @@ def ajusta_dados_gerais(diretorio: str, arquivo: str):
     registro_es = dadger.lista_registros(ES)
     registro_qi = dadger.lista_registros(QI)
 
-    exclui_registros(dadger,registro_ea)
-    exclui_registros(dadger,registro_es)
-    exclui_registros(dadger,registro_qi)
+    exclui_registros(dadger, registro_ea)
+    exclui_registros(dadger, registro_es)
+    exclui_registros(dadger, registro_qi)
 
     dadger.escreve_arquivo(diretorio, arquivo)

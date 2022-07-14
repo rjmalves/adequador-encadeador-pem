@@ -1,8 +1,11 @@
 from idecomp.decomp.dadger import Dadger
 from idecomp.decomp.modelos.dadger import RQ
+from utils.log import Log
 
 
 def ajusta_dados_rees(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Adequando REES...")
 
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 

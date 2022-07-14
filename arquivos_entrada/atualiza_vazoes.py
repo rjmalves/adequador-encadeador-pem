@@ -3,6 +3,7 @@ from os import getenv, sep
 from dotenv import load_dotenv
 from shutil import copyfile
 import pathlib
+from utils.log import Log
 
 DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
@@ -20,6 +21,7 @@ def obtem_nome_arquivo_vazoes(ano: str, mes: str, revisao: str):
 
 
 def atualiza_vazoes(diretorio: str, arquivo: str):
+    Log.log().info(f"Copiando vazões para {join(diretorio, arquivo)}")
     dados_estudo = diretorio.split(sep)[-2]
     ano_caso = dados_estudo[0]
     mes_caso = dados_estudo[1]

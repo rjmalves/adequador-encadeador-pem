@@ -4,6 +4,7 @@ from os.path import join
 from os import getenv
 from dotenv import load_dotenv
 import pathlib
+from utils.log import Log
 import pandas as pd
 
 
@@ -17,6 +18,8 @@ ARQUIVO_DADOS_GERAIS_NEWAVE = join(
 
 
 def ajusta_dados_gerais(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Adequando Dados Gerais...")
 
     df = pd.read_csv(ARQUIVO_DADOS_GERAIS_NEWAVE, sep=";")
 
@@ -35,6 +38,8 @@ def ajusta_dados_gerais(diretorio: str, arquivo: str):
 
 
 def ajusta_cvar(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Adequando CVAR...")
 
     df = pd.read_csv(ARQUIVO_DADOS_GERAIS_NEWAVE, sep=";")
 

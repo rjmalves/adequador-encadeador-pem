@@ -4,7 +4,7 @@ import pathlib
 from os.path import join
 from os import getenv
 from dotenv import load_dotenv
-
+from utils.log import Log
 # Dados de entrada:
 DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
@@ -14,6 +14,8 @@ ARQUIVO_POLINJUS = getenv("ARQUIVO_POLINJUS")
 
 
 def ajusta_fj(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando FJ...")
 
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 

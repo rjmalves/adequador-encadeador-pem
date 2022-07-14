@@ -8,7 +8,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from inewave.newave.modelos.modif import USINA, CMONT, CFUGA
 from inewave.newave.modif import Modif
-
+from utils.log import Log
 
 NUM_ANOS_ESTUDO = 5
 
@@ -84,6 +84,8 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
 
 
 def adequa_cfuga_cmont(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando CFUGA e CMONT...")
 
     df = pd.read_csv(ARQ_CFUGA_CMONT, sep=";")
     ano_caso = int(diretorio.split(sep)[-2].split("_")[0])

@@ -4,7 +4,7 @@ from os import sep, getenv
 from os.path import join, normpath
 import pathlib
 from dotenv import load_dotenv
-
+from utils.log import Log
 
 # Dados de entrada:
 DIR_BASE = pathlib.Path().resolve()
@@ -17,6 +17,8 @@ ARQUIVO_VOLUMES_ESPERA = join(
 
 
 def ajusta_volume_espera(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando VEs...")
 
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 

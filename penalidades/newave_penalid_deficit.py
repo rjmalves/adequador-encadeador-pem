@@ -6,7 +6,7 @@ import pathlib
 from dotenv import load_dotenv
 from os import getenv, sep
 from os.path import join
-
+from utils.log import Log
 
 # Dados de entrada:
 DIR_BASE = pathlib.Path().resolve()
@@ -19,6 +19,8 @@ ARQUIVO_CUSTOS_DEFICIT = join(
 
 
 def corrige_deficit_sistema(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando déficit...")
 
     df_deficit = pd.read_csv(ARQUIVO_CUSTOS_DEFICIT, sep=";")
     anos = df_deficit["ano"].tolist()
@@ -55,6 +57,8 @@ def corrige_deficit_sistema(diretorio: str, arquivo: str):
 
 
 def corrige_penalid(diretorio: str, arquivo: str):
+
+    Log.log().info(f"Ajustando penalidades...")
 
     df_deficit = pd.read_csv(ARQUIVO_CUSTOS_DEFICIT, sep=";")
     anos = df_deficit["ano"].tolist()
