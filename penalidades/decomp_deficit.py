@@ -35,6 +35,9 @@ def ajusta_deficit(diretorio: str, arquivo: str):
     cds = dadger.lista_registros(CD)
     patamares = [reg.numero_curva for reg in cds]
 
+    print("DEBUG",anos)
+    print("DEBUG",anodeck)
+    print("DEBUG",patamares)
     if anodeck in anos:
         if (2 in patamares) or (3 in patamares) or (4 in patamares):
             ind = anos.index(anodeck)
