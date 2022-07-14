@@ -187,6 +187,7 @@ def ajusta_rhe(diretorio: str, arquivo: str):
             if dadger.cm(id) is None:
                 cria_CM(dadger, id, r, 1, posicao)
 
+            print("DEBUG",vminop_rhe,ind_REE,estagio-1)
             cria_HE(
                 dadger,
                 id,
