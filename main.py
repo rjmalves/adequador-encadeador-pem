@@ -120,6 +120,8 @@ if ADEQUA_DECOMP:
 casos = [c for c in listdir(DIR_BASE) if isdir(join(DIR_BASE, c))]
 casos.sort()
 
+Log.log().info("Casos: " + ",".join(casos))
+
 for ajuste in ajustes:
     itera_casos(
         diretorio_casos=DIR_BASE,
