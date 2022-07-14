@@ -184,8 +184,10 @@ def ajusta_rhe(diretorio: str, arquivo: str):
             else:
                 posicao = dadger.lista_registros(CQ)[-1]
 
-            if dadger.cm(id) is None:
+            if dadger.cm(codigo=id) is None:
                 cria_CM(dadger, id, r, 1, posicao)
+            else:
+                posicao = dadger.cm(codigo=id)
 
             print("DEBUG",vminop_rhe,r,estagio-1)
             cria_HE(
