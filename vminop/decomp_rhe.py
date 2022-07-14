@@ -166,7 +166,7 @@ def ajusta_rhe(diretorio: str, arquivo: str):
 
             dadger.he(codigo=codigo, estagio=estagio).tipo_limite = 2
             dadger.he(codigo=codigo, estagio=estagio).limite = vminop_rhe[
-                ind_REE
+                r
             ][estagio - 1]
             dadger.he(codigo=codigo, estagio=estagio).penalidade = penalidade
             dadger.he(codigo=codigo, estagio=estagio).tipo_penalidade = tipo
@@ -187,12 +187,12 @@ def ajusta_rhe(diretorio: str, arquivo: str):
             if dadger.cm(id) is None:
                 cria_CM(dadger, id, r, 1, posicao)
 
-            print("DEBUG",vminop_rhe,ind_REE,estagio-1)
+            print("DEBUG",vminop_rhe,r,estagio-1)
             cria_HE(
                 dadger,
                 id,
                 2,
-                vminop_rhe[ind_REE][estagio - 1],
+                vminop_rhe[r][estagio - 1],
                 estagio,
                 penalidade,
                 tipo,
