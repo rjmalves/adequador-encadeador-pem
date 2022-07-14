@@ -177,7 +177,7 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
                 )
 
             # confere se existe AC COTVOL e armazena valor
-            if reg_cotvol.coeficiente is not None:
+            if reg_cotvol is not None:
                 cmont = reg_cotvol.coeficiente
             else:
                 cmont = None
