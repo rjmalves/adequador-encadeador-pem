@@ -50,9 +50,6 @@ def ajusta_acs(diretorio: str, arquivo: str):
 
     def adiciona_ac_nposnw(dadger: Dadger, u: int, p: int):
         usina = dadger.uh(codigo=u)
-        print("DEGUG usina:",usina)
-        print("DEBUG u",u)
-        print("DEGUG", type(u))
         if usina is not None:
             reg = dadger.ac(uhe=u, modificacao=ACNPOSNW)
             if reg is None:
@@ -136,7 +133,7 @@ def ajusta_acs(diretorio: str, arquivo: str):
 
     if ano_caso < 2017:
         for u, p in zip(usinas_nposnw, postos_nposnw):
-            adiciona_ac_nposnw(dadger, u, p)
+            adiciona_ac_nposnw(dadger, int(u), int(p))
 
     # Depois de ter feito as alterações, escreve arquivo dadger
     dadger.escreve_arquivo(diretorio, arquivo)
