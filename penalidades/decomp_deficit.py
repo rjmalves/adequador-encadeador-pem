@@ -39,9 +39,12 @@ def ajusta_deficit(diretorio: str, arquivo: str):
     print("DEBUG",anodeck)
     print("DEBUG",patamares)
     if anodeck in anos:
+        print("DEBUG ano in anos")
         if (2 in patamares) or (3 in patamares) or (4 in patamares):
+            print("DEBUG 2354 in patamares")
             ind = anos.index(anodeck)
             for reg in cds:
+                print("DEBUG",reg.numero_curva)
                 if reg.numero_curva > 1:
                     dadger.deleta_registro(reg)
                 else:
