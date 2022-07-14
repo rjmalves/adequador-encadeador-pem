@@ -88,7 +88,7 @@ CODIGOS_AJUSTES_DECOMP: Dict[str, Tuple[Callable, Callable]] = {
 # ------- NEWAVE --------
 ajustes = []
 if ADEQUA_NEWAVE:
-    Log.log().info(f"Ajustes para o NEWAVE: ", AJUSTES_NEWAVE)
+    Log.log().info(f"Ajustes para o NEWAVE: ", ",".join(AJUSTES_NEWAVE))
     for a in AJUSTES_NEWAVE:
         ajustes.append(CODIGOS_AJUSTES_NEWAVE[a])
 
@@ -113,7 +113,7 @@ for ajuste in ajustes:
 # ------- DECOMP --------
 ajustes = []
 if ADEQUA_DECOMP:
-    Log.log().info(f"Ajustes para o DECOMP: ", AJUSTES_DECOMP)
+    Log.log().info(f"Ajustes para o DECOMP: ", ",".join(AJUSTES_DECOMP))
     for a in AJUSTES_DECOMP:
         ajustes.append(CODIGOS_AJUSTES_DECOMP[a])
 
