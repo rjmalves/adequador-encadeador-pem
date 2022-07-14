@@ -117,7 +117,7 @@ if ADEQUA_DECOMP:
     for a in AJUSTES_DECOMP:
         ajustes.append(CODIGOS_AJUSTES_DECOMP[a])
 
-casos = [c for c in listdir(DIR_BASE) if isdir(join(DIR_BASE, c))]
+casos = [c for c in listdir(DIR_BASE) if isdir(join(DIR_BASE, c)) if "_rv" in c]
 casos.sort()
 
 Log.log().info("Casos: " + ",".join(casos))
