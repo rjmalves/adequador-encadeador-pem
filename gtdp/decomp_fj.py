@@ -10,7 +10,7 @@ DIR_BASE = pathlib.Path().resolve()
 load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
 DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
 
-ARQUIVO_POLINJUS = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_POLINJUS"))
+ARQUIVO_POLINJUS = getenv("ARQUIVO_POLINJUS")
 
 
 def ajusta_fj(diretorio: str, arquivo: str):
