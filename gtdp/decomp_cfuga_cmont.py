@@ -164,6 +164,7 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
                     semana=periodo,
                 )
             else:  # se 2º mês
+                print("DEBUG ",usina,meses[inds[m]])
                 periodo = 1
                 reg_cotvol = dadger.ac(
                     uhe=usina,
@@ -225,7 +226,7 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
                     cfuga_alterado,
                 )
 
-        return dadger
+
 
     # ======================== REALIZA ALTERACOES POR USINA ====================
     for usina in usinas_cmont_cfuga:
@@ -235,7 +236,7 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
             cfuga = df_cmont_cfuga.loc[
                 df_cmont_cfuga["usina"] == usina, "cfuga"
             ].tolist()
-            dadger = altera_jusmed_usina(
+            altera_jusmed_usina(
                 dadger, usina, meses, anos, inds, cfuga
             )
         else:
@@ -268,7 +269,7 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
             cfuga = df_cmont_cfuga.loc[
                 df_cmont_cfuga["usina"] == usina, "cfuga"
             ].tolist()
-            dadger = altera_cotvol_jusmed_usina(
+            altera_cotvol_jusmed_usina(
                 dadger,
                 usina,
                 n_est,
