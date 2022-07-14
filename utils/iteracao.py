@@ -40,10 +40,10 @@ def itera_casos(
             copyfile(
                 join(diretorio, arquivo), join(diretorio, arquivo_backup)
             )
-
-        converte_codificacao(
-            join(diretorio, arquivo), SCRIPT_CONVERTE_CODIFICACAO
-        )
+        if isfile(join(diretorio, arquivo)):
+            converte_codificacao(
+                join(diretorio, arquivo), SCRIPT_CONVERTE_CODIFICACAO
+            )
 
         print(f"Fazendo adequação do deck de {programa} do caso {caso}")
         t_inicio = time.time()
