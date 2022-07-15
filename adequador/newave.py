@@ -19,7 +19,7 @@ CODIGOS_AJUSTES_NEWAVE: Dict[str, Callable] = {
     "VAZOES": atualiza_vazoes,
     "REES": None,
     "DADOSGERAIS": ajusta_dados_gerais_cvar,
-    "GTDP_CFUGA_CMONT": adequa_cfuga_cmont,
+    "GTDP": adequa_cfuga_cmont,
     "DEFICIT": corrige_deficit_sistema,
     "PENALIDADES": corrige_penalid,
     "VMINOP": adequa_vminop,
