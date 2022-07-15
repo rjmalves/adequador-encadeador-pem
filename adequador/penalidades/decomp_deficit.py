@@ -10,7 +10,7 @@ from adequador.utils.configuracoes import Configuracoes
 
 def ajusta_deficit(diretorio: str):
 
-    Log.log().info(f"Ajustando déficit...")
+    Log.log().info(f"Adequando DEFICIT...")
 
     df_deficit = pd.read_csv(Configuracoes().arquivo_custos_deficit, sep=";")
 

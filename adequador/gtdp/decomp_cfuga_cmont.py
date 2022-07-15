@@ -19,7 +19,7 @@ from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
 
 def adequa_cfuga_cmont(diretorio: str):
 
-    Log.log().info(f"Ajustando CFUGA e CMONT...")
+    Log.log().info(f"Adequando GTDP_CFUGA_CMONT...")
 
     df_cmont_historico = pd.read_csv(
         Configuracoes().arquivo_cfuga_cmont_historico, sep=";"

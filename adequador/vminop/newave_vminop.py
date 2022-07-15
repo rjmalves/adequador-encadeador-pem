@@ -32,7 +32,9 @@ MESES = [
 
 
 def adequa_vminop(diretorio: str):
+
     Log.log().info(f"Adequando VMINOP...")
+
     df = pd.read_csv(Configuracoes().arquivo_vminop, sep=";")
 
     arquivo = nome_arquivo_dger()

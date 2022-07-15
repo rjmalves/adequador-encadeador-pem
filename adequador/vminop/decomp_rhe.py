@@ -10,7 +10,7 @@ from adequador.utils.configuracoes import Configuracoes
 
 def ajusta_rhe(diretorio: str):
 
-    Log.log().info(f"Ajustando VMINOP (RHE)...")
+    Log.log().info(f"Adequando VMINOP...")
 
     df = pd.read_csv(Configuracoes().arquivo_vminop, sep=";")
 

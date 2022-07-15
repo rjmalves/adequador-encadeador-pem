@@ -76,7 +76,7 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
 
 def adequa_cfuga_cmont(diretorio: str):
 
-    Log.log().info(f"Ajustando CFUGA e CMONT...")
+    Log.log().info(f"Adequando GTDP...")
     df = pd.read_csv(Configuracoes().arquivo_cfuga_cmont, sep=";")
     ano_caso, _, _ = dados_caso(diretorio)
     ano = int(ano_caso)

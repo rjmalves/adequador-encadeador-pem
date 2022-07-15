@@ -10,7 +10,7 @@ import pandas as pd
 
 def ajusta_dados_gerais_cvar(diretorio: str):
 
-    Log.log().info(f"Adequando Dados Gerais...")
+    Log.log().info(f"Adequando DADOSGERAIS...")
 
     df = pd.read_csv(Configuracoes().arquivo_dados_gerais_newave, sep=";")
 

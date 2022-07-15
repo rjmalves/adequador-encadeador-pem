@@ -15,9 +15,9 @@ def obtem_nome_arquivo_vazoes(ano: str, mes: str, revisao: str):
 
 
 def atualiza_vazoes(diretorio: str):
+    Log.log().info(f"Adequando VAZOES...")
     ano_caso, mes_caso, revisao_caso = dados_caso(diretorio)
     arquivo = nome_arquivo_vazoes(revisao_caso)
-    Log.log().info(f"Copiando vazões para {join(diretorio, arquivo)}")
     copyfile(
         join(
             Configuracoes().diretorio_vazoes,

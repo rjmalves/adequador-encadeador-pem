@@ -9,7 +9,7 @@ from adequador.utils.configuracoes import Configuracoes
 
 def ajusta_volume_espera(diretorio: str):
 
-    Log.log().info(f"Ajustando VEs...")
+    Log.log().info(f"Adequando VOLUMES_ESPERA...")
 
     _, _, revisao_caso = dados_caso(diretorio)
     arquivo = nome_arquivo_dadger(revisao_caso)

@@ -22,7 +22,7 @@ from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
 
 def ajusta_acs(diretorio: str):
 
-    Log.log().info(f"Ajustando ACs...")
+    Log.log().info(f"Adequando GTDP_AC...")
 
     def deleta_ac(dadger: Dadger, u: int, tipo: classmethod):
         reg = dadger.ac(uhe=u, modificacao=tipo)

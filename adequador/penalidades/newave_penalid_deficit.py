@@ -11,7 +11,7 @@ from adequador.utils.configuracoes import Configuracoes
 
 def corrige_deficit_sistema(diretorio: str):
 
-    Log.log().info(f"Ajustando déficit...")
+    Log.log().info(f"Adequando DEFICIT...")
     df_deficit = pd.read_csv(Configuracoes().arquivo_custos_deficit, sep=";")
     anos = df_deficit["ano"].tolist()
     custo = df_deficit["custo"].tolist()

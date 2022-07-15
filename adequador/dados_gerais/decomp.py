@@ -7,7 +7,7 @@ from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
 
 def ajusta_dados_gerais(diretorio: str):
 
-    Log.log().info(f"Adequando Dados Gerais...")
+    Log.log().info(f"Adequando DADOSGERAIS...")
 
     _, _, revisao_caso = dados_caso(diretorio)
     arquivo = nome_arquivo_dadger(revisao_caso)

@@ -11,7 +11,7 @@ from adequador.utils.nomes import (
 
 def ajusta_fj(diretorio: str):
 
-    Log.log().info(f"Ajustando FJ...")
+    Log.log().info(f"Adequando GTDP_FJ...")
 
     _, _, revisao_caso = dados_caso(diretorio)
     arquivo = nome_arquivo_dadger(revisao_caso)
