@@ -2,7 +2,7 @@ import logging
 import logging.handlers
 from os.path import join
 
-from utils.singleton import Singleton
+from adequador.utils.singleton import Singleton
 
 
 class Log(metaclass=Singleton):

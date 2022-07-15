@@ -16,8 +16,8 @@ import datetime
 import pandas as pd
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
-from utils.log import Log
-from utils.nomes import dados_caso, nome_arquivo_dadger
+from adequador.utils.log import Log
+from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
 
 
 def ajusta_acs(diretorio: str):

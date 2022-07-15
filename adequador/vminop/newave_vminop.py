@@ -1,5 +1,5 @@
 import pandas as pd
-from utils.log import Log
+from adequador.utils.log import Log
 from inewave.newave.dger import DGer
 from inewave.newave.curva import Curva
 from inewave.newave.clast import ClasT

@@ -3,9 +3,9 @@ from idecomp.decomp.modelos.dadger import CT, HE, CM, CQ
 import datetime
 import pandas as pd
 from adequador.utils.backup import converte_utf8
-from utils.log import Log
-from utils.nomes import dados_caso, nome_arquivo_dadger
-from utils.configuracoes import Configuracoes
+from adequador.utils.log import Log
+from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
+from adequador.utils.configuracoes import Configuracoes
 
 
 def ajusta_rhe(diretorio: str):

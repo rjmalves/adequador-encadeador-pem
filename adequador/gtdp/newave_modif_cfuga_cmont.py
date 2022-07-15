@@ -7,7 +7,7 @@ from inewave.newave.modif import Modif
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
 from adequador.utils.nomes import dados_caso, nome_arquivo_modif
-from utils.log import Log
+from adequador.utils.log import Log
 
 NUM_ANOS_ESTUDO = 5
 

@@ -1,7 +1,7 @@
 from typing import Callable, Optional, List
 from os.path import join
 import time
-from utils.log import Log
+from adequador.utils.log import Log
 
 
 def itera_casos(

@@ -4,7 +4,7 @@ from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
 from adequador.utils.nomes import nome_arquivo_cvar, nome_arquivo_dger
 
-from utils.log import Log
+from adequador.utils.log import Log
 import pandas as pd
 
 

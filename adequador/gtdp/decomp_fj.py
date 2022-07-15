@@ -1,8 +1,12 @@
 from idecomp.decomp.dadger import Dadger
 from idecomp.decomp.modelos.dadger import CQ, FJ
 from adequador.utils.backup import converte_utf8
-from utils.log import Log
-from utils.nomes import dados_caso, nome_arquivo_dadger, nome_arquivo_polinjus
+from adequador.utils.log import Log
+from adequador.utils.nomes import (
+    dados_caso,
+    nome_arquivo_dadger,
+    nome_arquivo_polinjus,
+)
 
 
 def ajusta_fj(diretorio: str):

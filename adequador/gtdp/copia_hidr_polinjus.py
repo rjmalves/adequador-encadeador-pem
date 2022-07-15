@@ -3,7 +3,7 @@ from os import getenv
 from shutil import copyfile
 from dotenv import load_dotenv
 import pathlib
-from utils.log import Log
+from adequador.utils.log import Log
 
 # Dados de entrada
 DIR_BASE = pathlib.Path().resolve()
