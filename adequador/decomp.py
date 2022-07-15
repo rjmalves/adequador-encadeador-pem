@@ -43,7 +43,7 @@ def adequa_decomp():
         casos = [
             c
             for c in listdir(Configuracoes().dir_base)
-            if isdir(join(Configuracoes().dir_base, c))
+            if isdir(join(Configuracoes().dir_base, c)) and "_rv" in c
         ]
         casos.sort()
         Log.log().info("Casos DECOMP: " + ", ".join(casos))
