@@ -18,30 +18,40 @@ class Configuracoes(metaclass=Singleton):
             self.dir_base, getenv("DIRETORIO_DADOS_ADEQUACAO")
         )
         self.arquivo_dados_gerais_newave = join(
-            self.dir_base, getenv("ARQUIVO_DADOS_GERAIS_NEWAVE")
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_DADOS_GERAIS_NEWAVE"),
         )
-        self.arquivo_vminop = join(self.dir_base, getenv("ARQUIVO_VMINOP"))
+        self.arquivo_vminop = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_VMINOP")
+        )
         self.arquivo_cfuga_cmont = join(
-            self.dir_base, getenv("ARQUIVO_CFUGA_CMONT")
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_CFUGA_CMONT")
         )
         self.arquivo_cfuga_cmont_historico = join(
-            self.dir_base, getenv("ARQUIVO_CFUGA_CMONT_HISTORICO")
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_CFUGA_CMONT_HISTORICO"),
         )
         self.arquivo_ac_nposnw = join(
-            self.dir_base, getenv("ARQUIVO_AC_NPOSNW")
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_AC_NPOSNW")
         )
         self.arquivo_ac_vertju = join(
-            self.dir_base, getenv("ARQUIVO_AC_VERTJU")
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_AC_VERTJU")
         )
-        self.arquivo_hidr = join(self.dir_base, getenv("ARQUIVO_HIDR"))
-        self.arquivo_polinjus = join(self.dir_base, getenv("ARQUIVO_POLINJUS"))
+        self.arquivo_hidr = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_HIDR")
+        )
+        self.arquivo_polinjus = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_POLINJUS")
+        )
         self.arquivo_custos_deficit = join(
-            self.dir_base, getenv("ARQUIVO_CUSTOS_DEFICIT")
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_CUSTOS_DEFICIT")
         )
         self.arquivo_volumes_espera = join(
-            self.dir_base, getenv("ARQUIVO_VOLUMES_ESPERA")
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_VOLUMES_ESPERA")
         )
-        self.diretorio_vazoes = join(self.dir_base, getenv("DIRETORIO_VAZOES"))
+        self.diretorio_vazoes = join(
+            self.diretorio_dados_adequacao, getenv("DIRETORIO_VAZOES")
+        )
         self.script_converte_codificacao = getenv(
             "SCRIPT_CONVERTE_CODIFICACAO"
         )
