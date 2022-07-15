@@ -75,11 +75,6 @@ def corrige_penalid(diretorio: str):
         rees_ghmin = [4, 5]
         penalidade_desvio = np.ceil(penalidade * 1.001)
 
-        indices_deletar = df_pen.loc[
-            df_pen["Chave"] == "VOLMIN"
-        ].index.tolist()
-        df_pen = df_pen.drop(indices_deletar)
-
         df_pen.loc[
             df_pen["Chave"] == "DESVIO", "Penalidade 1"
         ] = penalidade_desvio

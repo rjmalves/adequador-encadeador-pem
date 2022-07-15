@@ -4,11 +4,13 @@ from inewave.newave.dger import DGer
 from inewave.newave.curva import Curva
 from inewave.newave.clast import ClasT
 from inewave.newave.modif import Modif
+from inewave.newave.penalid import Penalid
 from adequador.utils.nomes import (
     nome_arquivo_clast,
     nome_arquivo_curva,
     nome_arquivo_dger,
     nome_arquivo_modif,
+    nome_arquivo_penalid,
 )
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
@@ -77,6 +79,16 @@ def adequa_vminop(diretorio: str):
     elif vminps is not None:
         modif.deleta_registro(vminps)
     modif.escreve_arquivo(diretorio, arquivo)
+
+    # Remove VOLMIN do PENALID
+    arquivo = nome_arquivo_penalid()
+    converte_utf8(diretorio, arquivo)
+    penalid = Penalid.le_arquivo(diretorio, arquivo)
+    df_pen = penalid.penalidades
+    indices_deletar = df_pen.loc[df_pen["Chave"] == "VOLMIN"].index.tolist()
+    df_pen = df_pen.drop(indices_deletar)
+    penalid.penalidades = df_pen
+    penalid.escreve_arquivo(diretorio, arquivo)
 
 
 def adequa_penalizacao_curva(ree: int, penalizacao: float, curva: Curva):
