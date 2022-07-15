@@ -1,29 +1,22 @@
 from inewave.newave.dger import DGer
 from inewave.newave.cvar import CVAR
-from os.path import join
-from os import getenv
-from dotenv import load_dotenv
-import pathlib
+from adequador.utils.backup import converte_utf8
+from adequador.utils.configuracoes import Configuracoes
+from adequador.utils.nomes import nome_arquivo_cvar, nome_arquivo_dger
+
 from utils.log import Log
 import pandas as pd
 
 
-DIR_BASE = pathlib.Path().resolve()
-load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
-
-ARQUIVO_DADOS_GERAIS_NEWAVE = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_DADOS_GERAIS_NEWAVE")
-)
-
-
-def ajusta_dados_gerais(diretorio: str, arquivo: str):
+def ajusta_dados_gerais_cvar(diretorio: str):
 
     Log.log().info(f"Adequando Dados Gerais...")
 
-    df = pd.read_csv(ARQUIVO_DADOS_GERAIS_NEWAVE, sep=";")
+    df = pd.read_csv(Configuracoes().arquivo_dados_gerais_newave, sep=";")
 
     # Arquivo de dados gerais
+    arquivo = nome_arquivo_dger()
+    converte_utf8(diretorio, arquivo)
     dger = DGer.le_arquivo(diretorio, arquivo)
 
     # Modifica, caso desejado, geração de cenários e critério de parada
@@ -36,14 +29,13 @@ def ajusta_dados_gerais(diretorio: str, arquivo: str):
 
     dger.escreve_arquivo(diretorio, arquivo)
 
-
-def ajusta_cvar(diretorio: str, arquivo: str):
-
     Log.log().info(f"Adequando CVAR...")
 
-    df = pd.read_csv(ARQUIVO_DADOS_GERAIS_NEWAVE, sep=";")
+    df = pd.read_csv(Configuracoes().arquivo_dados_gerais_newave, sep=";")
 
     # Arquivo de CVAR
+    arquivo = nome_arquivo_cvar()
+    converte_utf8(diretorio, arquivo)
     arq_cvar = CVAR.le_arquivo(diretorio, arquivo)
     arq_cvar.valores_constantes = [int(df["alpha"]), int(df["lambda"])]
     arq_cvar.escreve_arquivo(diretorio, arquivo)

@@ -1,0 +1,27 @@
+from os.path import join
+from shutil import copyfile
+from adequador.utils.configuracoes import Configuracoes
+from adequador.utils.log import Log
+from adequador.utils.nomes import dados_caso
+from adequador.utils.nomes import nome_arquivo_vazoes
+
+
+def obtem_nome_arquivo_vazoes(ano: str, mes: str, revisao: str):
+    raiz = f"vazoes.Gevazp_{ano}{mes.zfill(2)}_"
+    if revisao == "0":
+        return raiz + "PMO"
+    else:
+        return raiz + f"REV{revisao}"
+
+
+def atualiza_vazoes(diretorio: str):
+    ano_caso, mes_caso, revisao_caso = dados_caso(diretorio)
+    arquivo = nome_arquivo_vazoes(revisao_caso)
+    Log.log().info(f"Copiando vazões para {join(diretorio, arquivo)}")
+    copyfile(
+        join(
+            Configuracoes().diretorio_vazoes,
+            obtem_nome_arquivo_vazoes(ano_caso, mes_caso, revisao_caso),
+        ),
+        join(diretorio, arquivo),
+    )

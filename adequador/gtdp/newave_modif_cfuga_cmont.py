@@ -1,24 +1,15 @@
-from os.path import join
-from os import getenv, sep
-from dotenv import load_dotenv
-import pathlib
 import pandas as pd
 import numpy as np
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from inewave.newave.modelos.modif import USINA, CMONT, CFUGA
 from inewave.newave.modif import Modif
+from adequador.utils.backup import converte_utf8
+from adequador.utils.configuracoes import Configuracoes
+from adequador.utils.nomes import dados_caso, nome_arquivo_modif
 from utils.log import Log
 
 NUM_ANOS_ESTUDO = 5
-
-DIR_BASE = pathlib.Path().resolve()
-load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
-
-ARQ_CFUGA_CMONT = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_CFUGA_CMONT")
-)
 
 
 def adequa_usina(
@@ -83,13 +74,17 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
         modif.cria_registro(anterior, r)
 
 
-def adequa_cfuga_cmont(diretorio: str, arquivo: str):
+def adequa_cfuga_cmont(diretorio: str):
 
     Log.log().info(f"Ajustando CFUGA e CMONT...")
+    df = pd.read_csv(Configuracoes().arquivo_cfuga_cmont, sep=";")
+    ano_caso, _, _ = dados_caso(diretorio)
+    ano = int(ano_caso)
+    anos_estudo = np.arange(ano, ano + NUM_ANOS_ESTUDO)
 
-    df = pd.read_csv(ARQ_CFUGA_CMONT, sep=";")
-    ano_caso = int(diretorio.split(sep)[-2].split("_")[0])
-    anos_estudo = np.arange(ano_caso, ano_caso + NUM_ANOS_ESTUDO)
+    arquivo = nome_arquivo_modif()
+    converte_utf8(diretorio, arquivo)
+
     modif = Modif.le_arquivo(diretorio, arquivo)
     # Apaga VOLMAX vazios
     volmax = modif.volmax()

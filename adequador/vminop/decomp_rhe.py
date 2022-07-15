@@ -1,27 +1,18 @@
 from idecomp.decomp.dadger import Dadger
 from idecomp.decomp.modelos.dadger import CT, HE, CM, CQ
-from os.path import join
-from os import getenv
-from dotenv import load_dotenv
-import pathlib
 import datetime
 import pandas as pd
+from adequador.utils.backup import converte_utf8
 from utils.log import Log
-
-# Dados de entrada:
-
-DIR_BASE = pathlib.Path().resolve()
-load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
-
-ARQ_VMINOP = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP"))
+from utils.nomes import dados_caso, nome_arquivo_dadger
+from utils.configuracoes import Configuracoes
 
 
-def ajusta_rhe(diretorio: str, arquivo: str):
+def ajusta_rhe(diretorio: str):
 
     Log.log().info(f"Ajustando VMINOP (RHE)...")
 
-    df = pd.read_csv(ARQ_VMINOP, sep=";")
+    df = pd.read_csv(Configuracoes().arquivo_vminop, sep=";")
 
     v = df.loc[df["mes"] == 999, "vminop"].tolist()
     v_aux = []
@@ -37,6 +28,10 @@ def ajusta_rhe(diretorio: str, arquivo: str):
 
     tipo_penalidade = [0, 1]  # primeiro e segundo mês (hard e soft)
 
+    _, _, revisao_caso = dados_caso(diretorio)
+    arquivo = nome_arquivo_dadger(revisao_caso)
+
+    converte_utf8(diretorio, arquivo)
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
     # ======================== IDENTIFICA DADOS DO PMO

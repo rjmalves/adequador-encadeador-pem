@@ -12,38 +12,15 @@ from idecomp.decomp.modelos.dadger import (
     ACVAZMIN,
 )
 from idecomp.decomp.modelos.dadger import UH
-from os.path import join
-from os import getenv
-import pathlib
-from dotenv import load_dotenv
 import datetime
 import pandas as pd
+from adequador.utils.backup import converte_utf8
+from adequador.utils.configuracoes import Configuracoes
 from utils.log import Log
-
-# Dados de entrada:
-
-DIR_BASE = pathlib.Path().resolve()
-load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
-
-ARQUIVO_DADOS_GERAIS_NEWAVE = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_DADOS_GERAIS_NEWAVE")
-)
-
-ARQUIVO_USINAS_CMONT_CFUGA = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_CFUGA_CMONT")
-)
-
-ARQUIVO_AC_NPOSNW = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_AC_NPOSNW")
-)
-
-ARQUIVO_AC_VERTJU = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_AC_VERTJU")
-)
+from utils.nomes import dados_caso, nome_arquivo_dadger
 
 
-def ajusta_acs(diretorio: str, arquivo: str):
+def ajusta_acs(diretorio: str):
 
     Log.log().info(f"Ajustando ACs...")
 
@@ -87,16 +64,22 @@ def ajusta_acs(diretorio: str, arquivo: str):
                 # se ja existe AC VERTJU para esta usina, coloca valor correto - habilitar para 1
                 dadger.ac(uhe=u, modificacao=ACVERTJU).influi = 1
 
-    df_usinas_cmont_cfuga = pd.read_csv(ARQUIVO_USINAS_CMONT_CFUGA, sep=";")
-    df_nposnw = pd.read_csv(ARQUIVO_AC_NPOSNW, sep=";")
+    df_usinas_cmont_cfuga = pd.read_csv(
+        Configuracoes().arquivo_cfuga_cmont, sep=";"
+    )
+    df_nposnw = pd.read_csv(Configuracoes().arquivo_ac_nposnw, sep=";")
     df_nposnw = df_nposnw.loc[~df_nposnw["usinas_nposnw"].str.contains("&")]
-    df_vertju = pd.read_csv(ARQUIVO_AC_VERTJU, sep=";")
+    df_vertju = pd.read_csv(Configuracoes().arquivo_ac_vertju, sep=";")
 
     usinas_cmont_cfuga = df_usinas_cmont_cfuga["usina"].unique().tolist()
     usinas_nposnw = df_nposnw["usinas_nposnw"].tolist()
     postos_nposnw = df_nposnw["postos_nposnw"].tolist()
     usinas_vertju = df_vertju["usinas_vertju"].tolist()
 
+    _, _, revisao_caso = dados_caso(diretorio)
+    arquivo = nome_arquivo_dadger(revisao_caso)
+
+    converte_utf8(diretorio, arquivo)
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
     # Lista as usinas consideradas no deck (registros existentes no bloco UH)

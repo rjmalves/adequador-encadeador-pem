@@ -1,12 +1,19 @@
 from idecomp.decomp.dadger import Dadger
 from idecomp.decomp.modelos.dadger import RQ
-from utils.log import Log
+from adequador.utils.backup import converte_utf8, realiza_backup
+from adequador.utils.log import Log
+from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
 
 
-def ajusta_dados_rees(diretorio: str, arquivo: str):
+def ajusta_dados_rees(diretorio: str):
 
     Log.log().info(f"Adequando REES...")
 
+    _, _, revisao_caso = dados_caso(diretorio)
+    arquivo = nome_arquivo_dadger(revisao_caso)
+    realiza_backup(diretorio, arquivo)
+
+    converte_utf8(diretorio, arquivo)
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
     # ===================== Correção para 12 REEs

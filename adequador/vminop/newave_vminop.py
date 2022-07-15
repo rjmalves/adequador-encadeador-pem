@@ -1,21 +1,18 @@
-import pathlib
-from dotenv import load_dotenv
-from os import getenv
-from os.path import join
 import pandas as pd
 from utils.log import Log
 from inewave.newave.dger import DGer
 from inewave.newave.curva import Curva
 from inewave.newave.clast import ClasT
 from inewave.newave.modif import Modif
+from adequador.utils.nomes import (
+    nome_arquivo_clast,
+    nome_arquivo_curva,
+    nome_arquivo_dger,
+    nome_arquivo_modif,
+)
+from adequador.utils.backup import converte_utf8
+from adequador.utils.configuracoes import Configuracoes
 
-DIR_BASE = pathlib.Path().resolve()
-load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
-
-ARQ_VMINOP = join(DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VMINOP"))
-
-ARQUIVO_CLAST = "clast.dat"
 MESES = [
     "Janeiro",
     "Fevereiro",
@@ -32,21 +29,23 @@ MESES = [
 ]
 
 
-def adequa_dger(diretorio: str, arq_dger: str):
-    Log.log().info(f"Ajustando VMINOP no dger...")
-    dger = DGer.le_arquivo(diretorio, arq_dger)
+def adequa_vminop(diretorio: str):
+    Log.log().info(f"Adequando VMINOP...")
+    df = pd.read_csv(Configuracoes().arquivo_vminop, sep=";")
+
+    arquivo = nome_arquivo_dger()
+    converte_utf8(diretorio, arquivo)
+    dger = DGer.le_arquivo(diretorio, arquivo)
     dger.curva_aversao = 1
-    dger.escreve_arquivo(diretorio, arq_dger)
+    dger.escreve_arquivo(diretorio, arquivo)
 
-
-def adequa_curva(diretorio: str, arq_curva: str):
-    Log.log().info(f"Adequando VMINOP no curva...")
-    df = pd.read_csv(ARQ_VMINOP, sep=";")
-    curva = Curva.le_arquivo(diretorio, arq_curva)
+    arquivo = nome_arquivo_curva()
+    converte_utf8(diretorio, arquivo)
+    curva = Curva.le_arquivo(diretorio, arquivo)
     curva.configuracoes_penalizacao = [1, 11, 1]
 
     # obtem maior CVU e calcula penalidade
-    clast = ClasT.le_arquivo(diretorio, ARQUIVO_CLAST)
+    clast = ClasT.le_arquivo(diretorio, nome_arquivo_clast())
     df_clast = clast.usinas
     max_cvu = (
         df_clast[["Custo 1", "Custo 2", "Custo 3", "Custo 4", "Custo 5"]]
@@ -60,6 +59,24 @@ def adequa_curva(diretorio: str, arq_curva: str):
         adequa_volumes_curva(
             linha["ree"], linha["mes"], linha["vminop"], curva
         )
+
+    # Remove VMINP do MODIF
+    arquivo = nome_arquivo_modif()
+    converte_utf8(diretorio, arquivo)
+    modif = Modif.le_arquivo(diretorio, arquivo)
+    # Apaga VOLMAX vazios
+    volmax = modif.volmax()
+    if isinstance(volmax, list):
+        for v in volmax:
+            if v.volume is None:
+                modif.deleta_registro(v)
+    vminps = modif.vminp()
+    if isinstance(vminps, list):
+        for r in vminps:
+            modif.deleta_registro(r)
+    elif vminps is not None:
+        modif.deleta_registro(vminps)
+    modif.escreve_arquivo(diretorio, arquivo)
 
 
 def adequa_penalizacao_curva(ree: int, penalizacao: float, curva: Curva):
@@ -110,20 +127,3 @@ def adequa_volumes_curva(
                 & (curva.curva_seguranca["Ano"] == ano),
                 MESES[int(mes - 1)],
             ] = volume_minimo
-
-
-def remove_vminp_modif(diretorio: str, arquivo: str):
-    modif = Modif.le_arquivo(diretorio, arquivo)
-    # Apaga VOLMAX vazios
-    volmax = modif.volmax()
-    if isinstance(volmax, list):
-        for v in volmax:
-            if v.volume is None:
-                modif.deleta_registro(v)
-    vminps = modif.vminp()
-    if isinstance(vminps, list):
-        for r in vminps:
-            modif.deleta_registro(r)
-    elif vminps is not None:
-        modif.deleta_registro(vminps)
-    modif.escreve_arquivo(diretorio, arquivo)

@@ -2,31 +2,24 @@ from inewave.newave.sistema import Sistema
 from inewave.newave.penalid import Penalid
 import pandas as pd
 import numpy as np
-import pathlib
-from dotenv import load_dotenv
-from os import getenv, sep
-from os.path import join
-from utils.log import Log
-
-# Dados de entrada:
-DIR_BASE = pathlib.Path().resolve()
-load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
-
-ARQUIVO_CUSTOS_DEFICIT = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_CUSTOS_DEFICIT")
-)
+from adequador.utils.backup import converte_utf8
+from adequador.utils.nomes import nome_arquivo_penalid, nome_arquivo_sistema
+from adequador.utils.nomes import dados_caso
+from adequador.utils.log import Log
+from adequador.utils.configuracoes import Configuracoes
 
 
-def corrige_deficit_sistema(diretorio: str, arquivo: str):
+def corrige_deficit_sistema(diretorio: str):
 
     Log.log().info(f"Ajustando déficit...")
-
-    df_deficit = pd.read_csv(ARQUIVO_CUSTOS_DEFICIT, sep=";")
+    df_deficit = pd.read_csv(Configuracoes().arquivo_custos_deficit, sep=";")
     anos = df_deficit["ano"].tolist()
     custo = df_deficit["custo"].tolist()
+    ano_caso, _, _ = dados_caso(diretorio)
+    anodeck = int(ano_caso)
 
-    anodeck = int(diretorio.split(sep)[-2].split("_")[0])
+    arquivo = nome_arquivo_sistema()
+    converte_utf8(diretorio, arquivo)
     sistema = Sistema.le_arquivo(diretorio, arquivo)
     sistema.numero_patamares_deficit = 1
     df_sistema = sistema.custo_deficit
@@ -56,15 +49,18 @@ def corrige_deficit_sistema(diretorio: str, arquivo: str):
     sistema.escreve_arquivo(diretorio, arquivo)
 
 
-def corrige_penalid(diretorio: str, arquivo: str):
+def corrige_penalid(diretorio: str):
 
     Log.log().info(f"Ajustando penalidades...")
 
-    df_deficit = pd.read_csv(ARQUIVO_CUSTOS_DEFICIT, sep=";")
+    arquivo = nome_arquivo_penalid()
+
+    df_deficit = pd.read_csv(Configuracoes().arquivo_custos_deficit, sep=";")
     anos = df_deficit["ano"].tolist()
     custo = df_deficit["custo"].tolist()
 
-    anodeck = int(diretorio.split(sep)[-2].split("_")[0])
+    ano_caso, _, _ = dados_caso(diretorio)
+    anodeck = int(ano_caso)
 
     penalid = Penalid.le_arquivo(diretorio, arquivo)
     df_pen = penalid.penalidades

@@ -1,17 +1,22 @@
 from idecomp.decomp.dadger import Dadger
 from idecomp.decomp.modelos.dadger import TE, EV, SB, CQ, EA, ES, QI
+from adequador.utils.backup import converte_utf8
+from adequador.utils.log import Log
+from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
 
-from utils.log import Log
 
-
-def ajusta_dados_gerais(diretorio: str, arquivo: str):
+def ajusta_dados_gerais(diretorio: str):
 
     Log.log().info(f"Adequando Dados Gerais...")
 
+    _, _, revisao_caso = dados_caso(diretorio)
+    arquivo = nome_arquivo_dadger(revisao_caso)
+
+    converte_utf8(diretorio, arquivo)
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
     # Certifica que existe registro TE
-    if dadger.te.titulo is None:
+    if dadger.te is None:
         te_novo = TE()
         te_novo.titulo = (
             "PMO"  # Título provisório depois será alterado pelo encadeador

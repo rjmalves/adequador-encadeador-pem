@@ -6,7 +6,10 @@ from dotenv import load_dotenv
 from os import getenv
 import pandas as pd
 from os.path import join
+from adequador.utils.backup import converte_utf8
+from adequador.utils.configuracoes import Configuracoes
 from utils.log import Log
+from utils.nomes import dados_caso, nome_arquivo_dadger
 
 # ======================== Dados GTDP - CFUGA e CMONT
 
@@ -14,24 +17,13 @@ from utils.log import Log
 # comparar com COTVOL existente no deck:
 
 
-DIR_BASE = pathlib.Path().resolve()
-load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
-
-ARQUIVO_CFUGA_CMONT_HISTORICO = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_CFUGA_CMONT_HISTORICO")
-)
-
-ARQUIVO_CFUGA_CMONT = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_CFUGA_CMONT")
-)
-
-
-def adequa_cfuga_cmont(diretorio: str, arquivo: str):
+def adequa_cfuga_cmont(diretorio: str):
 
     Log.log().info(f"Ajustando CFUGA e CMONT...")
 
-    df_cmont_historico = pd.read_csv(ARQUIVO_CFUGA_CMONT_HISTORICO, sep=";")
+    df_cmont_historico = pd.read_csv(
+        Configuracoes().arquivo_cfuga_cmont_historico, sep=";"
+    )
     df_cmont_historico = df_cmont_historico.loc[
         ~df_cmont_historico["usina"].str.contains("&")
     ]
@@ -39,7 +31,7 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
     usinas_cmont_historico = [int(u) for u in usinas_cmont_historico]
 
     # Pega dados do cfuga_cmont.csv, dados do ciclo atual do GTDP, a serem considerados
-    df_cmont_cfuga = pd.read_csv(ARQUIVO_CFUGA_CMONT, sep=";")
+    df_cmont_cfuga = pd.read_csv(Configuracoes().arquivo_cfuga_cmont, sep=";")
     usinas_cmont_cfuga = df_cmont_cfuga["usina"].unique().tolist()
 
     meses = [
@@ -57,6 +49,10 @@ def adequa_cfuga_cmont(diretorio: str, arquivo: str):
         "DEZ",
     ]
 
+    _, _, revisao_caso = dados_caso(diretorio)
+    arquivo = nome_arquivo_dadger(revisao_caso)
+
+    converte_utf8(diretorio, arquivo)
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
     # ======================== IDENTIFICA DADOS DO PMO

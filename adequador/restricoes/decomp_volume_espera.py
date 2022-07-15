@@ -1,30 +1,26 @@
 from idecomp.decomp.dadger import Dadger
 import pandas as pd
-from os import sep, getenv
-from os.path import join, normpath
 import pathlib
-from dotenv import load_dotenv
+from adequador.utils.backup import converte_utf8
 from utils.log import Log
-
-# Dados de entrada:
-DIR_BASE = pathlib.Path().resolve()
-load_dotenv(join(DIR_BASE, "adequa.cfg"), override=True)
-DIRETORIO_DADOS_ADEQUACAO = join(DIR_BASE, getenv("DIRETORIO_DADOS_ADEQUACAO"))
-
-ARQUIVO_VOLUMES_ESPERA = join(
-    DIRETORIO_DADOS_ADEQUACAO, getenv("ARQUIVO_VOLUMES_ESPERA")
-)
+from utils.nomes import dados_caso, nome_arquivo_dadger
+from utils.configuracoes import Configuracoes
 
 
-def ajusta_volume_espera(diretorio: str, arquivo: str):
+def ajusta_volume_espera(diretorio: str):
 
     Log.log().info(f"Ajustando VEs...")
 
+    _, _, revisao_caso = dados_caso(diretorio)
+    arquivo = nome_arquivo_dadger(revisao_caso)
+    converte_utf8(diretorio, arquivo)
     dadger = Dadger.le_arquivo(diretorio, arquivo)
 
-    df_ve = pd.read_csv(ARQUIVO_VOLUMES_ESPERA, index_col="data")
+    df_ve = pd.read_csv(
+        Configuracoes().arquivo_volumes_espera, index_col="data"
+    )
 
-    caso = normpath(diretorio).split(sep)[-2]
+    caso = pathlib.Path(diretorio).parts[-2]
     ano, mes, _ = caso.split("_")
     ano = int(ano)
     mes = int(mes)
