@@ -33,6 +33,5 @@ def itera_casos(
         for f in funcoes_ajuste:
             f(diretorio)
 
-        Log.log().info(
-            f"Fim da adequação do caso. Tempo = {time.time() - t_inicio}"
-        )
+        t_fim = time.time() - t_inicio
+        Log.log().info(f"Fim da adequação do caso. Tempo = {t_fim:.2f} s")

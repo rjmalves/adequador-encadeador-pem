@@ -40,19 +40,19 @@ def adequa_decomp():
         for a in Configuracoes().ajustes_decomp:
             ajustes.append(CODIGOS_AJUSTES_DECOMP[a])
 
-    casos = [
-        c
-        for c in listdir(Configuracoes().dir_base)
-        if isdir(join(Configuracoes().dir_base, c))
-    ]
-    casos.sort()
-    Log.log().info("Casos DECOMP: " + ",".join(casos))
+        casos = [
+            c
+            for c in listdir(Configuracoes().dir_base)
+            if isdir(join(Configuracoes().dir_base, c))
+        ]
+        casos.sort()
+        Log.log().info("Casos DECOMP: " + ",".join(casos))
 
-    itera_casos(
-        diretorio_casos=Configuracoes().dir_base,
-        casos=casos,
-        caso_inicio=Configuracoes().caso_inicio,
-        caso_fim=Configuracoes().caso_fim,
-        programa="decomp",
-        funcoes_ajuste=ajustes,
-    )
+        itera_casos(
+            diretorio_casos=Configuracoes().dir_base,
+            casos=casos,
+            caso_inicio=Configuracoes().caso_inicio,
+            caso_fim=Configuracoes().caso_fim,
+            programa="decomp",
+            funcoes_ajuste=ajustes,
+        )

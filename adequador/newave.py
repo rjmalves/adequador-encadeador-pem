@@ -37,20 +37,20 @@ def adequa_newave():
         for a in Configuracoes().ajustes_newave:
             ajustes.append(CODIGOS_AJUSTES_NEWAVE[a])
 
-    casos = [
-        c
-        for c in listdir(Configuracoes().dir_base)
-        if isdir(join(Configuracoes().dir_base, c))
-        if "_rv0" in c
-    ]
-    casos.sort()
-    Log.log().info("Casos NEWAVE: " + ",".join(casos))
+        casos = [
+            c
+            for c in listdir(Configuracoes().dir_base)
+            if isdir(join(Configuracoes().dir_base, c))
+            if "_rv0" in c
+        ]
+        casos.sort()
+        Log.log().info("Casos NEWAVE: " + ",".join(casos))
 
-    itera_casos(
-        diretorio_casos=Configuracoes().dir_base,
-        casos=casos,
-        caso_inicio=Configuracoes().caso_inicio,
-        caso_fim=Configuracoes().caso_fim,
-        programa="newave",
-        funcoes_ajuste=ajustes,
-    )
+        itera_casos(
+            diretorio_casos=Configuracoes().dir_base,
+            casos=casos,
+            caso_inicio=Configuracoes().caso_inicio,
+            caso_fim=Configuracoes().caso_fim,
+            programa="newave",
+            funcoes_ajuste=ajustes,
+        )
