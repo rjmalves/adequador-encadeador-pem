@@ -1,4 +1,4 @@
-from typing import Callable, Optional, List
+from typing import Callable, List
 from os.path import join
 import time
 from adequador.utils.log import Log

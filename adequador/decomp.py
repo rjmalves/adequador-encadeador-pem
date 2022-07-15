@@ -54,5 +54,5 @@ def adequa_decomp():
         caso_inicio=Configuracoes().caso_inicio,
         caso_fim=Configuracoes().caso_fim,
         programa="decomp",
-        funcao_ajuste=ajustes,
+        funcoes_ajuste=ajustes,
     )

@@ -52,5 +52,5 @@ def adequa_newave():
         caso_inicio=Configuracoes().caso_inicio,
         caso_fim=Configuracoes().caso_fim,
         programa="newave",
-        funcao_ajuste=ajustes,
+        funcoes_ajuste=ajustes,
     )
