@@ -51,7 +51,7 @@ def corrige_deficit_sistema(diretorio: str):
 
 def corrige_penalid(diretorio: str):
 
-    Log.log().info(f"Ajustando penalidades...")
+    Log.log().info(f"Ajustando PENALIDADES...")
 
     arquivo = nome_arquivo_penalid()
 
