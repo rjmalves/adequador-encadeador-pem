@@ -52,6 +52,12 @@ class Configuracoes(metaclass=Singleton):
         self.diretorio_vazoes = join(
             self.diretorio_dados_adequacao, getenv("DIRETORIO_VAZOES")
         )
+        self.executavel_convertenomes_newave = getenv(
+            "EXECUTAVEL_CONVERTENOMES_NEWAVE"
+        )
+        self.executavel_convertenomes_decomp = getenv(
+            "EXECUTAVEL_CONVERTENOMES_DECOMP"
+        )
         self.script_converte_codificacao = getenv(
             "SCRIPT_CONVERTE_CODIFICACAO"
         )

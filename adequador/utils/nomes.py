@@ -2,12 +2,12 @@ import pathlib
 from typing import Tuple
 
 
+def nome_arquivo_arquivos():
+    return "arquivos.dat"
+
+
 def nome_arquivo_dger():
     return "dger.dat"
-
-
-def nome_arquivo_cvar():
-    return "cvar.dat"
 
 
 def nome_arquivo_curva():
@@ -28,6 +28,46 @@ def nome_arquivo_clast():
 
 def nome_arquivo_modif():
     return "modif.dat"
+
+
+def nome_arquivo_adterm():
+    return "adterm.dat"
+
+
+def nome_arquivo_ghmin():
+    return "ghmin.dat"
+
+
+def nome_arquivo_sar():
+    return "sar.dat"
+
+
+def nome_arquivo_cvar():
+    return "cvar.dat"
+
+
+def nome_arquivo_ree():
+    return "ree.dat"
+
+
+def nome_arquivo_re():
+    return "re.dat"
+
+
+def nome_arquivo_tecno():
+    return "tecno.dat"
+
+
+def nome_arquivo_abertura():
+    return "abertura.dat"
+
+
+def nome_arquivo_gee():
+    return "gee.dat"
+
+
+def nome_arquivo_clasgas():
+    return "clasgas.dat"
 
 
 def nome_arquivo_hidr():
