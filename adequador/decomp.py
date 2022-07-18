@@ -1,6 +1,7 @@
 from typing import Dict, Callable
 from os import listdir
 from os.path import isdir, join
+from adequador.convertenomes.decomp import ajusta_convertenomes_decomp
 from adequador.arquivos_entrada.atualiza_vazoes import atualiza_vazoes
 from adequador.compatibilizacao_rees.decomp import ajusta_dados_rees
 from adequador.dados_gerais.decomp import ajusta_dados_gerais
@@ -16,6 +17,7 @@ from adequador.utils.log import Log
 from adequador.utils.iteracao import itera_casos
 
 CODIGOS_AJUSTES_DECOMP: Dict[str, Callable] = {
+    "CONVERTENOMES": ajusta_convertenomes_decomp,
     "VAZOES": atualiza_vazoes,
     "REES": ajusta_dados_rees,
     "DADOSGERAIS": ajusta_dados_gerais,

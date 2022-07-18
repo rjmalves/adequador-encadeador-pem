@@ -1,3 +1,4 @@
+from adequador.convertenomes.newave import ajusta_convertenomes_newave
 from adequador.arquivos_entrada.atualiza_vazoes import atualiza_vazoes
 from adequador.dados_gerais.newave import ajusta_dados_gerais_cvar
 from adequador.gtdp.copia_hidr_polinjus import copia_hidr
@@ -16,6 +17,7 @@ from os.path import join, isdir
 from adequador.vminop.newave_vminop import adequa_vminop
 
 CODIGOS_AJUSTES_NEWAVE: Dict[str, Callable] = {
+    "CONVERTENOMES": ajusta_convertenomes_newave,
     "VAZOES": atualiza_vazoes,
     "REES": None,
     "DADOSGERAIS": ajusta_dados_gerais_cvar,
