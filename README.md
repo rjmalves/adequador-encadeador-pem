@@ -13,7 +13,7 @@ Adequador para decks de NEWAVE e DECOMP para realização de estudos encadeados 
 | DEFICIT       | |
 | PENALIDADES   | |
 | VMINOP        | |
-| HIDR          | |
+
 
 ## DECOMP
 |       CHAVE      | EFEITO |
@@ -22,11 +22,8 @@ Adequador para decks de NEWAVE e DECOMP para realização de estudos encadeados 
 | VAZOES           | |
 | REES             | |
 | DADOSGERAIS      | |
-| GTDP_CFUGA_CMONT | |
-| GTDP_FJ          | |
-| GTDP_AC          | |
+| GTDP             | |
 | DEFICIT          | |
 | PENALIDADES      | |
 | VMINOP           | |
-| HIDR             | |
-| POLINJUS         | |
+
