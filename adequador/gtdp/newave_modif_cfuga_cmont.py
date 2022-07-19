@@ -4,6 +4,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from inewave.newave.modelos.modif import USINA, CMONT, CFUGA
 from inewave.newave.modif import Modif
+from adequador.gtdp.copia_hidr_polinjus import copia_hidr
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
 from adequador.utils.nomes import dados_caso, nome_arquivo_modif
@@ -77,6 +78,9 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
 def adequa_cfuga_cmont(diretorio: str):
 
     Log.log().info(f"Adequando GTDP...")
+
+    copia_hidr(diretorio)
+
     df = pd.read_csv(Configuracoes().arquivo_cfuga_cmont, sep=";")
     ano_caso, _, _ = dados_caso(diretorio)
     ano = int(ano_caso)

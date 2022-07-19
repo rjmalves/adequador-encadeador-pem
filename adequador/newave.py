@@ -1,7 +1,6 @@
 from adequador.convertenomes.newave import ajusta_convertenomes_newave
 from adequador.arquivos_entrada.atualiza_vazoes import atualiza_vazoes
 from adequador.dados_gerais.newave import ajusta_dados_gerais_cvar
-from adequador.gtdp.copia_hidr_polinjus import copia_hidr
 from adequador.gtdp.newave_modif_cfuga_cmont import adequa_cfuga_cmont
 from adequador.penalidades.newave_penalid_deficit import (
     corrige_deficit_sistema,
@@ -25,7 +24,6 @@ CODIGOS_AJUSTES_NEWAVE: Dict[str, Callable] = {
     "DEFICIT": corrige_deficit_sistema,
     "PENALIDADES": corrige_penalid,
     "VMINOP": adequa_vminop,
-    "HIDR": copia_hidr,
 }
 
 

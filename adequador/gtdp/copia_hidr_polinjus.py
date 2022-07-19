@@ -7,13 +7,11 @@ from adequador.utils.nomes import nome_arquivo_hidr, nome_arquivo_polinjus
 
 def copia_hidr(diretorio: str):
     arquivo = nome_arquivo_hidr()
-    Log.log().info(f"Adequando HIDR")
     arq_destino_hidr = join(diretorio, arquivo)
     copyfile(Configuracoes().arquivo_hidr, arq_destino_hidr)
 
 
 def copia_polinjus(diretorio: str):
     arquivo = nome_arquivo_polinjus()
-    Log.log().info(f"Adequando POLINJUS")
     arq_destino_polinjus = join(diretorio, arquivo)
     copyfile(Configuracoes().arquivo_polinjus, arq_destino_polinjus)

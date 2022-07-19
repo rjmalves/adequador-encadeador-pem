@@ -5,10 +5,7 @@ from adequador.convertenomes.decomp import ajusta_convertenomes_decomp
 from adequador.arquivos_entrada.atualiza_vazoes import atualiza_vazoes
 from adequador.compatibilizacao_rees.decomp import ajusta_dados_rees
 from adequador.dados_gerais.decomp import ajusta_dados_gerais
-from adequador.gtdp.decomp_cfuga_cmont import adequa_cfuga_cmont
-from adequador.gtdp.decomp_ac import ajusta_acs
-from adequador.gtdp.decomp_fj import ajusta_fj
-from adequador.gtdp.copia_hidr_polinjus import copia_hidr, copia_polinjus
+from adequador.gtdp.decomp_gtdp import ajusta_gtdp
 from adequador.penalidades.decomp_deficit import ajusta_deficit
 from adequador.restricoes.decomp_volume_espera import ajusta_volume_espera
 from adequador.vminop.decomp_rhe import ajusta_rhe
@@ -21,14 +18,10 @@ CODIGOS_AJUSTES_DECOMP: Dict[str, Callable] = {
     "VAZOES": atualiza_vazoes,
     "REES": ajusta_dados_rees,
     "DADOSGERAIS": ajusta_dados_gerais,
-    "GTDP_CFUGA_CMONT": adequa_cfuga_cmont,
-    "GTDP_FJ": ajusta_fj,
-    "GTDP_AC": ajusta_acs,
+    "GTDP": ajusta_gtdp,
     "DEFICIT": ajusta_deficit,
     "VOLUMES_ESPERA": ajusta_volume_espera,
     "VMINOP": ajusta_rhe,
-    "HIDR": copia_hidr,
-    "POLINJUS": copia_polinjus,
 }
 
 
