@@ -8,10 +8,11 @@ from adequador.utils.nomes import nome_arquivo_vazoes
 
 def obtem_nome_arquivo_vazoes(ano: str, mes: str, revisao: str):
     raiz = f"vazoes.Gevazp_{ano}{mes.zfill(2)}_"
-    if revisao == "0":
+    digito_revisao = revisao.split("rv")[1]
+    if digito_revisao == "0":
         return raiz + "PMO"
     else:
-        return raiz + f"REV{revisao}"
+        return raiz + f"REV{digito_revisao}"
 
 
 def atualiza_vazoes(diretorio: str):
