@@ -107,6 +107,7 @@ def ajusta_dados_gerais_cvar(diretorio: str):
     # Modifica, caso desejado, geração de cenários e critério de parada
     dger.consideracao_media_anual_afluencias = int(df["vazao"])
     dger.reducao_automatica_ordem = 0
+    dger.num_minimo_iteracoes = int(df["miniter"])
     dger.num_max_iteracoes = int(df["maxiter"])
     dger.delta_zinf = float(df["deltazinf"])
     dger.deltas_consecutivos = int(df["deltaconsecutivo"])
