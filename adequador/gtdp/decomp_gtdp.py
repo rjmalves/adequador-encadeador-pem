@@ -10,6 +10,8 @@ from idecomp.decomp.modelos.dadger import (
     ACVERTJU,
     ACNPOSNW,
     ACVAZMIN,
+    ACVOLMIN,
+    ACVOLMAX,
 )
 from idecomp.decomp.modelos.dadger import UH, FJ, CQ
 import datetime
@@ -87,6 +89,10 @@ def ajusta_acs(diretorio: str):
     # Lista as usinas consideradas no deck (registros existentes no bloco UH)
     uhs = dadger.lista_registros(UH)
     cod_usinas = [r.codigo for r in uhs]
+
+    # Compatabilidade com decks antigos
+    deleta_ac(dadger, 46, ACVOLMIN)
+    deleta_ac(dadger, 46, ACVOLMAX)
 
     for u in cod_usinas:
 
