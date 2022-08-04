@@ -30,6 +30,10 @@ def nome_arquivo_modif():
     return "modif.dat"
 
 
+def nome_arquivo_exph():
+    return "exph.dat"
+
+
 def nome_arquivo_adterm():
     return "adterm.dat"
 

@@ -4,10 +4,15 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from inewave.newave.modelos.modif import USINA, CMONT, CFUGA
 from inewave.newave.modif import Modif
+from inewave.newave.exph import Exph
 from adequador.gtdp.copia_hidr_polinjus import copia_hidr
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
-from adequador.utils.nomes import dados_caso, nome_arquivo_modif
+from adequador.utils.nomes import (
+    dados_caso,
+    nome_arquivo_exph,
+    nome_arquivo_modif,
+)
 from adequador.utils.log import Log
 
 NUM_ANOS_ESTUDO = 5
@@ -75,7 +80,12 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
         modif.cria_registro(anterior, r)
 
 
-def adequa_cfuga_cmont(diretorio: str):
+def adequa_expansoes(exph: Exph):
+    # Remove expansões repetidas
+    exph.expansoes.drop_duplicates(inplace=True)
+
+
+def adequa_cfuga_cmont_exph(diretorio: str):
 
     Log.log().info(f"Adequando GTDP...")
 
@@ -102,3 +112,10 @@ def adequa_cfuga_cmont(diretorio: str):
         df_usina = df.loc[df["usina"] == u, :]
         adequa_usina(u, df_usina, modif, anos_estudo)
     modif.escreve_arquivo(diretorio, arquivo)
+
+    arquivo = nome_arquivo_exph()
+    converte_utf8(diretorio, arquivo)
+
+    exph = Exph.le_arquivo(diretorio, arquivo)
+    adequa_expansoes(exph)
+    exph.escreve_arquivo(diretorio, arquivo)
