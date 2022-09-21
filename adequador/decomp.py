@@ -4,6 +4,7 @@ from os.path import isdir, join
 from adequador.convertenomes.decomp import ajusta_convertenomes_decomp
 from adequador.arquivos_entrada.atualiza_vazoes import atualiza_vazoes
 from adequador.compatibilizacao_rees.decomp import ajusta_dados_rees
+from adequador.convertenomes.utf8 import ajusta_utf8
 from adequador.dados_gerais.decomp import ajusta_dados_gerais
 from adequador.gtdp.decomp_gtdp import ajusta_gtdp
 from adequador.penalidades.decomp_deficit import ajusta_deficit
@@ -22,6 +23,7 @@ CODIGOS_AJUSTES_DECOMP: Dict[str, Callable] = {
     "DEFICIT": ajusta_deficit,
     "VOLUMES_ESPERA": ajusta_volume_espera,
     "VMINOP": ajusta_rhe,
+    "UTF8": ajusta_utf8,
 }
 
 
