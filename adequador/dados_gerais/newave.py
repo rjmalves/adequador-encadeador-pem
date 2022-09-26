@@ -52,7 +52,8 @@ def garante_campos_dger(dger: DGer):
     dger.considera_zsup_min_convergencia = 0
     dger.desconsidera_vazao_minima = 0
     dger.restricoes_eletricas = 1
-    dger.selecao_de_cortes = 1
+    dger.selecao_de_cortes_backward = 1
+    dger.selecao_de_cortes_forward = 1
     dger.janela_de_cortes = 0
     dger.considera_reamostragem_cenarios = 1
     dger.tipo_reamostragem_cenarios = 1
@@ -81,17 +82,123 @@ def garante_campos_dger(dger: DGer):
     dger.compensacao_correlacao_cruzada = 0
     dger.restricao_turbinamento = 0
     dger.restricao_defluencia = 0
+    dger.aproveitamento_bases_backward = 1
+    dger.impressao_estados_geracao_cortes = 1
+    dger.semente_forward = 0
+    dger.semente_backward = 0
+    dger.restricao_lpp_turbinamento_maximo_ree = 1
+    dger.restricao_lpp_turbinamento_maximo_uhe = 1
+    dger.restricao_lpp_defluencia_maxima_ree = 1
+    dger.restricao_lpp_defluencia_maxima_uhe = 1
 
 
 def garante_legendas_dger(caminho: str):
 
-    LEGENDAS = []
-    COL_LEGENDA = 24
+    LEGENDAS = [
+        "TIPO DE EXECUCAO     ",
+        "DURACAO DO PERIODO   ",
+        "No. DE ANOS DO EST   ",
+        "MES INICIO PRE-EST   ",
+        "MES INICIO DO ESTUDO ",
+        "ANO INICIO DO ESTUDO ",
+        "No. DE ANOS PRE      ",
+        "No. DE ANOS POS      ",
+        "No. DE ANOS POS FINAL",
+        "IMPRIME DADOS        ",
+        "IMPRIME MERCADOS     ",
+        "IMPRIME ENERGIAS     ",
+        "IMPRIME M. ESTOCAS   ",
+        "IMPRIME SUBSISTEMA   ",
+        "No MAX. DE ITER.     ",
+        "No DE SIM. FORWARD   ",
+        "No DE ABERTURAS      ",
+        "No DE SERIES SINT.   ",
+        "ORDEM MAX. PAR(P)    ",
+        "ANO INICIAL HIST.    ",
+        "CALCULA VOL.INICIAL  ",
+        "VOLUME INICIAL  -%   ",
+        "POR SUBSISTEMA      ",
+        "TOLERANCIA      -%   ",
+        "TAXA DE DESCONTO-%   ",
+        "TIPO SIMUL. FINAL    ",
+        "IMPRESSAO DA OPER    ",
+        "IMPRESSAO DA CONVERG.",
+        "INTERVALO P/ GRAVAR  ",
+        "No. MIN. ITER.       ",
+        "RACIONAMENTO PREVENT.",
+        "No. ANOS MANUT.UTE'S ",
+        "TENDENCIA HIDROLOGICA",
+        "RESTRICA0 DE ITAIPU  ",
+        "BID                  ",
+        "PERDAS P/ TRANSMISSAO",
+        "EL NINO              ",
+        "ENSO INDEX           ",
+        "DURACAO POR PATAMAR  ",
+        "OUTROS USOS DA AGUA  ",
+        "CORRECAO DESVIO      ",
+        "C.AVERSAO/PENAL.VMINP",
+        "TIPO DE GERACAO ENAS ",
+        "RISCO DE DEFICIT     ",
+        "ITERACAO P/SIM.FINAL ",
+        "AGRUPAMENTO LIVRE    ",
+        "EQUALIZACAO PEN.INT. ",
+        "REPRESENT.SUBMOT.    ",
+        "ORDENACAO AUTOMATICA ",
+        "CONS. CARGA ADICIONAL",
+        "DELTA ZSUP           ",
+        "DELTA ZINF           ",
+        "DELTAS CONSECUT.     ",
+        "DESP. ANTEC.  GNL    ",
+        "MODIF.AUTOM.ADTERM   ",
+        "CONSIDERA GHMIN      ",
+        "S.F. COM DATA        ",
+        "GER.PLs E NV1 E NV2  ",
+        "SAR                  ",
+        "CVAR                 ",
+        "CONS. ZSUP MIN. CONV.",
+        "DESCONSIDERA VAZMIN  ",
+        "RESTRICOES ELETRICAS ",
+        "SELECAO DE CORTES    ",
+        "JANELA DE CORTES     ",
+        "REAMOST. CENARIOS    ",
+        "CONVERGE NO ZERO     ",
+        "CONSULTA FCF         ",
+        "IMPRESSAO AFL/VENTO  ",
+        "IMP. CATIVO S.FINAL  ",
+        "REP. AGREGACAO       ",
+        "MATRIZ CORR.ESPACIAL ",
+        "DESCONS. CONV. ESTAT ",
+        "MOMENTO REAMOSTRAGEM ",
+        "ARQUIVOS ENA         ",
+        "INICIO TESTE CONVERG.",
+        "SAZ. VMINT PER. EST. ",
+        "SAZ. VMAXT PER. EST. ",
+        "SAZ. VMINP PER. EST. ",
+        "SAZ. CFUGA E CMONT   ",
+        "REST. EMISSAO GEE    ",
+        "AFLUENCIA ANUAL PARP ",
+        "REST. FORNEC. GAS    ",
+        "MEM. CALCULO CORTES  ",
+        "GERACAO EOLICA       ",
+        "COMP. COR. CRUZ.     ",
+        "REST. TURBINAMENTO   ",
+        "REST. DEFL. MAXIMA   ",
+        "BASE PLS BACKWARD    ",
+        "ESTADOS GER. CORTES  ",
+        "SEMENTE FORWARD      ",
+        "SEMENTE BACWARD      ",
+        "REST.LPP TURB.MAX REE",
+        "REST.LPP DEFL.MAX REE",
+        "REST.LPP TURB.MAX UHE",
+        "REST.LPP DEFL.MAX UHE",
+    ]
+    COL_LEGENDA = 21
 
     with open(caminho, "r") as arq_entrada:
         linhas = arq_entrada.readlines()
     with open(caminho, "w") as arq_saida:
-        for legenda, linha in zip(LEGENDAS, linhas):
+        arq_saida.write(linhas[0])
+        for legenda, linha in zip(LEGENDAS, linhas[1:]):
             arq_saida.write(legenda + linha[COL_LEGENDA:])
 
 
@@ -124,6 +231,12 @@ def ajusta_dados_gerais_cvar(diretorio: str):
     dger.num_max_iteracoes = int(df["maxiter"])
     dger.delta_zinf = float(df["deltazinf"])
     dger.deltas_consecutivos = int(df["deltaconsecutivo"])
+    dger.restricao_defluencia = int(df["defluenciauhe"])
+    dger.restricao_turbinamento = int(df["turbinamentouhe"])
+    dger.restricao_lpp_defluencia_maxima_uhe = int(df["lppdefluenciauhe"])
+    dger.restricao_lpp_turbinamento_maximo_uhe = int(df["lppturbinamentouhe"])
+    dger.restricao_lpp_defluencia_maxima_ree = int(df["lppdefluenciaree"])
+    dger.restricao_lpp_turbinamento_maximo_ree = int(df["lppturbinamentoree"])
     dger.cvar = 1
 
     dger.escreve_arquivo(diretorio, arquivo)

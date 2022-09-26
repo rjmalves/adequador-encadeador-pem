@@ -1,2 +1,2 @@
-vazao;miniter;maxiter;deltazinf;deltaconsecutivo;alpha;lambda
-3;30;50;0.1;6;25;35
+vazao;miniter;maxiter;deltazinf;deltaconsecutivo;alpha;lambda;turbinamentouhe;defluenciauhe;lppturbinamentouhe;lppdefluenciauhe;lppturbinamentoree;lppdefluenciaree
+3;30;50;0.1;6;25;35;0;0;0;0;0;0
