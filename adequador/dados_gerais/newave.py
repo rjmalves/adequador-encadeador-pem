@@ -19,6 +19,7 @@ from adequador.utils.nomes import (
     nome_arquivo_tecno,
 )
 
+from os.path import join
 from adequador.utils.log import Log
 import pandas as pd
 
@@ -82,6 +83,18 @@ def garante_campos_dger(dger: DGer):
     dger.restricao_defluencia = 0
 
 
+def garante_legendas_dger(caminho: str):
+
+    LEGENDAS = []
+    COL_LEGENDA = 24
+
+    with open(caminho, "r") as arq_entrada:
+        linhas = arq_entrada.readlines()
+    with open(caminho, "w") as arq_saida:
+        for legenda, linha in zip(LEGENDAS, linhas):
+            arq_saida.write(legenda + linha[COL_LEGENDA:])
+
+
 def ajusta_dados_gerais_cvar(diretorio: str):
 
     Log.log().info(f"Adequando DADOSGERAIS...")
@@ -114,6 +127,9 @@ def ajusta_dados_gerais_cvar(diretorio: str):
     dger.cvar = 1
 
     dger.escreve_arquivo(diretorio, arquivo)
+
+    # TODO - temporario (garante legendas)
+    garante_legendas_dger(join(diretorio, arquivo))
 
     Log.log().info(f"Adequando CVAR...")
 
