@@ -86,10 +86,12 @@ def garante_campos_dger(dger: DGer):
     dger.impressao_estados_geracao_cortes = 1
     dger.semente_forward = 0
     dger.semente_backward = 0
-    dger.restricao_lpp_turbinamento_maximo_ree = 1
-    dger.restricao_lpp_turbinamento_maximo_uhe = 1
-    dger.restricao_lpp_defluencia_maxima_ree = 1
-    dger.restricao_lpp_defluencia_maxima_uhe = 1
+    dger.restricao_lpp_turbinamento_maximo_ree = 0
+    dger.restricao_lpp_turbinamento_maximo_uhe = 0
+    dger.restricao_lpp_defluencia_maxima_ree = 0
+    dger.restricao_lpp_defluencia_maxima_uhe = 0
+    dger.restricoes_eletricas_espeicais = 0
+    dger.funcao_producao_uhe = 0
 
 
 def garante_legendas_dger(caminho: str):
@@ -191,6 +193,8 @@ def garante_legendas_dger(caminho: str):
         "REST.LPP DEFL.MAX REE",
         "REST.LPP TURB.MAX UHE",
         "REST.LPP DEFL.MAX UHE",
+        "REST.ELETRI ESPECIAIS",
+        "FUNCAO DE PROD. UHE  ",
     ]
     COL_LEGENDA = 21
 
@@ -237,6 +241,10 @@ def ajusta_dados_gerais_cvar(diretorio: str):
     dger.restricao_lpp_turbinamento_maximo_uhe = int(df["lppturbinamentouhe"])
     dger.restricao_lpp_defluencia_maxima_ree = int(df["lppdefluenciaree"])
     dger.restricao_lpp_turbinamento_maximo_ree = int(df["lppturbinamentoree"])
+    dger.restricoes_eletricas_espeicais = int(
+        df["restricoeseletricasespeciais"]
+    )
+    dger.funcao_producao_uhe = int(df["funcaoproducao"])
     dger.cvar = 1
 
     dger.escreve_arquivo(diretorio, arquivo)
