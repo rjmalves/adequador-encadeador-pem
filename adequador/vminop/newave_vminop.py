@@ -68,12 +68,6 @@ def adequa_vminop(diretorio: str):
     arquivo = nome_arquivo_modif()
     converte_utf8(diretorio, arquivo)
     modif = Modif.le_arquivo(diretorio, arquivo)
-    # Apaga VOLMAX vazios
-    volmax = modif.volmax()
-    if isinstance(volmax, list):
-        for v in volmax:
-            if v.volume is None:
-                modif.deleta_registro(v)
     vminps = modif.vminp()
     if isinstance(vminps, list):
         for r in vminps:
