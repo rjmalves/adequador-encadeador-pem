@@ -20,7 +20,6 @@ from adequador.vminop.newave_vminop import adequa_vminop
 
 CODIGOS_AJUSTES_NEWAVE: Dict[str, Callable] = {
     "CONVERTENOMES": ajusta_convertenomes_newave,
-    "VAZOES": atualiza_vazoes,
     "REES": None,
     "DADOSGERAIS": ajusta_dados_gerais_cvar,
     "GTDP": adequa_cfuga_cmont_exph,

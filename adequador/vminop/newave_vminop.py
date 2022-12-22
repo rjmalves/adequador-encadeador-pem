@@ -118,6 +118,8 @@ def adequa_volumes_curva(
     if curva.curva_seguranca is None:
         return
 
+    # TODO - caso excepcional de VMINOP para o NORTE quando o
+    # PMO é de Novembro ou Dezembro ser 18% só nesses meses.
     anos = curva.curva_seguranca["Ano"].unique().tolist()
     num_linhas = curva.curva_seguranca.shape[0]
     for i, ano in enumerate(anos):
