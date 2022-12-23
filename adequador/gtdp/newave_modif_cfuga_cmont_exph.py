@@ -82,7 +82,8 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
 
 def adequa_expansoes(exph: Exph):
     # Remove expansões repetidas
-    exph.expansoes.drop_duplicates(inplace=True)
+    if exph.expansoes is not None:
+        exph.expansoes.drop_duplicates(inplace=True)
 
 
 def adequa_cfuga_cmont_exph(diretorio: str):
