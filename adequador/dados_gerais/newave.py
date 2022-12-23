@@ -241,7 +241,7 @@ def ajusta_dados_gerais_cvar(diretorio: str):
     dger.restricao_lpp_turbinamento_maximo_uhe = int(df["lppturbinamentouhe"])
     dger.restricao_lpp_defluencia_maxima_ree = int(df["lppdefluenciaree"])
     dger.restricao_lpp_turbinamento_maximo_ree = int(df["lppturbinamentoree"])
-    dger.restricoes_eletricas_espeicais = int(
+    dger.restricoes_eletricas_especiais = int(
         df["restricoeseletricasespeciais"]
     )
     dger.funcao_producao_uhe = int(df["funcaoproducao"])
