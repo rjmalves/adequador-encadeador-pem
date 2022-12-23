@@ -64,7 +64,7 @@ def ajusta_acs(diretorio: str):
                 ac_novo.uhe = u
                 ac_novo.influi = 1
                 dadger.cria_registro(posicao, ac_novo)
-            if isinstance(reg, list):
+            elif isinstance(reg, list):
                 # se ja existe AC VERTJU para esta usina, coloca valor correto - habilitar para 1
                 for r in reg:
                     r.influi = 1
