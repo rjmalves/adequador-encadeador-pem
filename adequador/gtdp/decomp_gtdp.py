@@ -64,9 +64,13 @@ def ajusta_acs(diretorio: str):
                 ac_novo.uhe = u
                 ac_novo.influi = 1
                 dadger.cria_registro(posicao, ac_novo)
+            if isinstance(reg, list):
+                # se ja existe AC VERTJU para esta usina, coloca valor correto - habilitar para 1
+                for r in reg:
+                    r.influi = 1
             else:
                 # se ja existe AC VERTJU para esta usina, coloca valor correto - habilitar para 1
-                dadger.ac(uhe=u, modificacao=ACVERTJU).influi = 1
+                reg.influi = 1
 
     df_usinas_cmont_cfuga = pd.read_csv(
         Configuracoes().arquivo_cfuga_cmont, sep=";"
