@@ -80,10 +80,12 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
         modif.cria_registro(anterior, r)
 
 
-def adequa_expansoes(exph: Exph):
+def adequa_expansoes(exph: Exph) -> bool:
     # Remove expansões repetidas
     if exph.expansoes is not None:
         exph.expansoes.drop_duplicates(inplace=True)
+        return True
+    return False
 
 
 def adequa_cfuga_cmont_exph(diretorio: str):
@@ -118,5 +120,5 @@ def adequa_cfuga_cmont_exph(diretorio: str):
     converte_utf8(diretorio, arquivo)
 
     exph = Exph.le_arquivo(diretorio, arquivo)
-    adequa_expansoes(exph)
-    exph.escreve_arquivo(diretorio, arquivo)
+    if adequa_expansoes(exph):
+        exph.escreve_arquivo(diretorio, arquivo)
