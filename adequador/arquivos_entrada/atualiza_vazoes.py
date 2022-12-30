@@ -12,7 +12,7 @@ def obtem_nome_arquivo_vazoes(ano: str, mes: str, revisao: str):
     if digito_revisao == "0":
         return raiz + "PMO"
     else:
-        return raiz + f"REV{digito_revisao}"
+        return raiz + f"RV{digito_revisao}"
 
 
 def atualiza_vazoes(diretorio: str):
