@@ -90,8 +90,9 @@ def garante_campos_dger(dger: DGer):
     dger.restricao_lpp_turbinamento_maximo_uhe = 0
     dger.restricao_lpp_defluencia_maxima_ree = 0
     dger.restricao_lpp_defluencia_maxima_uhe = 0
-    dger.restricoes_eletricas_espeicais = 0
+    dger.restricoes_eletricas_especiais = 0
     dger.funcao_producao_uhe = 0
+    dger.fcf_pos_estudo = 0
 
 
 def garante_legendas_dger(caminho: str):
@@ -195,6 +196,7 @@ def garante_legendas_dger(caminho: str):
         "REST.LPP DEFL.MAX UHE",
         "REST.ELETRI ESPECIAIS",
         "FUNCAO DE PROD. UHE  ",
+        "FCF POS ESTUDO       ",
     ]
     COL_LEGENDA = 21
 
@@ -245,6 +247,7 @@ def ajusta_dados_gerais_cvar(diretorio: str):
         df["restricoeseletricasespeciais"]
     )
     dger.funcao_producao_uhe = int(df["funcaoproducao"])
+    dger.fcf_pos_estudo = int(df["fcfpos"])
     dger.cvar = 1
 
     dger.escreve_arquivo(diretorio, arquivo)
