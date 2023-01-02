@@ -23,7 +23,6 @@ from adequador.utils.log import Log
 from adequador.utils.nomes import (
     dados_caso,
     nome_arquivo_dadger,
-    nome_arquivo_polinjus,
 )
 
 
