@@ -1,7 +1,7 @@
 from os.path import join
 from shutil import copyfile
 from adequador.utils.configuracoes import Configuracoes
-from adequador.utils.nomes import nome_arquivo_hidr
+from adequador.utils.nomes import nome_arquivo_hidr, nome_arquivo_polinjus
 
 
 def copia_hidr(diretorio: str):
@@ -11,6 +11,6 @@ def copia_hidr(diretorio: str):
 
 
 def copia_polinjus(diretorio: str):
-    arquivo = Configuracoes().arquivo_polinjus
+    arquivo = nome_arquivo_polinjus()
     arq_destino_polinjus = join(diretorio, arquivo)
     copyfile(Configuracoes().arquivo_polinjus, arq_destino_polinjus)
