@@ -414,11 +414,11 @@ def ajusta_fj(diretorio: str):
     # Consideração dos polinômios de jusante
     if dadger.fj is None:
         fj_novo = FJ()
-        fj_novo.arquivo = nome_arquivo_polinjus()
+        fj_novo.arquivo = Configuracoes().arquivo_polinjus
         reg_anterior = dadger.lista_registros(CQ)[-1]
         dadger.cria_registro(reg_anterior, fj_novo)
     else:
-        dadger.fj.arquivo = nome_arquivo_polinjus()
+        dadger.fj.arquivo = Configuracoes().arquivo_polinjus
 
     dadger.escreve_arquivo(diretorio, arquivo)
 

@@ -78,10 +78,6 @@ def nome_arquivo_hidr():
     return "hidr.dat"
 
 
-def nome_arquivo_polinjus():
-    return "polinjus.dat"
-
-
 def dados_caso(caminho: str) -> Tuple[str, str, str]:
     p = pathlib.Path(caminho)
     return p.parts[-2].split("_")

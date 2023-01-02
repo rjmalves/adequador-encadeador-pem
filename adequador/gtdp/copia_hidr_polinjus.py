@@ -12,6 +12,6 @@ def copia_hidr(diretorio: str):
 
 
 def copia_polinjus(diretorio: str):
-    arquivo = nome_arquivo_polinjus()
+    arquivo = Configuracoes().arquivo_polinjus
     arq_destino_polinjus = join(diretorio, arquivo)
     copyfile(Configuracoes().arquivo_polinjus, arq_destino_polinjus)
