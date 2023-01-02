@@ -3,6 +3,9 @@ from os import listdir
 from os.path import isdir, join
 from adequador.convertenomes.decomp import ajusta_convertenomes_decomp
 from adequador.arquivos_entrada.atualiza_vazoes import atualiza_vazoes
+from adequador.arquivos_entrada.atualiza_velocidades import (
+    atualiza_velocidades,
+)
 from adequador.compatibilizacao_rees.decomp import ajusta_dados_rees
 from adequador.convertenomes.utf8 import ajusta_utf8
 from adequador.dados_gerais.decomp import ajusta_dados_gerais
@@ -17,6 +20,7 @@ from adequador.utils.iteracao import itera_casos
 CODIGOS_AJUSTES_DECOMP: Dict[str, Callable] = {
     "CONVERTENOMES": ajusta_convertenomes_decomp,
     "VAZOES": atualiza_vazoes,
+    "VELOCIDADES": atualiza_velocidades,
     "REES": ajusta_dados_rees,
     "DADOSGERAIS": ajusta_dados_gerais,
     "GTDP": ajusta_gtdp,
