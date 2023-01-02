@@ -96,3 +96,9 @@ def nome_arquivo_vazoes(caso: str):
     rv = caso.split("_")[-1]
     arquivo = f"vazoes.{rv}"
     return arquivo
+
+
+def nome_arquivo_velocidades(caso: str):
+    rv = caso.split("_")[-1]
+    arquivo = f"velocidades.{rv}"
+    return arquivo

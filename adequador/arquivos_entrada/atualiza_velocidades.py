@@ -21,7 +21,7 @@ def atualiza_velocidades(diretorio: str):
     arquivo = nome_arquivo_vazoes(revisao_caso)
     copyfile(
         join(
-            Configuracoes().diretorio_vazoes,
+            Configuracoes().diretorio_velocidades,
             obtem_nome_arquivo_velocidades(ano_caso, mes_caso, revisao_caso),
         ),
         join(diretorio, arquivo),
