@@ -17,6 +17,9 @@ from adequador.utils.nomes import (
     nome_arquivo_sar,
     nome_arquivo_re,
     nome_arquivo_tecno,
+    nome_arquivo_simfinal,
+    nome_arquivo_cortes_pos,
+    nome_arquivo_cortesh_pos,
 )
 
 from os.path import join
@@ -35,6 +38,9 @@ def garante_campos_arquivos(arquivos: Arquivos):
     arquivos.abertura = nome_arquivo_abertura()
     arquivos.gee = nome_arquivo_gee()
     arquivos.clasgas = nome_arquivo_clasgas()
+    arquivos.dados_simulacao_final = nome_arquivo_simfinal()
+    arquivos.cortes_pos_estudo = nome_arquivo_cortes_pos()
+    arquivos.cortesh_pos_estudo = nome_arquivo_cortesh_pos()
 
 
 def garante_campos_dger(dger: DGer):

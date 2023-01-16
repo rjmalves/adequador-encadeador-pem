@@ -74,6 +74,18 @@ def nome_arquivo_clasgas():
     return "clasgas.dat"
 
 
+def nome_arquivo_simfinal():
+    return "simfinal.dat"
+
+
+def nome_arquivo_cortes_pos():
+    return "cortes-pos.dat"
+
+
+def nome_arquivo_cortesh_pos():
+    return "cortesh-pos.dat"
+
+
 def nome_arquivo_hidr():
     return "hidr.dat"
 
