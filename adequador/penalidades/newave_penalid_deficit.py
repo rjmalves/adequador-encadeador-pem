@@ -73,7 +73,7 @@ def corrige_penalid(diretorio: str):
 
         rees_vazmin = list(range(1, 13))
         rees_ghmin = [4, 5]
-        penalidade_desvio = np.ceil(penalidade * 1.001)
+        penalidade_desvio = np.ceil(penalidade * 1.01)
 
         df_pen.loc[
             df_pen["Chave"] == "DESVIO", "Penalidade 1"
