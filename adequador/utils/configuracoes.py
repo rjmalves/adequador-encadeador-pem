@@ -37,11 +37,20 @@ class Configuracoes(metaclass=Singleton):
         self.arquivo_ac_vertju = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_AC_VERTJU")
         )
-        self.arquivo_hidr = join(
-            self.diretorio_dados_adequacao, getenv("ARQUIVO_HIDR")
+        self.arquivo_hidr_fontes_antiga = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_HIDR_FONTES_ANTIGA"),
         )
-        self.arquivo_polinjus = join(
-            self.diretorio_dados_adequacao, getenv("ARQUIVO_POLINJUS")
+        self.arquivo_polinjus_fontes_antiga = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_POLINJUS_FONTES_ANTIGA"),
+        )
+        self.arquivo_hidr_fontes_nova = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_HIDR_FONTES_NOVA")
+        )
+        self.arquivo_polinjus_fontes_nova = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_POLINJUS_FONTES_NOVA"),
         )
         self.arquivo_custos_deficit = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_CUSTOS_DEFICIT")
