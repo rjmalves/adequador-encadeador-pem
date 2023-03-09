@@ -295,5 +295,8 @@ def ajusta_dados_gerais_cvar(diretorio: str):
     arquivo = nome_arquivo_cvar()
     converte_utf8(diretorio, arquivo)
     arq_cvar = CVAR.le_arquivo(diretorio, arquivo)
-    arq_cvar.valores_constantes = [int(df["alpha"]), int(df["lambda"])]
+    arq_cvar.valores_constantes = [
+        int(df.at["alpha", "valor"]),
+        int(df.at["lambda", "valor"]),
+    ]
     arq_cvar.escreve_arquivo(diretorio, arquivo)
