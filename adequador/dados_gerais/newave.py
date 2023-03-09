@@ -1,6 +1,6 @@
 from inewave.newave.arquivos import Arquivos
+from inewave.newave.caso import Caso
 from inewave.newave.dger import DGer
-
 from inewave.newave.cvar import CVAR
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
@@ -218,7 +218,9 @@ def ajusta_dados_gerais_cvar(diretorio: str):
 
     Log.log().info(f"Adequando DADOSGERAIS...")
 
-    df = pd.read_csv(Configuracoes().arquivo_dados_gerais_newave, sep=";")
+    df = pd.read_csv(
+        Configuracoes().arquivo_dados_gerais_newave, sep=";", index_col=0
+    )
 
     # Arquivo de arquivos
     arquivo = nome_arquivo_arquivos()
@@ -237,24 +239,48 @@ def ajusta_dados_gerais_cvar(diretorio: str):
     garante_campos_dger(dger)
 
     # Modifica, caso desejado, geração de cenários e critério de parada
-    dger.consideracao_media_anual_afluencias = int(df["vazao"])
-    dger.reducao_automatica_ordem = 0
-    dger.num_minimo_iteracoes = int(df["miniter"])
-    dger.num_max_iteracoes = int(df["maxiter"])
-    dger.delta_zinf = float(df["deltazinf"])
-    dger.deltas_consecutivos = int(df["deltaconsecutivo"])
-    dger.restricao_defluencia = int(df["defluenciauhe"])
-    dger.restricao_turbinamento = int(df["turbinamentouhe"])
-    dger.restricao_lpp_defluencia_maxima_uhe = int(df["lppdefluenciauhe"])
-    dger.restricao_lpp_turbinamento_maximo_uhe = int(df["lppturbinamentouhe"])
-    dger.restricao_lpp_defluencia_maxima_ree = int(df["lppdefluenciaree"])
-    dger.restricao_lpp_turbinamento_maximo_ree = int(df["lppturbinamentoree"])
+    dger.consideracao_media_anual_afluencias = int(df.at["parp", "valor"])
+    dger.num_minimo_iteracoes = int(df.at["miniter", "valor"])
+    dger.num_max_iteracoes = int(df.at["maxiter", "valor"])
+    dger.delta_zinf = float(df.at["deltazinf", "valor"])
+    dger.deltas_consecutivos = int(df.at["deltaconsecutivo", "valor"])
+    dger.restricao_defluencia = int(df.at["defluenciauhe", "valor"])
+    dger.restricao_turbinamento = int(df.at["turbinamentouhe", "valor"])
+    dger.restricao_lpp_defluencia_maxima_uhe = int(
+        df.at["lppdefluenciauhe", "valor"]
+    )
+    dger.restricao_lpp_turbinamento_maximo_uhe = int(
+        df.at["lppturbinamentouhe", "valor"]
+    )
+    dger.restricao_lpp_defluencia_maxima_ree = int(
+        df.at["lppdefluenciaree", "valor"]
+    )
+    dger.restricao_lpp_turbinamento_maximo_ree = int(
+        df.at["lppturbinamentoree", "valor"]
+    )
     dger.restricoes_eletricas_especiais = int(
         df["restricoeseletricasespeciais"]
     )
-    dger.funcao_producao_uhe = int(df["funcaoproducao"])
-    dger.fcf_pos_estudo = int(df["fcfpos"])
-    dger.cvar = 1
+    dger.funcao_producao_uhe = int(df.at["funcaoproducao", "valor"])
+    dger.fcf_pos_estudo = int(df.at["fcfpos", "valor"])
+    dger.cvar = int(df.at["cvar", "valor"])
+
+    usa_gerenciador = int(df.at["usa_gerenciador_processos", "valor"])
+    if usa_gerenciador:
+        Log.log().info(f"Adequando gerenciador de PLs...")
+        dger.utiliza_gerenciamento_pls = 1
+        dger.comunicacao_dois_niveis = 1
+        dger.armazenamento_local_arquivos_temporarios = 1
+        caso = Caso.le_arquivo(diretorio, "caso.dat")
+        caso.gerenciador_processos = df.at[
+            "caminho_gerenciador_processos", "valor"
+        ]
+        caso.escreve_arquivo(diretorio, "caso.dat")
+
+    imprime_arquivos = int(df.at["imprime_arquivos", "valor"])
+    if imprime_arquivos:
+        dger.mantem_arquivos_energias = 1
+        dger.impressao_estados_geracao_cortes = 0
 
     dger.escreve_arquivo(diretorio, arquivo)
 
