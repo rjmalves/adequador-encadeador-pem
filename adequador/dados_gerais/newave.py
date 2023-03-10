@@ -21,7 +21,7 @@ from adequador.utils.nomes import (
     nome_arquivo_cortes_pos,
     nome_arquivo_cortesh_pos,
 )
-
+from shutil import copyfile
 from os.path import join
 from adequador.utils.log import Log
 import pandas as pd
@@ -214,7 +214,7 @@ def garante_legendas_dger(caminho: str):
             arq_saida.write(legenda + linha[COL_LEGENDA:])
 
 
-def ajusta_dados_gerais_cvar(diretorio: str):
+def ajusta_dados_gerais_cvar_selcor(diretorio: str):
 
     Log.log().info(f"Adequando DADOSGERAIS...")
 
@@ -300,3 +300,8 @@ def ajusta_dados_gerais_cvar(diretorio: str):
         int(df.at["lambda", "valor"]),
     ]
     arq_cvar.escreve_arquivo(diretorio, arquivo)
+
+    # Selcor
+    Log.log().info(f"Adequando Seleção de Cortes...")
+    arq_destino_selcor = join(diretorio, "selcor.dat")
+    copyfile(Configuracoes().arquivo_selcor_newave, arq_destino_selcor)
