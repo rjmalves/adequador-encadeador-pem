@@ -1,7 +1,6 @@
 from adequador.convertenomes.newave import ajusta_convertenomes_newave
-from adequador.arquivos_entrada.atualiza_vazoes import atualiza_vazoes
 from adequador.convertenomes.utf8 import ajusta_utf8
-from adequador.dados_gerais.newave import ajusta_dados_gerais_cvar
+from adequador.dados_gerais.newave import ajusta_dados_gerais_cvar_selcor
 from adequador.gtdp.newave_modif_cfuga_cmont_exph import (
     adequa_cfuga_cmont_exph,
 )
@@ -21,7 +20,7 @@ from adequador.vminop.newave_vminop import adequa_vminop
 CODIGOS_AJUSTES_NEWAVE: Dict[str, Callable] = {
     "CONVERTENOMES": ajusta_convertenomes_newave,
     "REES": None,
-    "DADOSGERAIS": ajusta_dados_gerais_cvar,
+    "DADOSGERAIS": ajusta_dados_gerais_cvar_selcor,
     "GTDP": adequa_cfuga_cmont_exph,
     "DEFICIT": corrige_deficit_sistema,
     "PENALIDADES": corrige_penalid,
