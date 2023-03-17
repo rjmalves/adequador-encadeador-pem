@@ -194,4 +194,4 @@ def ajusta_rhe(diretorio: str):
                 posicao,
             )
 
-            dadger.escreve_arquivo(diretorio, arquivo)
+    dadger.escreve_arquivo(diretorio, arquivo)

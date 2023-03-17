@@ -25,7 +25,7 @@ def copia_hidr(diretorio: str):
     ano, mes, revisao = dados_caso(diretorio)
     arquivo = nome_arquivo_hidr()
     arq_destino_hidr = join(diretorio, arquivo)
-    if __vale_fontes_nova(ano, mes, revisao):
+    if __vale_fontes_nova(int(ano), int(mes), int(revisao.split("rv")[1])):
         copyfile(Configuracoes().arquivo_hidr_fontes_nova, arq_destino_hidr)
     else:
         copyfile(Configuracoes().arquivo_hidr_fontes_antiga, arq_destino_hidr)
@@ -36,7 +36,7 @@ def copia_polinjus(diretorio: str):
 
     arquivo = nome_arquivo_polinjus()
     arq_destino_polinjus = join(diretorio, arquivo)
-    if __vale_fontes_nova(ano, mes, revisao):
+    if __vale_fontes_nova(int(ano), int(mes), int(revisao.split("rv")[1])):
         copyfile(
             Configuracoes().arquivo_polinjus_fontes_nova, arq_destino_polinjus
         )

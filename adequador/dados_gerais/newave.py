@@ -259,7 +259,7 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
         df.at["lppturbinamentoree", "valor"]
     )
     dger.restricoes_eletricas_especiais = int(
-        df["restricoeseletricasespeciais"]
+        df.at["restricoeseletricasespeciais", "valor"]
     )
     dger.funcao_producao_uhe = int(df.at["funcaoproducao", "valor"])
     dger.fcf_pos_estudo = int(df.at["fcfpos", "valor"])
@@ -277,7 +277,7 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
         ]
         caso.escreve_arquivo(diretorio, "caso.dat")
 
-    imprime_arquivos = int(df.at["imprime_arquivos", "valor"])
+    imprime_arquivos = int(df.at["imprimearquivos", "valor"])
     if imprime_arquivos:
         dger.mantem_arquivos_energias = 1
         dger.impressao_estados_geracao_cortes = 0
@@ -289,7 +289,9 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
 
     Log.log().info(f"Adequando CVAR...")
 
-    df = pd.read_csv(Configuracoes().arquivo_dados_gerais_newave, sep=";")
+    df = pd.read_csv(
+        Configuracoes().arquivo_dados_gerais_newave, sep=";", index_col=0
+    )
 
     # Arquivo de CVAR
     arquivo = nome_arquivo_cvar()
