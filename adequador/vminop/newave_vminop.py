@@ -32,7 +32,6 @@ MESES = [
 
 
 def adequa_vminop(diretorio: str):
-
     Log.log().info(f"Adequando VMINOP...")
 
     df = pd.read_csv(Configuracoes().arquivo_vminop, sep=";")
@@ -63,6 +62,8 @@ def adequa_vminop(diretorio: str):
         adequa_volumes_curva(
             linha["ree"], linha["mes"], linha["vminop"], curva
         )
+
+    curva.escreve_arquivo(diretorio, arquivo)
 
     # Remove VMINP do MODIF
     arquivo = nome_arquivo_modif()
