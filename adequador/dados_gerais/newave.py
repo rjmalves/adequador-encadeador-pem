@@ -102,7 +102,6 @@ def garante_campos_dger(dger: DGer):
 
 
 def garante_legendas_dger(caminho: str):
-
     LEGENDAS = [
         "TIPO DE EXECUCAO     ",
         "DURACAO DO PERIODO   ",
@@ -215,7 +214,6 @@ def garante_legendas_dger(caminho: str):
 
 
 def ajusta_dados_gerais_cvar_selcor(diretorio: str):
-
     Log.log().info(f"Adequando DADOSGERAIS...")
 
     df = pd.read_csv(
@@ -264,6 +262,7 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
     dger.funcao_producao_uhe = int(df.at["funcaoproducao", "valor"])
     dger.fcf_pos_estudo = int(df.at["fcfpos", "valor"])
     dger.cvar = int(df.at["cvar", "valor"])
+    dger.considera_geracao_eolica = int(df.at["geracaoeolica", "valor"])
 
     usa_gerenciador = int(df.at["usa_gerenciador_processos", "valor"])
     if usa_gerenciador:
