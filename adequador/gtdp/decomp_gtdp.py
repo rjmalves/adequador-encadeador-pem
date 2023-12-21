@@ -25,52 +25,54 @@ from adequador.utils.nomes import (
     nome_arquivo_dadger,
     nome_arquivo_polinjus,
 )
+from os.path import join
 
 
 def ajusta_acs(diretorio: str):
     def deleta_ac(dadger: Dadger, u: int, tipo: classmethod):
-        reg = dadger.ac(uhe=u, modificacao=tipo)
+        reg = dadger.ac(codigo_usina=u, modificacao=tipo)
         if reg is not None:
-            dadger.deleta_registro(reg)
+            dadger.data.remove(reg)
 
     def adiciona_ac_nposnw(dadger: Dadger, u: int, p: int):
-        usina = dadger.uh(codigo=u)
+        usina = dadger.uh(codigo_usina=u)
         if usina is not None:
-            reg = dadger.ac(uhe=u, modificacao=ACNPOSNW)
+            reg = dadger.ac(codigo_usina=u, modificacao=ACNPOSNW)
             if reg is None:
                 # se não existir AC NPOSNW para esta usina, cria
-                posicao = dadger.lista_registros(ACVAZMIN)[
+                posicao = dadger.data.get_registers_of_type(ACVAZMIN)[
                     -1
                 ]  # Escolhe  posicao para colocar os novos registros
                 ac_novo = ACNPOSNW()
-                ac_novo.uhe = u
-                ac_novo.posto = p
-                dadger.cria_registro(posicao, ac_novo)
+                ac_novo.codigo_usina = u
+                ac_novo.codigo_posto = p
+                dadger.data.add_after(posicao, ac_novo)
             else:
                 # se ja existe AC NPOSNW para esta usina, coloca valor correto
-                dadger.ac(uhe=u, modificacao=ACNPOSNW).posto = p
+                dadger.ac(
+                    codigo_usina=u, modificacao=ACNPOSNW
+                ).codigo_posto = p
 
     def adiciona_ac_vertju(dadger: Dadger, u: int):
-
-        usina = dadger.uh(codigo=u)
+        usina = dadger.uh(codigo_usina=u)
         if usina is not None:
-            reg = dadger.ac(uhe=u, modificacao=ACVERTJU)
+            reg = dadger.ac(codigo_usina=u, modificacao=ACVERTJU)
             if reg is None:
                 # se não existir AC VERTJU para esta usina, cria
-                posicao = dadger.lista_registros(ACVAZMIN)[
+                posicao = dadger.data.get_registers_of_type(ACVAZMIN)[
                     -1
                 ]  # Escolhe posicao para colocar os novos registros
                 ac_novo = ACVERTJU()
-                ac_novo.uhe = u
-                ac_novo.influi = 1
-                dadger.cria_registro(posicao, ac_novo)
+                ac_novo.codigo_usina = u
+                ac_novo.considera_influencia = 1
+                dadger.data.add_after(posicao, ac_novo)
             elif isinstance(reg, list):
                 # se ja existe AC VERTJU para esta usina, coloca valor correto - habilitar para 1
                 for r in reg:
-                    r.influi = 1
+                    r.considera_influencia = 1
             else:
                 # se ja existe AC VERTJU para esta usina, coloca valor correto - habilitar para 1
-                reg.influi = 1
+                reg.considera_influencia = 1
 
     df_usinas_cmont_cfuga = pd.read_csv(
         Configuracoes().arquivo_cfuga_cmont, sep=";"
@@ -88,18 +90,17 @@ def ajusta_acs(diretorio: str):
     arquivo = nome_arquivo_dadger(revisao_caso)
 
     converte_utf8(diretorio, arquivo)
-    dadger = Dadger.le_arquivo(diretorio, arquivo)
+    dadger = Dadger.read(join(diretorio, arquivo))
 
     # Lista as usinas consideradas no deck (registros existentes no bloco UH)
-    uhs = dadger.lista_registros(UH)
-    cod_usinas = [r.codigo for r in uhs]
+    uhs = dadger.data.get_registers_of_type(UH)
+    cod_usinas = [r.codigo_usina for r in uhs]
 
     # Compatabilidade com decks antigos
     deleta_ac(dadger, 46, ACVOLMIN)
     deleta_ac(dadger, 46, ACVOLMAX)
 
     for u in cod_usinas:
-
         # Deleta registros AC PROESP, PERHID, NCHAVE, COTVAZ, TIPERH para todas as usinas que possuem.
         # O objetivo é que os dados considerados passem a ser os revisados pelo GTDP.
         deleta_ac(dadger, u, ACPROESP)
@@ -112,7 +113,6 @@ def ajusta_acs(diretorio: str):
         # (Tucuruí, Santo Antônio e Jirau) visto que essas possuem cota de montante e de jusante variáveis
         # sazonais conforme o GTDP
         if u not in usinas_cmont_cfuga:
-
             deleta_ac(dadger, u, ACCOTVOL)
             deleta_ac(dadger, u, ACJUSMED)
 
@@ -135,7 +135,7 @@ def ajusta_acs(diretorio: str):
             adiciona_ac_nposnw(dadger, int(u), int(p))
 
     # Depois de ter feito as alterações, escreve arquivo dadger
-    dadger.escreve_arquivo(diretorio, arquivo)
+    dadger.write(join(diretorio, arquivo))
 
 
 # ======================== Dados GTDP - CFUGA e CMONT
@@ -145,7 +145,6 @@ def ajusta_acs(diretorio: str):
 
 
 def adequa_cfuga_cmont(diretorio: str):
-
     df_cmont_historico = pd.read_csv(
         Configuracoes().arquivo_cfuga_cmont_historico, sep=";"
     )
@@ -178,11 +177,11 @@ def adequa_cfuga_cmont(diretorio: str):
     arquivo = nome_arquivo_dadger(revisao_caso)
 
     converte_utf8(diretorio, arquivo)
-    dadger = Dadger.le_arquivo(diretorio, arquivo)
+    dadger = Dadger.read(join(diretorio, arquivo))
 
     # ======================== IDENTIFICA DADOS DO PMO
     # Pega o número total de estágios do deck
-    n_est = len(dadger.dp(subsistema=1))
+    n_est = len(dadger.dp(codigo_submercado=1))
 
     # Coleta informações de datas do deck
     dataini = datetime.date(
@@ -205,45 +204,42 @@ def adequa_cfuga_cmont(diretorio: str):
 
     # ======================== FUNCOES CRIA REGISTRO ========================
     def cria_cotvol(dadger: Dadger, usina, mes, semana, ano, ordem, cmont):
-
         if ordem == 1:
             cotvol = cmont
         else:
             cotvol = 0
 
-        posicao = dadger.lista_registros(ACVAZMIN)[
+        posicao = dadger.data.get_registers_of_type(ACVAZMIN)[
             -1
         ]  # Escolhe uma posicao para colocar os novos registros
         ac_novo = ACCOTVOL()
-        ac_novo.uhe = usina
+        ac_novo.codigo_usina = usina
         ac_novo.mes = mes
         ac_novo.semana = semana
         ac_novo.ano = ano
         ac_novo.ordem = ordem
         ac_novo.coeficiente = cotvol
-        dadger.cria_registro(posicao, ac_novo)
+        dadger.data.add_after(posicao, ac_novo)
 
     def cria_jusmed(dadger: Dadger, usina, mes, semana, ano, cjus):
-
-        posicao = dadger.lista_registros(ACVAZMIN)[
+        posicao = dadger.data.get_registers_of_type(ACVAZMIN)[
             -1
         ]  # Escolhe uma posicao para colocar os novos registros
         ac_novo = ACJUSMED()
-        ac_novo.uhe = usina
+        ac_novo.codigo_usina = usina
         ac_novo.mes = mes
         ac_novo.semana = semana
         ac_novo.ano = ano
         ac_novo.cota = cjus
-        dadger.cria_registro(posicao, ac_novo)
+        dadger.data.add_after(posicao, ac_novo)
 
     # ======================== AJUSTE CFUGA (TUCURUI) ========================
     def altera_jusmed_usina(
         dadger: Dadger, usina, meses, anos, inds, cfuga_tucurui
     ):
-
         for m in [1, 0]:
             reg = dadger.ac(
-                uhe=usina, modificacao=ACJUSMED, mes=meses[inds[m]]
+                codigo_usina=usina, modificacao=ACJUSMED, mes=meses[inds[m]]
             )
             cota = cfuga_tucurui[inds[m]]
             if reg is None:
@@ -263,7 +259,6 @@ def adequa_cfuga_cmont(diretorio: str):
         cfuga_usina,
         cmont_antes,
     ):
-
         estagios = []
         for m in [1, 0]:
             for e in range(n_est - 1, 0, -1):
@@ -271,18 +266,17 @@ def adequa_cfuga_cmont(diretorio: str):
                     estagios.append(list([m, e]))
 
         for m, e in estagios:
-
             if m == 0:  # se 1º mês
                 periodo = e
                 reg_cotvol = dadger.ac(
-                    uhe=usina,
+                    codigo_usina=usina,
                     modificacao=ACCOTVOL,
                     mes=meses[inds[m]],
                     semana=periodo,
                     ordem=1,
                 )
                 reg_jusmed = dadger.ac(
-                    uhe=usina,
+                    codigo_usina=usina,
                     modificacao=ACJUSMED,
                     mes=meses[inds[m]],
                     semana=periodo,
@@ -290,13 +284,15 @@ def adequa_cfuga_cmont(diretorio: str):
             else:  # se 2º mês
                 periodo = 1
                 reg_cotvol = dadger.ac(
-                    uhe=usina,
+                    codigo_usina=usina,
                     modificacao=ACCOTVOL,
                     mes=meses[inds[m]],
                     ordem=1,
                 )
                 reg_jusmed = dadger.ac(
-                    uhe=usina, modificacao=ACJUSMED, mes=meses[inds[m]]
+                    codigo_usina=usina,
+                    modificacao=ACJUSMED,
+                    mes=meses[inds[m]],
                 )
 
             # confere se existe AC COTVOL e armazena valor
@@ -401,30 +397,27 @@ def adequa_cfuga_cmont(diretorio: str):
             )
 
     # ----- Escreve novo dadger
-    dadger.escreve_arquivo(diretorio, arquivo)
+    dadger.write(join(diretorio, arquivo))
 
 
 def ajusta_fj(diretorio: str):
-
     _, _, revisao_caso = dados_caso(diretorio)
     arquivo = nome_arquivo_dadger(revisao_caso)
     converte_utf8(diretorio, arquivo)
-    dadger = Dadger.le_arquivo(diretorio, arquivo)
+    dadger = Dadger.read(join(diretorio, arquivo))
 
     # Consideração dos polinômios de jusante
     if dadger.fj is None:
         fj_novo = FJ()
         fj_novo.arquivo = nome_arquivo_polinjus()
-        reg_anterior = dadger.lista_registros(CQ)[-1]
-        dadger.cria_registro(reg_anterior, fj_novo)
+        dadger.data.append(fj_novo)
     else:
         dadger.fj.arquivo = nome_arquivo_polinjus()
 
-    dadger.escreve_arquivo(diretorio, arquivo)
+    dadger.write(join(diretorio, arquivo))
 
 
 def ajusta_gtdp(diretorio: str):
-
     Log.log().info(f"Adequando GTDP...")
 
     ajusta_acs(diretorio)
