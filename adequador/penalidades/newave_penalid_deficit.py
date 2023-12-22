@@ -7,10 +7,10 @@ from adequador.utils.nomes import nome_arquivo_penalid, nome_arquivo_sistema
 from adequador.utils.nomes import dados_caso
 from adequador.utils.log import Log
 from adequador.utils.configuracoes import Configuracoes
+from os.path import join
 
 
 def corrige_deficit_sistema(diretorio: str):
-
     Log.log().info(f"Adequando DEFICIT...")
     df_deficit = pd.read_csv(Configuracoes().arquivo_custos_deficit, sep=";")
     anos = df_deficit["ano"].tolist()
@@ -20,7 +20,7 @@ def corrige_deficit_sistema(diretorio: str):
 
     arquivo = nome_arquivo_sistema()
     converte_utf8(diretorio, arquivo)
-    sistema = Sistema.le_arquivo(diretorio, arquivo)
+    sistema = Sistema.read(join(diretorio, arquivo))
     sistema.numero_patamares_deficit = 1
     df_sistema = sistema.custo_deficit
 
@@ -30,30 +30,34 @@ def corrige_deficit_sistema(diretorio: str):
         ind = anos.index(anodeck)
         # se existir, corrige
         for s in [1, 2, 3, 4]:
-            for i in [2, 3, 4]:
+            for i in [1, 2, 3, 4]:
+                if i == 1:
+                    corte = 1
+                    custo_def = custo[ind]
+                else:
+                    corte = 0
+                    custo_def = 0
                 df_sistema.loc[
-                    df_sistema["Num. Subsistema"] == s, "Corte Pat. " + str(i)
-                ] = 0.00
+                    (df_sistema["codigo_submercado"] == s)
+                    & (df_sistema["patamar_deficit"] == i),
+                    "corte",
+                ] = corte
                 df_sistema.loc[
-                    df_sistema["Num. Subsistema"] == s, "Custo Pat. " + str(i)
-                ] = 0.00
-            i = 1
-            df_sistema.loc[
-                df_sistema["Num. Subsistema"] == s, "Corte Pat. " + str(i)
-            ] = 1.00
-            df_sistema.loc[
-                df_sistema["Num. Subsistema"] == s, "Custo Pat. " + str(i)
-            ] = custo[ind]
+                    (df_sistema["codigo_submercado"] == s)
+                    & (df_sistema["patamar_deficit"] == i),
+                    "custo",
+                ] = custo_def
 
     sistema.custo_deficit = df_sistema
-    sistema.escreve_arquivo(diretorio, arquivo)
+    sistema.write(join(diretorio, arquivo))
 
 
 def corrige_penalid(diretorio: str):
-
     Log.log().info(f"Ajustando PENALIDADES...")
 
     arquivo = nome_arquivo_penalid()
+
+    # TODO - trocar penalidades de cdef para hibrido
 
     df_deficit = pd.read_csv(Configuracoes().arquivo_custos_deficit, sep=";")
     anos = df_deficit["ano"].tolist()
@@ -62,7 +66,7 @@ def corrige_penalid(diretorio: str):
     ano_caso, _, _ = dados_caso(diretorio)
     anodeck = int(ano_caso)
 
-    penalid = Penalid.le_arquivo(diretorio, arquivo)
+    penalid = Penalid.read(join(diretorio, arquivo))
     df_pen = penalid.penalidades
 
     if (
@@ -76,46 +80,49 @@ def corrige_penalid(diretorio: str):
         penalidade_desvio = np.ceil(penalidade * 1.01)
 
         df_pen.loc[
-            df_pen["Chave"] == "DESVIO", "Penalidade 1"
+            df_pen["variavel"] == "DESVIO", "valor_R$_MWh"
         ] = penalidade_desvio
 
         for r in rees_vazmin:
             filtro_vazmin = df_pen.loc[
-                (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "VAZMIN")
+                (df_pen["codigo_ree_submercado"] == r)
+                & (df_pen["variavel"] == "VAZMIN")
             ]
             if len(filtro_vazmin) == 0:
                 # necessario criar linha
                 linha_nova = {
-                    "Chave": "VAZMIN",
-                    "Penalidade 1": penalidade,
-                    "Penalidade 2": np.nan,
-                    "Subsistema": r,
+                    "variavel": "VAZMIN",
+                    "valor_R$_MWh": penalidade,
+                    "valor_R$_hm3": np.nan,
+                    "codigo_ree_submercado": r,
                 }
                 df_pen.loc[df_pen.shape[0]] = linha_nova
             else:
                 df_pen.loc[
-                    (df_pen["Subsistema"] == r)
-                    & (df_pen["Chave"] == "VAZMIN"),
-                    "Penalidade 1",
+                    (df_pen["codigo_ree_submercado"] == r)
+                    & (df_pen["variavel"] == "VAZMIN"),
+                    "valor_R$_MWh",
                 ] = penalidade
 
         for r in rees_ghmin:
             filtro_ghmin = df_pen.loc[
-                (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN")
+                (df_pen["codigo_ree_submercado"] == r)
+                & (df_pen["variavel"] == "GHMIN")
             ]
             if len(filtro_ghmin) == 0:
                 # necessario criar linha
                 linha_nova = {
-                    "Chave": "GHMIN",
-                    "Penalidade 1": penalidade,
-                    "Penalidade 2": np.nan,
-                    "Subsistema": r,
+                    "variavel": "GHMIN",
+                    "valor_R$_MWh": penalidade,
+                    "valor_R$_hm3": np.nan,
+                    "codigo_ree_submercado": r,
                 }
                 df_pen.loc[df_pen.shape[0]] = linha_nova
             else:
                 df_pen.loc[
-                    (df_pen["Subsistema"] == r) & (df_pen["Chave"] == "GHMIN"),
-                    "Penalidade 1",
+                    (df_pen["codigo_ree_submercado"] == r)
+                    & (df_pen["variavel"] == "GHMIN"),
+                    "valor_R$_MWh",
                 ] = penalidade
     penalid.penalidades = df_pen
-    penalid.escreve_arquivo(diretorio, arquivo)
+    penalid.write(join(diretorio, arquivo))
