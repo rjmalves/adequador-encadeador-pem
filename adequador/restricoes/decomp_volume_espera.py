@@ -5,16 +5,16 @@ from adequador.utils.backup import converte_utf8
 from adequador.utils.log import Log
 from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
 from adequador.utils.configuracoes import Configuracoes
+from os.path import join
 
 
 def ajusta_volume_espera(diretorio: str):
-
     Log.log().info(f"Adequando VOLUMES_ESPERA...")
 
     _, _, revisao_caso = dados_caso(diretorio)
     arquivo = nome_arquivo_dadger(revisao_caso)
     converte_utf8(diretorio, arquivo)
-    dadger = Dadger.le_arquivo(diretorio, arquivo)
+    dadger = Dadger.read(join(diretorio, arquivo))
 
     df_ve = pd.read_csv(
         Configuracoes().arquivo_volumes_espera, index_col="data"
@@ -28,7 +28,7 @@ def ajusta_volume_espera(diretorio: str):
     ano_seguinte = ano if mes != 12 else ano + 1
 
     # Acessa o VE de CAMARGOS para saber quantas semanas a frente
-    num_casos_a_frente = len(dadger.ve(codigo=1).volumes) - 1
+    num_casos_a_frente = len(dadger.ve(codigo_usina=1).volume) - 1
 
     # Extrai somente as informações que serão utilizadas para atualizar os VE
     indices = list(df_ve.index)
@@ -47,7 +47,7 @@ def ajusta_volume_espera(diretorio: str):
         co = str(c)
         dados_ve = linhas_ve[co].tolist() + [ve_mes[co].tolist()[-1]]
 
-        if dadger.ve(codigo=c) is not None:
-            dadger.ve(codigo=c).volumes = dados_ve
+        if dadger.ve(codigo_usina=c) is not None:
+            dadger.ve(codigo_usina=c).volume = dados_ve
 
-    dadger.escreve_arquivo(diretorio, arquivo)
+    dadger.write(join(diretorio, arquivo))

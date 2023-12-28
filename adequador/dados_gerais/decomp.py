@@ -3,17 +3,17 @@ from idecomp.decomp.modelos.dadger import TE, EV, SB, CQ, EA, ES, QI
 from adequador.utils.backup import converte_utf8
 from adequador.utils.log import Log
 from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
+from os.path import join
 
 
 def ajusta_dados_gerais(diretorio: str):
-
     Log.log().info(f"Adequando DADOSGERAIS...")
 
     _, _, revisao_caso = dados_caso(diretorio)
     arquivo = nome_arquivo_dadger(revisao_caso)
 
     converte_utf8(diretorio, arquivo)
-    dadger = Dadger.le_arquivo(diretorio, arquivo)
+    dadger = Dadger.read(join(diretorio, arquivo))
 
     # Certifica que existe registro TE
     if dadger.te is None:
@@ -21,16 +21,14 @@ def ajusta_dados_gerais(diretorio: str):
         te_novo.titulo = (
             "PMO"  # Título provisório depois será alterado pelo encadeador
         )
-        reg_anterior = dadger.lista_registros(SB)[0]
-        dadger.cria_registro(reg_anterior, te_novo)
+        dadger.data.preppend(te_novo)
 
     # Consideração de evaporação linear com base no volume inicial
     if dadger.ev is None:
         ev_novo = EV()
         ev_novo.modelo = 1
         ev_novo.volume_referencia = "INI"
-        reg_anterior = dadger.lista_registros(CQ)[-1]
-        dadger.cria_registro(reg_anterior, ev_novo)
+        dadger.data.append(ev_novo)
     else:
         dadger.ev.modelo = 1
         dadger.ev.volume_referencia = "INI"
@@ -45,14 +43,14 @@ def ajusta_dados_gerais(diretorio: str):
     def exclui_registros(dadger: Dadger, registros):
         if len(registros) > 0:
             for reg in registros:
-                dadger.deleta_registro(reg)
+                dadger.data.remove(reg)
 
-    registro_ea = dadger.lista_registros(EA)
-    registro_es = dadger.lista_registros(ES)
-    registro_qi = dadger.lista_registros(QI)
+    registro_ea = dadger.data.get_registers_of_type(EA)
+    registro_es = dadger.data.get_registers_of_type(ES)
+    registro_qi = dadger.data.get_registers_of_type(QI)
 
     exclui_registros(dadger, registro_ea)
     exclui_registros(dadger, registro_es)
     exclui_registros(dadger, registro_qi)
 
-    dadger.escreve_arquivo(diretorio, arquivo)
+    dadger.write(join(diretorio, arquivo))

@@ -1,7 +1,7 @@
 from inewave.newave.arquivos import Arquivos
 from inewave.newave.caso import Caso
-from inewave.newave.dger import DGer
-from inewave.newave.cvar import CVAR
+from inewave.newave.dger import Dger
+from inewave.newave.cvar import Cvar
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
 from adequador.utils.nomes import (
@@ -43,7 +43,7 @@ def garante_campos_arquivos(arquivos: Arquivos):
     arquivos.cortesh_pos_estudo = nome_arquivo_cortesh_pos()
 
 
-def garante_campos_dger(dger: DGer):
+def garante_campos_dger(dger: Dger):
     dger.despacho_antecipado_gnl = 1
     dger.modif_automatica_adterm = 1
     dger.considera_ghmin = 1
@@ -223,15 +223,15 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
     # Arquivo de arquivos
     arquivo = nome_arquivo_arquivos()
     converte_utf8(diretorio, arquivo)
-    arq = Arquivos.le_arquivo(diretorio, arquivo)
+    arq = Arquivos.read(join(diretorio, arquivo))
     # Garante que tem todos os blocos necessários
     garante_campos_arquivos(arq)
-    arq.escreve_arquivo(diretorio, arquivo)
+    arq.write(join(diretorio, arquivo))
 
     # Arquivo de dados gerais
     arquivo = nome_arquivo_dger()
     converte_utf8(diretorio, arquivo)
-    dger = DGer.le_arquivo(diretorio, arquivo)
+    dger = Dger.read(join(diretorio, arquivo))
 
     # Garante que tem todos os blocos necessários
     garante_campos_dger(dger)
@@ -270,18 +270,18 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
         dger.utiliza_gerenciamento_pls = 1
         dger.comunicacao_dois_niveis = 1
         dger.armazenamento_local_arquivos_temporarios = 1
-        caso = Caso.le_arquivo(diretorio, "caso.dat")
+        caso = Caso.read(join(diretorio, "caso.dat"))
         caso.gerenciador_processos = df.at[
             "caminho_gerenciador_processos", "valor"
         ]
-        caso.escreve_arquivo(diretorio, "caso.dat")
+        caso.write(join(diretorio, "caso.dat"))
 
     imprime_arquivos = int(df.at["imprimearquivos", "valor"])
     if imprime_arquivos:
         dger.mantem_arquivos_energias = 1
         dger.impressao_estados_geracao_cortes = 0
 
-    dger.escreve_arquivo(diretorio, arquivo)
+    dger.write(join(diretorio, arquivo))
 
     # TODO - temporario (garante legendas)
     garante_legendas_dger(join(diretorio, arquivo))
@@ -295,12 +295,12 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
     # Arquivo de CVAR
     arquivo = nome_arquivo_cvar()
     converte_utf8(diretorio, arquivo)
-    arq_cvar = CVAR.le_arquivo(diretorio, arquivo)
+    arq_cvar = Cvar.read(join(diretorio, arquivo))
     arq_cvar.valores_constantes = [
         int(df.at["alpha", "valor"]),
         int(df.at["lambda", "valor"]),
     ]
-    arq_cvar.escreve_arquivo(diretorio, arquivo)
+    arq_cvar.write(join(diretorio, arquivo))
 
     # Selcor
     Log.log().info(f"Adequando Seleção de Cortes...")
