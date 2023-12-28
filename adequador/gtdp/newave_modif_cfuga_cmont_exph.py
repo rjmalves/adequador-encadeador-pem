@@ -14,6 +14,7 @@ from adequador.utils.nomes import (
     nome_arquivo_modif,
 )
 from adequador.utils.log import Log
+from os.path import join
 
 NUM_ANOS_ESTUDO = 5
 
@@ -25,7 +26,7 @@ def adequa_usina(
     if r_usina is None:
         r_usina = USINA()
         r_usina.codigo = codigo
-        modif.append_registro(r_usina)
+        modif.data.append(r_usina)
 
     df_ordenado = df_usina.sort_values("mes")
     for ano in anos_estudo:
@@ -44,18 +45,15 @@ def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     anterior = modif.usina(codigo=codigo)
     for r in modificacoes_usina:
         if isinstance(r, CFUGA):
-            if (r.ano == ano) and (r.mes == mes):
-                modif.deleta_registro(r)
-            elif (r.ano == mes_anterior.year) and (
-                r.mes == mes_anterior.month
-            ):
+            if r.data_inicio == datetime(year=ano, month=mes, day=1):
+                modif.data.remove(r)
+            elif r.data_inicio == mes_anterior:
                 anterior = r
     if not np.isnan(valor):
         r = CFUGA()
-        r.ano = ano
-        r.mes = mes
+        r.data_inicio = datetime(year=ano, month=mes, day=1)
         r.nivel = valor
-        modif.cria_registro(anterior, r)
+        modif.data.add_after(anterior, r)
 
 
 def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
@@ -66,18 +64,15 @@ def adequa_cmont(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
     anterior = modif.usina(codigo=codigo)
     for r in modificacoes_usina:
         if isinstance(r, CMONT):
-            if (r.ano == ano) and (r.mes == mes):
-                modif.deleta_registro(r)
-            elif (r.ano == mes_anterior.year) and (
-                r.mes == mes_anterior.month
-            ):
+            if r.data_inicio == datetime(year=ano, month=mes, day=1):
+                modif.data.remove(r)
+            elif r.data_inicio == mes_anterior:
                 anterior = r
     if not np.isnan(valor):
         r = CMONT()
-        r.ano = ano
-        r.mes = mes
+        r.data_inicio = datetime(year=ano, month=mes, day=1)
         r.nivel = valor
-        modif.cria_registro(anterior, r)
+        modif.data.add_after(anterior, r)
 
 
 def adequa_expansoes(exph: Exph) -> bool:
@@ -89,7 +84,6 @@ def adequa_expansoes(exph: Exph) -> bool:
 
 
 def adequa_cfuga_cmont_exph(diretorio: str):
-
     Log.log().info(f"Adequando GTDP...")
 
     copia_hidr(diretorio)
@@ -102,23 +96,26 @@ def adequa_cfuga_cmont_exph(diretorio: str):
     arquivo = nome_arquivo_modif()
     converte_utf8(diretorio, arquivo)
 
-    modif = Modif.le_arquivo(diretorio, arquivo)
+    modif = Modif.read(join(diretorio, arquivo))
     # Apaga VOLMAX vazios
     volmax = modif.volmax()
     if isinstance(volmax, list):
         for v in volmax:
             if v.volume is None:
-                modif.deleta_registro(v)
+                modif.data.remove(v)
+    elif volmax is not None:
+        if volmax.volume is None:
+            modif.data.remove(volmax)
 
     usinas = df["usina"].unique().tolist()
     for u in usinas:
         df_usina = df.loc[df["usina"] == u, :]
         adequa_usina(u, df_usina, modif, anos_estudo)
-    modif.escreve_arquivo(diretorio, arquivo)
+    modif.write(join(diretorio, arquivo))
 
     arquivo = nome_arquivo_exph()
     converte_utf8(diretorio, arquivo)
 
-    exph = Exph.le_arquivo(diretorio, arquivo)
+    exph = Exph.read(join(diretorio, arquivo))
     if adequa_expansoes(exph):
-        exph.escreve_arquivo(diretorio, arquivo)
+        exph.write(join(diretorio, arquivo))

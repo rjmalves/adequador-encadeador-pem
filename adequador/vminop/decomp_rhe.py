@@ -6,10 +6,10 @@ from adequador.utils.backup import converte_utf8
 from adequador.utils.log import Log
 from adequador.utils.nomes import dados_caso, nome_arquivo_dadger
 from adequador.utils.configuracoes import Configuracoes
+from os.path import join
 
 
 def ajusta_rhe(diretorio: str):
-
     Log.log().info(f"Adequando VMINOP...")
 
     df = pd.read_csv(Configuracoes().arquivo_vminop, sep=";")
@@ -32,11 +32,11 @@ def ajusta_rhe(diretorio: str):
     arquivo = nome_arquivo_dadger(revisao_caso)
 
     converte_utf8(diretorio, arquivo)
-    dadger = Dadger.le_arquivo(diretorio, arquivo)
+    dadger = Dadger.read(join(diretorio, arquivo))
 
     # ======================== IDENTIFICA DADOS DO PMO
     # Pega o número total de estágios do deck
-    n_est = len(dadger.dp(subsistema=1))
+    n_est = len(dadger.dp(codigo_submercado=1))
 
     # Coleta informações de datas do deck
     dataini = datetime.date(
@@ -56,8 +56,8 @@ def ajusta_rhe(diretorio: str):
         rv0 = "sim"
 
     # ======================== CALCULA PENALIDADE RHE CONFORME REGRA ESTABELECIDA
-    cts = dadger.lista_registros(CT)
-    cvu_usinas = [r.cvus for r in cts]
+    cts = dadger.data.get_registers_of_type(CT)
+    cvu_usinas = [r.cvu for r in cts]
     cvu_max = max(max(cvu_usinas))
 
     # Regra de cálculo da penalidade:
@@ -74,7 +74,6 @@ def ajusta_rhe(diretorio: str):
     vminop_rhe = dict()
     for r in REEs_RHE:
         if pmo in [11, 12, 1]:  # se for PMO de nov, dez ou jan
-
             # Valor para o primeiro estágio/semana:
             if rv0 == "sim":  # é primeira semana
                 estagio_1 = min(
@@ -110,28 +109,28 @@ def ajusta_rhe(diretorio: str):
         posicao_registro,
     ):
         he_novo = HE()
-        he_novo.codigo = codigo
+        he_novo.codigo_restricao = codigo
         he_novo.tipo_limite = tipo_limite
         he_novo.limite = limite
         he_novo.estagio = estagio
-        he_novo.penalidade = penalidade
+        he_novo.valor_penalidade = penalidade
         he_novo.tipo_penalidade = tipo_penalidade
-        dadger.cria_registro(posicao_registro, he_novo)
+        dadger.data.add_after(posicao_registro, he_novo)
 
     def cria_CM(dadger: Dadger, codigo, ree, coeficiente, posicao_registro):
         cm_novo = CM()
-        cm_novo.codigo = codigo
-        cm_novo.ree = ree
+        cm_novo.codigo_restricao = codigo
+        cm_novo.codigo_ree = ree
         cm_novo.coeficiente = coeficiente
-        dadger.cria_registro(posicao_registro, cm_novo)
+        dadger.data.add_after(posicao_registro, cm_novo)
 
     # Confere registros CM e HE existentes
-    cms = dadger.lista_registros(CM)
-    cms_ree = [r.ree for r in cms]
-    cms_cod = [r.codigo for r in cms]
+    cms = dadger.data.get_registers_of_type(CM)
+    cms_ree = [r.codigo_ree for r in cms]
+    cms_cod = [r.codigo_restricao for r in cms]
 
-    hes = dadger.lista_registros(HE)
-    hes_codigos = [r.codigo for r in hes]
+    hes = dadger.data.get_registers_of_type(HE)
+    hes_codigos = [r.codigo_restricao for r in hes]
     hes_estagios = [r.estagio for r in hes]
 
     rhes_existentes = []
@@ -146,8 +145,7 @@ def ajusta_rhe(diretorio: str):
 
     # Verifica se as RHEs necessárias no deck já existem. Caso sim, confere e ajusta valores.
     # Caso não, cria os registros necessários.
-    for (r, e) in list(reversed(rhes_necessarios)):
-
+    for r, e in list(reversed(rhes_necessarios)):
         ind_REE = REEs_RHE.index(r)
         estagio = e
         if estagio == n_est:
@@ -156,16 +154,19 @@ def ajusta_rhe(diretorio: str):
             tipo = tipo_penalidade[0]  # se o estágio é do 1º mês
 
         if [r, e] in rhes_existentes:  # Já existe RHE para o REE e estágio
-
             ind_cod = rhes_existentes.index([r, e])
             codigo = hes_codigos[ind_cod]
 
-            dadger.he(codigo=codigo, estagio=estagio).tipo_limite = 2
-            dadger.he(codigo=codigo, estagio=estagio).limite = vminop_rhe[r][
-                estagio - 1
-            ]
-            dadger.he(codigo=codigo, estagio=estagio).penalidade = penalidade
-            dadger.he(codigo=codigo, estagio=estagio).tipo_penalidade = tipo
+            dadger.he(codigo_restricao=codigo, estagio=estagio).tipo_limite = 2
+            dadger.he(
+                codigo_restricao=codigo, estagio=estagio
+            ).limite = vminop_rhe[r][estagio - 1]
+            dadger.he(
+                codigo_restricao=codigo, estagio=estagio
+            ).valor_penalidade = penalidade
+            dadger.he(
+                codigo_restricao=codigo, estagio=estagio
+            ).tipo_penalidade = tipo
         else:
             # Não existe RHE para o REE e estágio
             # Cria novos registros
@@ -175,12 +176,10 @@ def ajusta_rhe(diretorio: str):
             else:
                 id = ind_REE + 1
 
-            if len(dadger.lista_registros(CM)) > 0:
-                posicao = dadger.lista_registros(CQ)[-1]
-            else:
-                posicao = dadger.lista_registros(CQ)[-1]
+            if len(dadger.data.get_registers_of_type(CM)) > 0:
+                posicao = dadger.data.get_registers_of_type(CQ)[-1]
 
-            if dadger.cm(codigo=id) is None:
+            if dadger.cm(codigo_restricao=id) is None:
                 cria_CM(dadger, id, r, 1, posicao)
 
             cria_HE(
@@ -194,4 +193,4 @@ def ajusta_rhe(diretorio: str):
                 posicao,
             )
 
-    dadger.escreve_arquivo(diretorio, arquivo)
+    dadger.write(join(diretorio, arquivo))
