@@ -21,6 +21,7 @@ from idecomp.decomp.modelos.dadger import TI, FA, VL, VA, VU
 from shutil import copyfile
 import datetime
 import pandas as pd
+import numpy as np
 from adequador.gtdp.copia_hidr_polinjus import copia_hidr, copia_polinjus
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
@@ -429,14 +430,14 @@ def adequa_cfuga_cmont(diretorio: str):
             cmont = df_cmont_cfuga.loc[
                 df_cmont_cfuga["usina"] == usina, "cmont"
             ].tolist()
-            if any([c is not None for c in cmont]):
+            if any([not np.isnan(c) for c in cmont]):
                 Log.log().info(cmont)
                 Log.log().info(f"Alterando COTVOL da UHE {usina}")
                 altera_cotvol_usina(dadger, usina, meses, anos, inds, cmont)
             cfuga = df_cmont_cfuga.loc[
                 df_cmont_cfuga["usina"] == usina, "cfuga"
             ].tolist()
-            if any([c is not None for c in cfuga]):
+            if any([not np.isnan(c) for c in cfuga]):
                 Log.log().info(cfuga)
                 Log.log().info(f"Alterando JUSMED da UHE {usina}")
                 altera_jusmed_usina(dadger, usina, meses, anos, inds, cfuga)
