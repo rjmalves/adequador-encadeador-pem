@@ -284,6 +284,7 @@ def adequa_cfuga_cmont(diretorio: str):
                 cmont = None
 
             if cmont is None:
+                Log.log().info(f"usina={usina},mes={meses[inds[m]]},semana={periodo}")
                 Log.log().info(f"Criando COTVOL: {reg_cotvol}")
                 # se não existe AC COTVOL, cria com valor estipulado e armazena cfuga
                 for o in [5, 4, 3, 2]:
