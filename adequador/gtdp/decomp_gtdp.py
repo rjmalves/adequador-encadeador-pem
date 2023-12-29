@@ -17,7 +17,7 @@ from idecomp.decomp.modelos.dadger import (
     ACVSVERT,
     ACVMDESV,
 )
-from idecomp.decomp.modelos.dadger import UH, TI, MP, FD, FA, VL, VA, VU, CQ
+from idecomp.decomp.modelos.dadger import TI, FA, VL, VA, VU
 from shutil import copyfile
 import datetime
 import pandas as pd
@@ -28,8 +28,6 @@ from adequador.utils.log import Log
 from adequador.utils.nomes import (
     dados_caso,
     nome_arquivo_dadger,
-    nome_arquivo_hidr,
-    nome_arquivo_polinjus,
 )
 from os.path import join
 
@@ -432,11 +430,13 @@ def adequa_cfuga_cmont(diretorio: str):
                 df_cmont_cfuga["usina"] == usina, "cmont"
             ].tolist()
             if any([c is not None for c in cmont]):
+                Log.log().info(f"Alterando COTVOL da UHE {usina}")
                 altera_cotvol_usina(dadger, usina, meses, anos, inds, cmont)
             cfuga = df_cmont_cfuga.loc[
                 df_cmont_cfuga["usina"] == usina, "cfuga"
             ].tolist()
             if any([c is not None for c in cfuga]):
+                Log.log().info(f"Alterando JUSMED da UHE {usina}")
                 altera_jusmed_usina(dadger, usina, meses, anos, inds, cfuga)
         else:
             # ------ Jirau e Santo Antônio:
