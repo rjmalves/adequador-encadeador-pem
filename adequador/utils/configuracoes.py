@@ -35,6 +35,9 @@ class Configuracoes(metaclass=Singleton):
             self.diretorio_dados_adequacao,
             getenv("ARQUIVO_CFUGA_CMONT_HISTORICO"),
         )
+        self.arquivo_volumes_sazonais = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_VOLUMES_SAZONAIS")
+        )
         self.arquivo_ac_nposnw = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_AC_NPOSNW")
         )
@@ -43,6 +46,9 @@ class Configuracoes(metaclass=Singleton):
         )
         self.arquivo_hidr = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_HIDR")
+        )
+        self.arquivo_indices = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_INDICES")
         )
         self.arquivo_polinjus = join(
             self.diretorio_dados_adequacao,
