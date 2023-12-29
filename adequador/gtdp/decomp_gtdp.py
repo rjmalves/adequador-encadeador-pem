@@ -789,7 +789,7 @@ def ajusta_representacao_belo_monte_pimental(diretorio: str):
                     )
 
                 volume = df.loc[
-                    (df["usina"] == u) & (df["mes"] == meses[inds[m]]),
+                    (df["usina"] == u) & (df["mes"] == inds[m] + 1),
                     "volume",
                 ].iloc[0]
 
