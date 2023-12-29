@@ -510,17 +510,17 @@ def copia_indices(diretorio: str):
 
 def ajusta_representacao_fontes(diretorio: str):
     def ajusta_codigos_uh_fontes(dadger: Dadger):
-        for k, v in mapa_fontes:
+        for k, v in mapa_fontes.items():
             uh_fontes = dadger.uh(codigo_usina=k)
             uh_fontes.codigo_usina = v
 
     def ajusta_codigos_mp_fontes(dadger: Dadger):
-        for k, v in mapa_fontes:
+        for k, v in mapa_fontes.items():
             mp_fontes = dadger.mp(codigo_usina=k)
             mp_fontes.codigo_usina = v
 
     def ajusta_codigos_fd_fontes(dadger: Dadger):
-        for k, v in mapa_fontes:
+        for k, v in mapa_fontes.items():
             fd_fontes = dadger.fd(codigo_usina=k)
             fd_fontes.codigo_usina = v
 
