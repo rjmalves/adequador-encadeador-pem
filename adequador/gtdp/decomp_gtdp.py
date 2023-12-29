@@ -319,7 +319,7 @@ def adequa_cfuga_cmont(diretorio: str):
             )
             cota = cfuga_tucurui[inds[m]]
             if reg is None:
-                cria_jusmed(usina, meses[inds[m]], 1, anos[m], cota)
+                cria_jusmed(dadger, usina, meses[inds[m]], 1, anos[m], cota)
             else:
                 reg.cota = cota
 
