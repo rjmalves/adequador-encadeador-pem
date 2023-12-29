@@ -906,7 +906,7 @@ def ajusta_representacao_belo_monte_pimental(diretorio: str):
     # Se o deck possui VL, VU e VA para BM, então o deck já
     # possui a representação. Não faz nada
     if (
-        dadger.vl(codigo_usina=288) is not None
+        dadger.vl(codigo_usina_influenciada=288) is not None
         and dadger.vu(
             codigo_usina_influenciada=288, codigo_usina_influenciadora=314
         )
