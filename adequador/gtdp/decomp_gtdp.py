@@ -888,6 +888,9 @@ def ajusta_representacao_belo_monte_pimental(diretorio: str):
             )
         ultimo_registro_adicionado_vazao_lateral = vu_bm
         # Insere VA 288 288 0.07
+        vu_bm = dadger.va(
+            codigo_usina_influenciada=288, codigo_posto_influenciador=288
+        )
         if va_bm is None:
             va_bm = VA()
             va_bm.codigo_usina_influenciada = 288
