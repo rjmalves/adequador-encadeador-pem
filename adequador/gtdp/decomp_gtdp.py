@@ -284,8 +284,6 @@ def adequa_cfuga_cmont(diretorio: str):
                 cmont = None
 
             if cmont is None:
-                Log.log().info(f"usina={usina},mes={meses[inds[m]]},semana={periodo}")
-                Log.log().info(f"Criando COTVOL: {reg_cotvol}")
                 # se não existe AC COTVOL, cria com valor estipulado e armazena cfuga
                 for o in [5, 4, 3, 2]:
                     cria_cotvol(
@@ -433,15 +431,11 @@ def adequa_cfuga_cmont(diretorio: str):
                 df_cmont_cfuga["usina"] == usina, "cmont"
             ].tolist()
             if any([not np.isnan(c) for c in cmont]):
-                Log.log().info(cmont)
-                Log.log().info(f"Alterando COTVOL da UHE {usina}")
                 altera_cotvol_usina(dadger, usina, meses, anos, inds, cmont)
             cfuga = df_cmont_cfuga.loc[
                 df_cmont_cfuga["usina"] == usina, "cfuga"
             ].tolist()
             if any([not np.isnan(c) for c in cfuga]):
-                Log.log().info(cfuga)
-                Log.log().info(f"Alterando JUSMED da UHE {usina}")
                 altera_jusmed_usina(dadger, usina, meses, anos, inds, cfuga)
         else:
             # ------ Jirau e Santo Antônio:
