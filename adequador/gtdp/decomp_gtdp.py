@@ -722,7 +722,7 @@ def ajusta_representacao_belo_monte_pimental(diretorio: str):
         # ACS VOLMIN, VOLMAX, VSVERT e VMDESV para o valor sazonal
         ultimo_registro_adicionado_volume = dadger.ac(
             codigo_usina=314, modificacao=ACCOTVOL
-        )
+        )[-1]
         df = pd.read_csv(Configuracoes().arquivo_volumes_sazonais, sep=";")
         usinas_volumes = [288, 314]
         for u in usinas_volumes:
