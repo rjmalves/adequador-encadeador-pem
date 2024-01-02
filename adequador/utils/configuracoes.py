@@ -29,6 +29,10 @@ class Configuracoes(metaclass=Singleton):
             self.diretorio_dados_adequacao,
             getenv("ARQUIVO_CPAMP_NEWAVE"),
         )
+        self.arquivo_valores_penalidades_newave = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_VALORES_PENALIDADES_NEWAVE"),
+        )
         self.arquivo_vminop = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_VMINOP")
         )

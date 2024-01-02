@@ -1,9 +1,14 @@
 from inewave.newave.sistema import Sistema
 from inewave.newave.penalid import Penalid
+from inewave.newave.clast import Clast
 import pandas as pd
 import numpy as np
 from adequador.utils.backup import converte_utf8
-from adequador.utils.nomes import nome_arquivo_penalid, nome_arquivo_sistema
+from adequador.utils.nomes import (
+    nome_arquivo_penalid,
+    nome_arquivo_sistema,
+    nome_arquivo_clast,
+)
 from adequador.utils.nomes import dados_caso
 from adequador.utils.log import Log
 from adequador.utils.configuracoes import Configuracoes
@@ -124,5 +129,38 @@ def corrige_penalid(diretorio: str):
                     & (df_pen["variavel"] == "GHMIN"),
                     "valor_R$_MWh",
                 ] = penalidade
-    penalid.penalidades = df_pen
+
+    # Troca os valores de penalidades, calculando com base em cada
+    # fonte informada
+
+    df_valores = pd.read_csv(
+        Configuracoes().arquivo_valores_penalidades_newave, sep=";"
+    )
+    sistema = Sistema.read(join(nome_arquivo_sistema(), arquivo))
+    clast = Clast.read(join(nome_arquivo_clast(), arquivo))
+    cdef = sistema.custo_deficit["custo"].max()
+    maxcvu = clast.usinas["valor"].max()
+    mapa_fontes = {
+        "MAXCVU": maxcvu,
+        "CDEF": cdef,
+    }
+    mapa_valores = {
+        linha["violacao"]: mapa_fontes[linha["fonte"]] * linha["fator"]
+        for _, linha in df_valores.iterrows()
+    }
+    rees = df_pen["codigo_ree_submercado"].dropna().unique().tolist()
+
+    df_pen_novo = pd.DataFrame(columns=df_pen.columns)
+    for k, v in mapa_valores.items():
+        for r in rees:
+            df_pen_novo.loc[df_pen_novo.shape[0], :] = [
+                k,
+                r,
+                None,
+                None,
+                v,
+                None,
+            ]
+
+    penalid.penalidades = df_pen_novo
     penalid.write(join(diretorio, arquivo))
