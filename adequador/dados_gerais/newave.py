@@ -85,7 +85,6 @@ def garante_campos_dger(dger: Dger):
     dger.memoria_calculo_cortes = 0
     dger.considera_geracao_eolica = 0
     dger.penalidade_corte_geracao_eolica = 0.0063
-    dger.compensacao_correlacao_cruzada = 0
     dger.restricao_turbinamento = 0
     dger.restricao_defluencia = 0
     dger.aproveitamento_bases_backward = 1
@@ -188,7 +187,6 @@ def garante_legendas_dger(caminho: str):
         "REST. FORNEC. GAS    ",
         "MEM. CALCULO CORTES  ",
         "GERACAO EOLICA       ",
-        "COMP. COR. CRUZ.     ",
         "REST. TURBINAMENTO   ",
         "REST. DEFL. MAXIMA   ",
         "BASE PLS BACKWARD    ",
