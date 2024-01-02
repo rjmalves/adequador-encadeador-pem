@@ -178,10 +178,7 @@ def ajusta_rhe(diretorio: str):
             else:
                 id = ind_REE + 1
 
-            cms = dadger.cm()
-            cms = [] if cms is None else cms
-            if len(cms) > 0:
-                posicao = dadger.cq()[-1]
+            posicao = dadger.cq()[-1]
 
             if dadger.cm(codigo_restricao=id) is None:
                 cria_CM(dadger, id, r, 1, posicao)
