@@ -170,5 +170,7 @@ def corrige_penalid(diretorio: str):
                 None,
             ]
 
+    print(df_pen)
+    print(df_pen_novo)
     penalid.penalidades = df_pen_novo
     penalid.write(join(diretorio, arquivo))
