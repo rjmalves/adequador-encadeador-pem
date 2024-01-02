@@ -41,13 +41,16 @@ def ajusta_dados_gerais(diretorio: str):
     # pois a informação agora é lida pelo vazoes.xx.
 
     def exclui_registros(dadger: Dadger, registros):
-        if len(registros) > 0:
-            for reg in registros:
-                dadger.data.remove(reg)
+        if registros is not None:
+            if isinstance(registros, list):
+                for reg in registros:
+                    dadger.data.remove(reg)
+            else:
+                dadger.data.remove(registros)
 
-    registro_ea = dadger.data.get_registers_of_type(EA)
-    registro_es = dadger.data.get_registers_of_type(ES)
-    registro_qi = dadger.data.get_registers_of_type(QI)
+    registro_ea = dadger.ea()
+    registro_es = dadger.es()
+    registro_qi = dadger.qi()
 
     exclui_registros(dadger, registro_ea)
     exclui_registros(dadger, registro_es)
