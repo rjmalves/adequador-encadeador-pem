@@ -32,6 +32,8 @@ def ajusta_volume_espera(diretorio: str):
 
     # Extrai somente as informações que serão utilizadas para atualizar os VE
     indices = list(df_ve.index)
+    if caso not in indices:
+        return
     idx = indices.index(caso)
     idx_linhas = list(range(idx, idx + num_casos_a_frente))
     linhas_ve = df_ve.iloc[idx_linhas, :]
