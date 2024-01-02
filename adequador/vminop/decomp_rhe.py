@@ -125,11 +125,13 @@ def ajusta_rhe(diretorio: str):
         dadger.data.add_after(posicao_registro, cm_novo)
 
     # Confere registros CM e HE existentes
-    cms = dadger.data.get_registers_of_type(CM)
+    cms = dadger.cm()
+    cms = [] if cms is None else cms
     cms_ree = [r.codigo_ree for r in cms]
     cms_cod = [r.codigo_restricao for r in cms]
 
-    hes = dadger.data.get_registers_of_type(HE)
+    hes = dadger.he()
+    hes = [] if hes is None else hes
     hes_codigos = [r.codigo_restricao for r in hes]
     hes_estagios = [r.estagio for r in hes]
 
