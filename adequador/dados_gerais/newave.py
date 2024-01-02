@@ -320,7 +320,7 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
     copyfile(Configuracoes().arquivo_selcor_newave, arq_destino_selcor)
 
     # cpamp.dat
-    if isfile(Configuracoes().arquivo_selcor_newave):
+    if isfile(Configuracoes().arquivo_cpamp_newave):
         Log.log().info(f"Adequando parametrização CPAMP...")
         arq_destino_cpamp = join(diretorio, "cpamp.dat")
-        copyfile(Configuracoes().arquivo_selcor_newave, arq_destino_cpamp)
+        copyfile(Configuracoes().arquivo_cpamp_newave, arq_destino_cpamp)
