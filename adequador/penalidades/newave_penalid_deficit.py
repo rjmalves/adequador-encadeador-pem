@@ -164,13 +164,19 @@ def corrige_penalid(diretorio: str):
             df_pen_novo.loc[df_pen_novo.shape[0], :] = [
                 k,
                 r,
-                None,
+                1,
                 None,
                 v,
                 None,
             ]
+            df_pen_novo.loc[df_pen_novo.shape[0], :] = [
+                k,
+                r,
+                2,
+                None,
+                None,
+                None,
+            ]
 
-    print(df_pen)
-    print(df_pen_novo)
     penalid.penalidades = df_pen_novo
     penalid.write(join(diretorio, arquivo))
