@@ -136,8 +136,8 @@ def corrige_penalid(diretorio: str):
     df_valores = pd.read_csv(
         Configuracoes().arquivo_valores_penalidades_newave, sep=";"
     )
-    sistema = Sistema.read(join(nome_arquivo_sistema(), arquivo))
-    clast = Clast.read(join(nome_arquivo_clast(), arquivo))
+    sistema = Sistema.read(join(diretorio, nome_arquivo_sistema()))
+    clast = Clast.read(join(diretorio, nome_arquivo_clast()))
     cdef = sistema.custo_deficit["custo"].max()
     maxcvu = clast.usinas["valor"].max()
     mapa_fontes = {
