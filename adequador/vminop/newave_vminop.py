@@ -139,6 +139,7 @@ def adequa_volumes_curva(
                 "valor",
             ] = volume_minimo
         else:
+            print(ano, mes)
             curva.curva_seguranca.loc[
                 (curva.curva_seguranca["codigo_ree"] == ree)
                 & (
