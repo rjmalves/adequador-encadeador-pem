@@ -281,6 +281,15 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
         dger.mantem_arquivos_energias = 1
         dger.impressao_estados_geracao_cortes = 0
 
+    dger.estacoes_bombeamento = int(df.at["estacoesbombeamento", "valor"])
+    dger.canal_desvio = int(df.at["canaldesvio", "valor"])
+    dger.restricoes_rhq = int(df.at["restricoesrhq", "valor"])
+    dger.restricoes_rhv = int(df.at["restricoesrhv", "valor"])
+    dger.gera_arquivo_cortes_unico = int(df.at["geracorteunico", "valor"])
+    dger.mantem_arquivos_cortes_por_periodo = int(
+        df.at["mantemcortesperiodo", "valor"]
+    )
+
     dger.write(join(diretorio, arquivo))
 
     # TODO - temporario (garante legendas)

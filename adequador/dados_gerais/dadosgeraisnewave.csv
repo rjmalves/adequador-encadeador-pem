@@ -15,8 +15,15 @@ lppturbinamentouhe;0
 lppdefluenciauhe;0
 lppturbinamentoree;0
 lppdefluenciaree;0
+geracaoeolica;0
 restricoeseletricasespeciais;0
 funcaoproducao;0
 fcfpos;0
+estacoesbombeamento;0
+canaldesvio;0
+restricoesrhq;0
+restricoesrhv;0
+geracorteunico;1
+mantemcortesperiodo;0
 usa_gerenciador_processos;1
 caminho_gerenciador_processos;"/home/pem/versoes/NEWAVE/v28.11.6_CPAMP/"
