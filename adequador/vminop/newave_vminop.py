@@ -118,14 +118,14 @@ def adequa_volumes_curva(
     for ano in anos:
         if curva.curva_seguranca.loc[
             (curva.curva_seguranca["codigo_ree"] == ree)
-            & (curva.curva_seguranca["data"].dt.year == ano),
+            & (curva.curva_seguranca["data"].dt.year == int(ano)),
             :,
         ].empty:
             for m in range(1, 13):
                 dic_curva = dict(
                     {
                         "codigo_ree": [ree],
-                        "data": [datetime(year=ano, month=m, day=1)],
+                        "data": [datetime(year=int(ano), month=m, day=1)],
                         "valor": [volume_minimo],
                     }
                 )
@@ -135,16 +135,15 @@ def adequa_volumes_curva(
         if mes == 999:
             curva.curva_seguranca.loc[
                 (curva.curva_seguranca["codigo_ree"] == ree)
-                & (curva.curva_seguranca["data"].dt.year == ano),
+                & (curva.curva_seguranca["data"].dt.year == int(ano)),
                 "valor",
             ] = volume_minimo
         else:
-            print(ano, mes)
             curva.curva_seguranca.loc[
                 (curva.curva_seguranca["codigo_ree"] == ree)
                 & (
                     curva.curva_seguranca["data"]
-                    == datetime(year=ano, month=mes, day=1)
+                    == datetime(year=int(ano), month=int(mes), day=1)
                 ),
                 "valor",
             ] = volume_minimo
