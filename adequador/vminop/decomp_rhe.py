@@ -56,7 +56,7 @@ def ajusta_rhe(diretorio: str):
         rv0 = "sim"
 
     # ======================== CALCULA PENALIDADE RHE CONFORME REGRA ESTABELECIDA
-    cts = dadger.data.get_registers_of_type(CT)
+    cts = dadger.ct()
     cvu_usinas = [r.cvu for r in cts]
     cvu_max = max(max(cvu_usinas))
 
@@ -178,8 +178,10 @@ def ajusta_rhe(diretorio: str):
             else:
                 id = ind_REE + 1
 
-            if len(dadger.data.get_registers_of_type(CM)) > 0:
-                posicao = dadger.data.get_registers_of_type(CQ)[-1]
+            cms = dadger.cm()
+            cms = [] if cms is None else cms
+            if len(cms) > 0:
+                posicao = dadger.cq()[-1]
 
             if dadger.cm(codigo_restricao=id) is None:
                 cria_CM(dadger, id, r, 1, posicao)
