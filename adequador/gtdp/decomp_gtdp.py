@@ -726,7 +726,7 @@ def ajusta_representacao_belo_monte_pimental(diretorio: str):
         for u in usinas_volumes:
             estagios = []
             for m in [1, 0]:
-                for e in range(n_est - 1, 0, -1):
+                for e in range(n_est - 1):
                     if not (
                         m == 1 and e > 1
                     ):  # se não é o 2º mês e estágio > 1
