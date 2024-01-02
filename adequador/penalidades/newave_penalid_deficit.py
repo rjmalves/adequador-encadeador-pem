@@ -149,8 +149,16 @@ def corrige_penalid(diretorio: str):
         for _, linha in df_valores.iterrows()
     }
     rees = df_pen["codigo_ree_submercado"].dropna().unique().tolist()
-    print(rees)
-    df_pen_novo = pd.DataFrame(columns=df_pen.columns)
+    df_pen_novo = pd.DataFrame(
+        columns=[
+            "variavel",
+            "codigo_ree_submercado",
+            "patamar_penalidade",
+            "patamar_carga",
+            "valor_R$_MWh",
+            "valor_R$_hm3",
+        ]
+    )
     for k, v in mapa_valores.items():
         for r in rees:
             df_pen_novo.loc[df_pen_novo.shape[0], :] = [
