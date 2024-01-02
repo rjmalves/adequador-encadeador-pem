@@ -25,6 +25,10 @@ class Configuracoes(metaclass=Singleton):
             self.diretorio_dados_adequacao,
             getenv("ARQUIVO_SELCOR_NEWAVE"),
         )
+        self.arquivo_cpamp_newave = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_CPAMP_NEWAVE"),
+        )
         self.arquivo_vminop = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_VMINOP")
         )

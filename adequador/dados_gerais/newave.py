@@ -22,7 +22,7 @@ from adequador.utils.nomes import (
     nome_arquivo_cortesh_pos,
 )
 from shutil import copyfile
-from os.path import join
+from os.path import join, isfile
 from adequador.utils.log import Log
 import pandas as pd
 
@@ -202,6 +202,11 @@ def garante_legendas_dger(caminho: str):
         "REST.ELETRI ESPECIAIS",
         "FUNCAO DE PROD. UHE  ",
         "FCF POS ESTUDO       ",
+        "ESTACOES BOMBEAMENTO ",
+        "CANAL DE DESVIO      ",
+        "REST.HID. VAZAO(RHQ) ",
+        "REST.HID. VOLUME(RHV)",
+        "TRATA ARQS CORTES    ",
     ]
     COL_LEGENDA = 21
 
@@ -315,3 +320,9 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
     Log.log().info(f"Adequando Seleção de Cortes...")
     arq_destino_selcor = join(diretorio, "selcor.dat")
     copyfile(Configuracoes().arquivo_selcor_newave, arq_destino_selcor)
+
+    # cpamp.dat
+    if isfile(Configuracoes().arquivo_selcor_newave):
+        Log.log().info(f"Adequando parametrização CPAMP...")
+        arq_destino_cpamp = join(diretorio, "cpamp.dat")
+        copyfile(Configuracoes().arquivo_selcor_newave, arq_destino_cpamp)
