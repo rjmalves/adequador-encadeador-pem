@@ -22,7 +22,11 @@ from shutil import copyfile
 import datetime
 import pandas as pd
 import numpy as np
-from adequador.gtdp.copia_hidr_polinjus import copia_hidr, copia_polinjus
+from adequador.gtdp.copia_hidr_polinjus import (
+    copia_hidr,
+    copia_polinjus,
+    copia_indices,
+)
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
 from adequador.utils.log import Log
@@ -500,12 +504,6 @@ def ajusta_fj(diretorio: str):
         dadger.data.add_after(dadger.ev, r)
 
     dadger.write(join(diretorio, arquivo))
-
-
-def copia_indices(diretorio: str):
-    arquivo = "indices.csv"
-    arq_destino = join(diretorio, arquivo)
-    copyfile(Configuracoes().arquivo_indices, arq_destino)
 
 
 def ajusta_representacao_fontes(diretorio: str):

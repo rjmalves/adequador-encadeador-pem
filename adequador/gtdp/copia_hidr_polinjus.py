@@ -22,3 +22,9 @@ def copia_polinjus(diretorio: str):
         remove(arq_polinjus_dat)
     arq_destino_polinjus = join(diretorio, arquivo)
     copyfile(Configuracoes().arquivo_polinjus, arq_destino_polinjus)
+
+
+def copia_indices(diretorio: str):
+    arquivo = "indices.csv"
+    arq_destino = join(diretorio, arquivo)
+    copyfile(Configuracoes().arquivo_indices, arq_destino)
