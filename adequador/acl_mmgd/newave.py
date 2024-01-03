@@ -757,12 +757,11 @@ class ConversorCargasPECNEWAVE:
                 dados_medios = dfp.loc[
                     filtro_medio, self.COL_CARGA_MMGD
                 ].to_numpy()
-                dados = dfp.loc[filtro, self.COL_CARGA_MMGD].to_numpy()
+                dados_dfp = dfp.loc[filtro, self.COL_CARGA_MMGD].to_numpy()
                 indice_inicial = 60 * indice_patamar
                 indice_final = 60 * (indice_patamar + 1)
-                print(indice_inicial, indice_final)
                 dados[indice_inicial:indice_final] = np.divide(
-                    dados, dados_medios
+                    dados_dfp, dados_medios
                 )
             # Monta o trecho do dataframe associado ao bloco lido
             df_pats = pd.DataFrame(
