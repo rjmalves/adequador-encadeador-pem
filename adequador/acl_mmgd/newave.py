@@ -872,7 +872,7 @@ class DecompositorPequsiNEWAVE:
         df = sistema_adequacao.geracao_usinas_nao_simuladas
 
         # Só adequa se não tem pequsi separada por bloco
-        if len(df["bloco"].unique()) >= 4:
+        if len(df["indice_bloco"].unique()) >= 4:
             return
 
         df_ref = sistema_referencia.geracao_usinas_nao_simuladas
