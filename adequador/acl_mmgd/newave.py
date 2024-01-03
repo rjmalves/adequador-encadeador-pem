@@ -910,15 +910,13 @@ class DecompositorPequsiNEWAVE:
                     & (df_ref["data"].dt.year == 2020)
                     & df_ref["data"].dt.month.isin(meses),
                     "valor",
-                ] = float(
-                    df_ref.loc[
-                        (df_ref["codigo_submercado"] == submercado)
-                        & (df_ref["fonte"] == fonte)
-                        & (df_ref["data"].dt.year == 2021)
-                        & df_ref["data"].dt.month.isin(meses),
-                        "valor",
-                    ]
-                )
+                ] = df_ref.loc[
+                    (df_ref["codigo_submercado"] == submercado)
+                    & (df_ref["fonte"] == fonte)
+                    & (df_ref["data"].dt.year == 2021)
+                    & df_ref["data"].dt.month.isin(meses),
+                    "valor",
+                ].to_numpy()
 
         df_novo = df_ref.copy()
         for submercado in df_novo["codigo_submercado"].unique():
