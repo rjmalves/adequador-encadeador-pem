@@ -675,10 +675,6 @@ class ConversorCargasPECNEWAVE:
             df_cadic_mmgd["razao"] = "MMGD"
             # Reordena as colunas e concatena
             df_cadic_mmgd = df_cadic_mmgd[
-                ["codigo_submercado", "data", "valor"]
-            ]
-            # Reordena as colunas e concatena
-            df_cadic_mmgd = df_cadic_mmgd[
                 [
                     "codigo_submercado",
                     "nome_submercado",
