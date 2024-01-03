@@ -24,7 +24,25 @@ def copia_polinjus(diretorio: str):
     copyfile(Configuracoes().arquivo_polinjus, arq_destino_polinjus)
 
 
-def copia_indices(diretorio: str):
+def copia_indices_newave(diretorio: str):
     arquivo = "indices.csv"
     arq_destino = join(diretorio, arquivo)
-    copyfile(Configuracoes().arquivo_indices, arq_destino)
+    copyfile(Configuracoes().arquivo_indices_newave, arq_destino)
+
+
+def copia_indices_decomp(diretorio: str):
+    arquivo = "indices.csv"
+    arq_destino = join(diretorio, arquivo)
+    copyfile(Configuracoes().arquivo_indices_decomp, arq_destino)
+
+
+def copia_volrefsaz(diretorio: str):
+    arquivo = "volref_saz.dat"
+    arq_destino = join(diretorio, arquivo)
+    copyfile(Configuracoes().arquivo_volrefsaz, arq_destino)
+
+
+def copia_volumes_referencia_libs(diretorio: str):
+    arquivo = "volumes-referencia.csv"
+    arq_destino = join(diretorio, arquivo)
+    copyfile(Configuracoes().arquivo_volumes_referencia_libs, arq_destino)

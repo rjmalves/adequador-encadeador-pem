@@ -59,12 +59,23 @@ class Configuracoes(metaclass=Singleton):
         self.arquivo_hidr = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_HIDR")
         )
-        self.arquivo_indices = join(
-            self.diretorio_dados_adequacao, getenv("ARQUIVO_INDICES")
+        self.arquivo_indices_newave = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_INDICES_NEWAVE")
+        )
+        self.arquivo_indices_decomp = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_INDICES_DECOMP")
         )
         self.arquivo_polinjus = join(
             self.diretorio_dados_adequacao,
             getenv("ARQUIVO_POLINJUS"),
+        )
+        self.arquivo_volrefsaz = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_VOLREFSAZ"),
+        )
+        self.arquivo_volumes_referencia_libs = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_VOLUMES_REFERENCIA_LIBS"),
         )
         self.arquivo_custos_deficit = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_CUSTOS_DEFICIT")

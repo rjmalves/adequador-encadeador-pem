@@ -25,7 +25,7 @@ import numpy as np
 from adequador.gtdp.copia_hidr_polinjus import (
     copia_hidr,
     copia_polinjus,
-    copia_indices,
+    copia_indices_decomp,
 )
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
@@ -976,4 +976,4 @@ def ajusta_gtdp(diretorio: str):
     ajusta_fj(diretorio)
     copia_hidr(diretorio)
     copia_polinjus(diretorio)
-    copia_indices(diretorio)
+    copia_indices_decomp(diretorio)

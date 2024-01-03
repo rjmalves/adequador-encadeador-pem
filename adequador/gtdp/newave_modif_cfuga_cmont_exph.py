@@ -8,7 +8,9 @@ from inewave.newave.exph import Exph
 from adequador.gtdp.copia_hidr_polinjus import (
     copia_hidr,
     copia_polinjus,
-    copia_indices,
+    copia_indices_newave,
+    copia_volrefsaz,
+    copia_volumes_referencia_libs,
 )
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
@@ -92,7 +94,9 @@ def adequa_cfuga_cmont_exph(diretorio: str):
 
     copia_hidr(diretorio)
     copia_polinjus(diretorio)
-    copia_indices(diretorio)
+    copia_indices_newave(diretorio)
+    copia_volrefsaz(diretorio)
+    copia_volumes_referencia_libs(diretorio)
 
     df = pd.read_csv(Configuracoes().arquivo_cfuga_cmont, sep=";")
     ano_caso, _, _ = dados_caso(diretorio)
