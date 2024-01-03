@@ -528,6 +528,7 @@ class ConversorACLVerificadoNEWAVE:
         # patamar = Patamar.le_arquivo(self.__caminho_deck, self.__nome_patamar)
         df_pequsi = sistema.geracao_usinas_nao_simuladas
         df_pequsi = df_pequsi.loc[~df_pequsi["fonte"].str.contains("MMGD")]
+        print(df_pequsi)
         df_pequsi = self.__obtem_pequsi_verificada(
             self.__df_base_pequsi, df_pequsi
         )
