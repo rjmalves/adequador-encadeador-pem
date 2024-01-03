@@ -164,7 +164,7 @@ class DecompositorPequsiDECOMP:
         for indice, submercado in submercados.items():
             for fonte in ["PCH", "PCT", "EOL", "UFV"]:
                 pequsi_fonte = df.loc[
-                    (df["submercado"] == indice)
+                    (df["codigo_submercado"] == indice)
                     & (df["fonte"] == fonte)
                     & (df["data"] >= self.__data_base),
                     "valor",
