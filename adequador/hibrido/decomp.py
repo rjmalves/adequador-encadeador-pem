@@ -55,7 +55,7 @@ class AdequaDeckHibridoDECOMP:
         dadger.write(join(self.__caminho_deck, self.__arquivos.dadger))
 
     def __adiciona_NW(self, dadger: Dadger, u: int):
-        usina = dadger.uh(codigo=u)
+        usina = dadger.uh(codigo_usina=u)
         if usina is None:
             posicao = dadger.uh()[0]
             uh_novo = UH()
