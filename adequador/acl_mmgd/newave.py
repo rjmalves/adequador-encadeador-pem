@@ -662,7 +662,7 @@ class ConversorCargasPECNEWAVE:
                 dfp["TYPE"] == self.NOME_PATAMAR_MEDIO
             )
             datas = dfp.loc[filtro, "DATE"].tolist()
-            dados = dfp.loc[filtro, self.COL_CARGA_MMGD].to_numpy()
+            dados = dfp.loc[filtro, self.COL_BASE_MMGD].to_numpy()
             # Adiciona o periodo pós
             datas = np.concatenate(
                 (datas, [d + relativedelta(years=1) for d in datas[-12:]])
