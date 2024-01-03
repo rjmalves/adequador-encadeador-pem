@@ -2,6 +2,8 @@ from inewave.newave.arquivos import Arquivos
 from inewave.newave.caso import Caso
 from inewave.newave.dger import Dger
 from inewave.newave.cvar import Cvar
+from inewave.newave.confhd import Confhd
+from inewave.newave.modif import Modif
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
 from adequador.utils.nomes import (
@@ -24,6 +26,7 @@ from adequador.utils.nomes import (
 from shutil import copyfile
 from os.path import join, isfile
 from adequador.utils.log import Log
+from datetime import datetime
 import pandas as pd
 
 
@@ -48,6 +51,7 @@ def garante_campos_dger(dger: Dger):
     dger.modif_automatica_adterm = 1
     dger.considera_ghmin = 1
     dger.simulacao_final_com_data = 0
+    dger.agregacao_simulacao_final = 0
     dger.utiliza_gerenciamento_pls = 0
     dger.comunicacao_dois_niveis = 0
     dger.armazenamento_local_arquivos_temporarios = 0
@@ -216,6 +220,48 @@ def garante_legendas_dger(caminho: str):
             arq_saida.write(legenda + linha[COL_LEGENDA:])
 
 
+def __corrige_juruena_confhd(diretorio: str):
+    confhd = Confhd.read(join(diretorio, "confhd.dat"))
+    df = confhd.usinas
+    modifica_juruena = (
+        df.loc[df["codigo_usina"] == 309, "usina_modificada"].tolist()[0] == 1
+    )
+    if not modifica_juruena:
+        df.loc[df["codigo_usina"] == 309, "usina_modificada"] = 1
+        confhd.usinas = df
+        confhd.write(join(diretorio, "confhd.dat"))
+
+    return not modifica_juruena
+
+
+def __adiciona_juruena_modif(diretorio: str):
+    caminho_modif = join(diretorio, "modif.dat")
+    modif = Modif.read(caminho_modif)
+    if modif.usina(309) is not None:
+        return
+    novo_arquivo = []
+    with open(caminho_modif, "r") as arquivo:
+        for i, linha in enumerate(arquivo.readlines()):
+            if i == 2:
+                novo_arquivo.append(" USINA    309\n")
+                novo_arquivo.append(" COTAREA  0.64 0.00 0.00 0.00 0.00\n")
+            novo_arquivo.append(linha)
+    with open(caminho_modif, "w") as arquivo:
+        for linha in novo_arquivo:
+            arquivo.write(linha)
+
+
+def __corrige_juruena(diretorio: str):
+    dger = Dger.read(join(diretorio, "dger.dat"))
+    data_caso = datetime(
+        year=dger.ano_inicio_estudo, month=dger.mes_inicio_estudo, day=1
+    )
+    data_inicial_juruena = datetime(year=2021, month=8, day=1)
+    if data_inicial_juruena <= data_caso:
+        if __corrige_juruena_confhd(diretorio):
+            __adiciona_juruena_modif(diretorio)
+
+
 def ajusta_dados_gerais_cvar_selcor(diretorio: str):
     Log.log().info(f"Adequando DADOSGERAIS...")
 
@@ -240,6 +286,9 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
     garante_campos_dger(dger)
 
     # Modifica, caso desejado, geração de cenários e critério de parada
+    dger.agregacao_simulacao_final = int(
+        df.at["agregacao_simulacao_final", "valor"]
+    )
     dger.consideracao_media_anual_afluencias = int(df.at["parp", "valor"])
     dger.num_minimo_iteracoes = int(df.at["miniter", "valor"])
     dger.num_max_iteracoes = int(df.at["maxiter", "valor"])
@@ -324,3 +373,6 @@ def ajusta_dados_gerais_cvar_selcor(diretorio: str):
         Log.log().info(f"Adequando parametrização CPAMP...")
         arq_destino_cpamp = join(diretorio, "cpamp.dat")
         copyfile(Configuracoes().arquivo_cpamp_newave, arq_destino_cpamp)
+
+    # JURUENA
+    __corrige_juruena(diretorio)

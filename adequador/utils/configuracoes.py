@@ -33,6 +33,10 @@ class Configuracoes(metaclass=Singleton):
             self.diretorio_dados_adequacao,
             getenv("ARQUIVO_VALORES_PENALIDADES_NEWAVE"),
         )
+        self.arquivo_base_pequsi = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_BASE_PEQUSI"),
+        )
         self.arquivo_vminop = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_VMINOP")
         )
@@ -73,6 +77,25 @@ class Configuracoes(metaclass=Singleton):
         )
         self.diretorio_velocidades = join(
             self.diretorio_dados_adequacao, getenv("DIRETORIO_VELOCIDADES")
+        )
+        self.diretorio_dados_mmgd_newave = join(
+            self.diretorio_dados_adequacao,
+            getenv("DIRETORIO_DADOS_MMGD_NEWAVE"),
+        )
+        self.diretorio_dados_mmgd_decomp = join(
+            self.diretorio_dados_adequacao,
+            getenv("DIRETORIO_DADOS_MMGD_DECOMP"),
+        )
+        self.diretorio_casos_fcf_externa = getenv(
+            "DIRETORIO_CASOS_FCF_EXTERNA"
+        )
+        self.arquivo_mapa_fcf_externa = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_MAPA_FCF_EXTERNA"),
+        )
+        self.arquivo_produtibilidades_usinas = join(
+            self.diretorio_dados_adequacao,
+            getenv("ARQUIVO_PRODUTIBILIDADES_USINAS"),
         )
         self.executavel_convertenomes_newave = getenv(
             "EXECUTAVEL_CONVERTENOMES_NEWAVE"

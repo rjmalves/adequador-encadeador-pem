@@ -13,6 +13,8 @@ from adequador.gtdp.decomp_gtdp import ajusta_gtdp
 from adequador.penalidades.decomp_deficit import ajusta_deficit
 from adequador.restricoes.decomp_volume_espera import ajusta_volume_espera
 from adequador.vminop.decomp_rhe import ajusta_rhe
+from adequador.acl_mmgd.decomp import adequa_acl_mmgd_decomp
+from adequador.hibrido.decomp import adequa_hibrido_decomp
 from adequador.utils.configuracoes import Configuracoes
 from adequador.utils.log import Log
 from adequador.utils.iteracao import itera_casos
@@ -28,6 +30,8 @@ CODIGOS_AJUSTES_DECOMP: Dict[str, Callable] = {
     "VOLUMES_ESPERA": ajusta_volume_espera,
     "VMINOP": ajusta_rhe,
     "UTF8": ajusta_utf8,
+    "ACL_MMGD": adequa_acl_mmgd_decomp,
+    "HIBRIDO": adequa_hibrido_decomp,
 }
 
 

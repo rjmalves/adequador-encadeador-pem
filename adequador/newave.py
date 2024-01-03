@@ -8,6 +8,9 @@ from adequador.penalidades.newave_penalid_deficit import (
     corrige_deficit_sistema,
     corrige_penalid,
 )
+from adequador.acl_mmgd.newave import adequa_acl_mmgd_newave
+from adequador.hibrido.newave import adequa_hibrido_newave
+from adequador.fcfexterna.newave import adequa_fcfexterna_newave
 from adequador.utils.configuracoes import Configuracoes
 from adequador.utils.log import Log
 from adequador.utils.iteracao import itera_casos
@@ -26,6 +29,9 @@ CODIGOS_AJUSTES_NEWAVE: Dict[str, Callable] = {
     "PENALIDADES": corrige_penalid,
     "VMINOP": adequa_vminop,
     "UTF8": ajusta_utf8,
+    "ACL_MMGD": adequa_acl_mmgd_newave,
+    "HIBRIDO": adequa_hibrido_newave,
+    "FCFEXTERNA": adequa_fcfexterna_newave,
 }
 
 
