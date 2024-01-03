@@ -463,10 +463,12 @@ class ConversorACLVerificadoNEWAVE:
         submercados = pequsi_existente["codigo_submercado"].unique()
         fontes = pequsi_existente["fonte"].unique()
         df_verif = pequsi_existente.copy()
+        datas_caso = df_verif["data"].unique().tolist()
         for sub in submercados:
             for fonte in fontes:
                 dados_verif = base_pequsi.loc[
                     (base_pequsi["codigo_submercado"] == sub)
+                    & (base_pequsi["data"].isin(datas_caso))
                     & (base_pequsi["fonte"] == fonte),
                     "geracao",
                 ].to_numpy()
