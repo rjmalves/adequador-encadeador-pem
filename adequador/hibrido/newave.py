@@ -205,7 +205,7 @@ class AdequaDeckHibridoNEWAVE:
                     )
                 valor_restricao_sazonal = fsarh_u["Valor"].tolist()[0]
             reg_novo = TURBMINT()
-            reg_novo.data_inicio = datetime(year=e.year, month=m.month, day=1)
+            reg_novo.data_inicio = datetime(year=e.year, month=e.month, day=1)
             if reg_novo.data_inicio.month in meses_fsarh_sazonal:
                 reg_novo.turbinamento = valor_restricao_sazonal
             else:
