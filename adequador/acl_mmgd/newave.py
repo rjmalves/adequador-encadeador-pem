@@ -527,7 +527,7 @@ class ConversorACLVerificadoNEWAVE:
         sistema = Sistema.read(join(self.__caminho_deck, self.__nome_sistema))
         # patamar = Patamar.le_arquivo(self.__caminho_deck, self.__nome_patamar)
         df_pequsi = sistema.geracao_usinas_nao_simuladas
-        df_pequsi = df_pequsi.loc[df_pequsi["indice_bloco"] <= 4]
+        df_pequsi = df_pequsi.loc[~df_pequsi["fonte"].str.contains("MMGD")]
         df_pequsi = self.__obtem_pequsi_verificada(
             self.__df_base_pequsi, df_pequsi
         )
@@ -651,9 +651,8 @@ class ConversorCargasPECNEWAVE:
     def processa_cadic_mmgd_base(self):
         cadic = Cadic.read(join(self.__caminho_deck, self.__nome_cadic))
 
-        razoes_cadic = cadic.cargas["razao"].unique().tolist()
-        if any(["MMGD" in r for r in razoes_cadic]):
-            return
+        df_cargas = cadic.cargas
+        df_cargas = df_cargas.loc[~df_cargas["razao"].str.contains("MMGD")]
 
         df = pd.DataFrame()
         dfp = self.df_planilha
@@ -687,16 +686,15 @@ class ConversorCargasPECNEWAVE:
             ]
             df = pd.concat([df, df_cadic_mmgd], ignore_index=True)
 
-        cadic.cargas = pd.concat([cadic.cargas, df], ignore_index=True)
+        cadic.cargas = pd.concat([df_cargas, df], ignore_index=True)
         cadic.write(join(self.__caminho_deck, self.__nome_cadic))
 
     def processa_sistema_mmgd_expansao(self):
         sistema = Sistema.read(join(self.__caminho_deck, self.__nome_sistema))
-        fontes_pequsi = (
-            sistema.geracao_usinas_nao_simuladas["fonte"].unique().tolist()
-        )
-        if any(["MMGD" in r for r in fontes_pequsi]):
-            return
+        df_pequsi_sem_mmgd = sistema.geracao_usinas_nao_simuladas
+        df_pequsi_sem_mmgd = df_pequsi_sem_mmgd.loc[
+            ~df_pequsi_sem_mmgd["fonte"].str.contains("MMGD")
+        ]
 
         df = pd.DataFrame()
         dfp = self.df_planilha
@@ -732,7 +730,7 @@ class ConversorCargasPECNEWAVE:
                 df = pd.concat([df, df_pequsi], ignore_index=True)
 
         sistema.geracao_usinas_nao_simuladas = pd.concat(
-            [sistema.geracao_usinas_nao_simuladas, df], ignore_index=True
+            [df_pequsi_sem_mmgd, df], ignore_index=True
         )
         sistema.geracao_usinas_nao_simuladas.sort_values(
             ["codigo_submercado", "indice_bloco"], inplace=True
