@@ -37,9 +37,11 @@ class AdequaDeckHibridoNEWAVE:
 
     def horizonte_individualizado(self):
         df = pd.read_csv(Configuracoes().arquivo_dados_gerais_newave, sep=";")
-        numero_meses = df.loc[
-            df["parametro"] == "periodos_individualizados", "valor"
-        ].iloc[0]
+        numero_meses = int(
+            df.loc[
+                df["parametro"] == "periodos_individualizados", "valor"
+            ].iloc[0]
+        )
         if numero_meses > 0:
             ree = Ree.read(join(self.__caminho_deck, self.__arquivos.ree))
             dger = Dger.read(join(self.__caminho_deck, self.__arquivos.dger))
