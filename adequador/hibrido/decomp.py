@@ -3,6 +3,8 @@ from idecomp.decomp.modelos.dadger import UH, CX
 import pandas as pd
 from os.path import join
 from datetime import datetime, timedelta
+from adequador.utils.log import Log
+from adequador.utils.configuracoes import Configuracoes
 
 
 class AdequaDeckHibridoDECOMP:
@@ -97,6 +99,8 @@ class AdequaDeckHibridoDECOMP:
 
 
 def adequa_hibrido_decomp(diretorio: str):
+    Log.log().info("Adequando HIBRIDO...")
+
     hibrido = AdequaDeckHibridoDECOMP(caminho_deck=diretorio)
-    hibrido.adiciona_registros_CX()
-    hibrido.adiciona_registros_NW()
+    hibrido.adiciona_registros_CX(Configuracoes().arquivo_usinas_cx_decomp)
+    hibrido.adiciona_registros_NW(Configuracoes().arquivo_usinas_nw_decomp)

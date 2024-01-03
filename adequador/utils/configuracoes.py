@@ -72,6 +72,12 @@ class Configuracoes(metaclass=Singleton):
         self.arquivo_volumes_espera = join(
             self.diretorio_dados_adequacao, getenv("ARQUIVO_VOLUMES_ESPERA")
         )
+        self.arquivo_usinas_cx_decomp = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_USINAS_CX_DECOMP")
+        )
+        self.arquivo_usinas_nw_decomp = join(
+            self.diretorio_dados_adequacao, getenv("ARQUIVO_USINAS_NW_DECOMP")
+        )
         self.diretorio_vazoes = join(
             self.diretorio_dados_adequacao, getenv("DIRETORIO_VAZOES")
         )
