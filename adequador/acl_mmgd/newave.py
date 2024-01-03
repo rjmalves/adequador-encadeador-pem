@@ -528,13 +528,13 @@ class ConversorACLVerificadoNEWAVE:
         # patamar = Patamar.le_arquivo(self.__caminho_deck, self.__nome_patamar)
         df_pequsi = sistema.geracao_usinas_nao_simuladas
         df_pequsi = df_pequsi.loc[df_pequsi["indice_bloco"] <= 4]
-        pequsi_verif = self.__obtem_pequsi_verificada(
-            self.__df_base_pequsi, sistema.geracao_usinas_nao_simuladas
+        df_pequsi = self.__obtem_pequsi_verificada(
+            self.__df_base_pequsi, df_pequsi
         )
         # profs_verif = self.__obtem_profundidade_verificada(
         #     self.__df_base_profundidades, patamar.usinas_nao_simuladas
         # )
-        sistema.geracao_usinas_nao_simuladas = pequsi_verif
+        sistema.geracao_usinas_nao_simuladas = df_pequsi
         # patamar.usinas_nao_simuladas = profs_verif
         sistema.write(join(self.__caminho_deck, self.__nome_sistema))
         # patamar.escreve_arquivo(self.__caminho_deck, self.__nome_patamar)
