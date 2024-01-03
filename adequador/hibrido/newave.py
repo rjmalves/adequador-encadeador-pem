@@ -441,7 +441,7 @@ class AdequaDeckHibridoNEWAVE:
             dger, re, hidr, engol_usinas, usinas_res, fatores_res
         )
 
-        self.__aplica_turbmaxt_usina(confhd, modif, dfs_usinas)
+        self.__aplica_turbmaxt_usina(confhd, modif, hidr, dfs_usinas)
 
         confhd.write(join(self.__caminho_deck, self.__arquivos.confhd))
         modif.write(join(self.__caminho_deck, self.__arquivos.modif))
