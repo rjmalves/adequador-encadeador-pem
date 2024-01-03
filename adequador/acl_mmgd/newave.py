@@ -86,7 +86,7 @@ class MontadorBaseACLNEWAVE:
     ):
         # O df deve ter as colunas:
         # submercado | patamar | bloco | data | delta_acl
-        submercados = pequsi_atual["submercado"].unique().tolist()
+        submercados = pequsi_atual["codigo_submercado"].unique().tolist()
         patamares = patamar_atual["patamar"].unique().tolist()
         blocos = patamar_atual["indice_bloco"].unique().tolist()
         datas = self.__monta_vetor_datas()
@@ -96,8 +96,8 @@ class MontadorBaseACLNEWAVE:
                 for b in blocos:
                     geracao_oficial = (
                         pequsi_atual.loc[
-                            (pequsi_atual["submercado"] == s)
-                            & (pequsi_atual["bloco"] == b),
+                            (pequsi_atual["codigo_submercado"] == s)
+                            & (pequsi_atual["indice_bloco"] == b),
                             "valor",
                         ]
                         .to_numpy()
@@ -117,8 +117,8 @@ class MontadorBaseACLNEWAVE:
                     )
                     geracao_acl = (
                         pequsi_acl.loc[
-                            (pequsi_acl["submercado"] == s)
-                            & (pequsi_acl["bloco"] == b),
+                            (pequsi_acl["codigo_submercado"] == s)
+                            & (pequsi_acl["indice_bloco"] == b),
                             "valor",
                         ]
                         .to_numpy()
@@ -143,11 +143,19 @@ class MontadorBaseACLNEWAVE:
                             - geracao_oficial * prof_oficial,
                         }
                     )
-                    df_t["bloco"] = b
+                    df_t["indice_bloco"] = b
                     df_t["patamar"] = p
-                    df_t["submercado"] = s
+                    df_t["codigo_submercado"] = s
                     df_acl = pd.concat([df_acl, df_t], ignore_index=True)
-        return df_acl[["submercado", "patamar", "bloco", "data", "delta_acl"]]
+        return df_acl[
+            [
+                "codigo_submercado",
+                "patamar",
+                "indice_bloco",
+                "data",
+                "delta_acl",
+            ]
+        ]
 
     def processa_base_acl(self):
         self.__le_arquivos_decks()
@@ -238,8 +246,8 @@ class ConversorACLNEWAVE:
                     )
                     geracoes = (
                         pequsi.loc[
-                            (pequsi["submercado"] == s)
-                            & (pequsi["bloco"] == b),
+                            (pequsi["codigo_submercado"] == s)
+                            & (pequsi["indice_bloco"] == b),
                             "valor",
                         ]
                         .to_numpy()
@@ -259,15 +267,15 @@ class ConversorACLNEWAVE:
     def __soma_valores_acl(self, pequsi_por_pat: pd.DataFrame) -> pd.DataFrame:
         submercados = pequsi_por_pat["codigo_submercado"].unique().tolist()
         patamares = pequsi_por_pat["patamar"].unique().tolist()
-        blocos = self.__df_base["bloco"].unique().tolist()
+        blocos = self.__df_base["indice_bloco"].unique().tolist()
         for s in submercados:
             for p in patamares:
                 for b in blocos:
                     valores_base_acl = (
                         self.__df_base.loc[
-                            (self.__df_base["submercado"] == s)
+                            (self.__df_base["codigo_submercado"] == s)
                             & (self.__df_base["patamar"] == p)
-                            & (self.__df_base["bloco"] == b),
+                            & (self.__df_base["indice_bloco"] == b),
                             "delta_acl",
                         ]
                         .to_numpy()
@@ -291,7 +299,7 @@ class ConversorACLNEWAVE:
         duracoes = patamar.duracao_mensal_patamares
         patamares = pequsi_por_pat["patamar"].unique().tolist()
         submercados = pequsi_por_pat["codigo_submercado"].unique().tolist()
-        blocos = self.__df_base["bloco"].unique().tolist()
+        blocos = self.__df_base["indice_bloco"].unique().tolist()
         pequsi_medio = sistema.geracao_usinas_nao_simuladas.copy()
         for s in submercados:
             for b in blocos:
@@ -319,8 +327,8 @@ class ConversorACLNEWAVE:
                     )
                     media_patamares += np.multiply(geracao, duracao)
                 pequsi_medio.loc[
-                    (pequsi_medio["submercado"] == s)
-                    & (pequsi_medio["bloco"] == b),
+                    (pequsi_medio["codigo_submercado"] == s)
+                    & (pequsi_medio["indice_bloco"] == b),
                     "valor",
                 ] = media_patamares
 
@@ -334,7 +342,7 @@ class ConversorACLNEWAVE:
     ) -> pd.DataFrame:
         patamares = pequsi_por_pat["patamar"].unique().tolist()
         submercados = pequsi_por_pat["codigo_submercado"].unique().tolist()
-        blocos = self.__df_base["bloco"].unique().tolist()
+        blocos = self.__df_base["indice_bloco"].unique().tolist()
         profs_pequsi = patamar.usinas_nao_simuladas.copy()
         for s in submercados:
             for b in blocos:
@@ -352,8 +360,8 @@ class ConversorACLNEWAVE:
                     )
                     geracao_media = (
                         pequsi_medio.loc[
-                            (pequsi_medio["submercado"] == s)
-                            & (pequsi_medio["nloco"] == b),
+                            (pequsi_medio["codigo_submercado"] == s)
+                            & (pequsi_medio["indice_bloco"] == b),
                             "valor",
                         ]
                         .to_numpy()
@@ -452,18 +460,18 @@ class ConversorACLVerificadoNEWAVE:
     def __obtem_pequsi_verificada(
         self, base_pequsi: pd.DataFrame, pequsi_existente: pd.DataFrame
     ) -> pd.DataFrame:
-        submercados = pequsi_existente["submercado"].unique()
+        submercados = pequsi_existente["codigo_submercado"].unique()
         fontes = pequsi_existente["fonte"].unique()
         df_verif = pequsi_existente.copy()
         for sub in submercados:
             for fonte in fontes:
                 dados_verif = base_pequsi.loc[
-                    (base_pequsi["submercado"] == sub)
+                    (base_pequsi["codigo_submercado"] == sub)
                     & (base_pequsi["fonte"] == fonte),
                     "geracao",
                 ].to_numpy()
                 df_verif.loc[
-                    (df_verif["submercado"] == sub)
+                    (df_verif["codigo_submercado"] == sub)
                     & (df_verif["fonte"] == fonte),
                     "valor",
                 ] = dados_verif
@@ -684,7 +692,9 @@ class ConversorCargasPECNEWAVE:
 
     def processa_sistema_mmgd_expansao(self):
         sistema = Sistema.read(join(self.__caminho_deck, self.__nome_sistema))
-        fontes_pequsi = sistema.geracao_usinas_nao_simuladas["fonte"].unique().tolist()
+        fontes_pequsi = (
+            sistema.geracao_usinas_nao_simuladas["fonte"].unique().tolist()
+        )
         if any(["MMGD" in r for r in fontes_pequsi]):
             return
 
@@ -706,12 +716,18 @@ class ConversorCargasPECNEWAVE:
                 dados = dfp.loc[filtro, coluna_pequsi].to_numpy()
                 # Monta o trecho do dataframe associado ao bloco lido
                 df_pequsi = pd.DataFrame(data={"data": datas, "valor": dados})
-                df_pequsi["submercado"] = indice_subsistema
+                df_pequsi["codigo_submercado"] = indice_subsistema
                 df_pequsi["fonte"] = razao_pequsi
-                df_pequsi["bloco"] = indice_pequsi
+                df_pequsi["indice_bloco"] = indice_pequsi
                 # Reordena as colunas e concatena
                 df_pequsi = df_pequsi[
-                    ["submercado", "bloco", "fonte", "data", "valor"]
+                    [
+                        "codigo_submercado",
+                        "indice_bloco",
+                        "fonte",
+                        "data",
+                        "valor",
+                    ]
                 ]
                 df = pd.concat([df, df_pequsi], ignore_index=True)
 
@@ -719,7 +735,7 @@ class ConversorCargasPECNEWAVE:
             [sistema.geracao_usinas_nao_simuladas, df], ignore_index=True
         )
         sistema.geracao_usinas_nao_simuladas.sort_values(
-            ["submercado", "bloco"], inplace=True
+            ["codigo_submercado", "indice_bloco"], inplace=True
         )
         sistema.write(join(self.__caminho_deck, self.__nome_sistema))
 
@@ -864,40 +880,41 @@ class DecompositorPequsiNEWAVE:
         df_ref = sistema_referencia.geracao_usinas_nao_simuladas
 
         df_ref_agrupado = (
-            df_ref.groupby(["submercado", "data"]).sum().reset_index()
+            df_ref.groupby(["codigo_submercado", "data"]).sum().reset_index()
         )
 
-        for submercado in df_ref["submercado"].unique():
+        for submercado in df_ref["codigo_submercado"].unique():
             for fonte in df_ref["fonte"].unique():
                 df_ref.loc[
-                    (df_ref["submercado"] == submercado)
+                    (df_ref["codigo_submercado"] == submercado)
                     & (df_ref["fonte"] == fonte),
                     "valor",
                 ] = np.divide(
                     df_ref.loc[
-                        (df_ref["submercado"] == submercado)
+                        (df_ref["codigo_submercado"] == submercado)
                         & (df_ref["fonte"] == fonte),
                         "valor",
                     ],
                     df_ref_agrupado.loc[
-                        (df_ref_agrupado["submercado"] == submercado), "valor"
+                        (df_ref_agrupado["codigo_submercado"] == submercado),
+                        "valor",
                     ]
                     .to_numpy()
                     .flatten(),
                 )
 
-        for submercado in df_ref["submercado"].unique():
+        for submercado in df_ref["codigo_submercado"].unique():
             for fonte in df_ref["fonte"].unique():
                 meses = [1, 2, 3, 4]
                 df_ref.loc[
-                    (df_ref["submercado"] == submercado)
+                    (df_ref["codigo_submercado"] == submercado)
                     & (df_ref["fonte"] == fonte)
                     & (df_ref["data"].dt.year == 2020)
                     & df_ref["data"].dt.month.isin(meses),
                     "valor",
                 ] = float(
                     df_ref.loc[
-                        (df_ref["submercado"] == submercado)
+                        (df_ref["codigo_submercado"] == submercado)
                         & (df_ref["fonte"] == fonte)
                         & (df_ref["data"].dt.year == 2021)
                         & df_ref["data"].dt.month.isin(meses),
@@ -906,21 +923,21 @@ class DecompositorPequsiNEWAVE:
                 )
 
         df_novo = df_ref.copy()
-        for submercado in df_novo["submercado"].unique():
+        for submercado in df_novo["codigo_submercado"].unique():
             for fonte in df_novo["fonte"].unique():
                 df_novo.loc[
-                    (df_novo["submercado"] == submercado)
+                    (df_novo["codigo_submercado"] == submercado)
                     & (df_novo["fonte"] == fonte),
                     "valor",
                 ] = np.multiply(
                     df.loc[
-                        (df["submercado"] == submercado),
+                        (df["codigo_submercado"] == submercado),
                         "valor",
                     ]
                     .to_numpy()
                     .flatten(),
                     df_ref.loc[
-                        (df_ref["submercado"] == submercado)
+                        (df_ref["codigo_submercado"] == submercado)
                         & (df_ref["fonte"] == fonte),
                         "valor",
                     ]
@@ -998,9 +1015,12 @@ def adequa_acl_mmgd_newave(diretorio: str):
 
     # Adequa MMGD
     planilha_mmgd = join(
-        Configuracoes().diretorio_dados_mmgd_newave, f"Previsoes_MMGD_NW_PMO_{ano}{mes}.xlsx"
+        Configuracoes().diretorio_dados_mmgd_newave,
+        f"Previsoes_MMGD_NW_PMO_{ano}{mes}.xlsx",
     )
-    conversor_mmgd = ConversorCargasPECNEWAVE(caminho_deck=diretorio, caminho_planilha=planilha_mmgd)
+    conversor_mmgd = ConversorCargasPECNEWAVE(
+        caminho_deck=diretorio, caminho_planilha=planilha_mmgd
+    )
     conversor_mmgd.processa_cadic_mmgd_base()
     conversor_mmgd.processa_sistema_mmgd_expansao()
     conversor_mmgd.processa_patamar_mercado()
