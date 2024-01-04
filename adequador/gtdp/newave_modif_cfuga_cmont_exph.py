@@ -100,7 +100,7 @@ def gera_volumes_referencia_libs(diretorio: str):
     data_inicio_estudo = datetime(
         dger.ano_inicio_estudo, dger.mes_inicio_estudo, 1
     )
-    num_anos_estudo = dger.num_anos_estudo
+    num_anos_estudo = dger.num_anos_estudo + dger.num_anos_pos_estudo
 
     data_fim_estudo = datetime(
         data_inicio_estudo.year + num_anos_estudo - 1, 12, 1
