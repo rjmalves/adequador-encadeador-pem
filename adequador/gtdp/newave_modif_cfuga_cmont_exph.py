@@ -5,12 +5,16 @@ from dateutil.relativedelta import relativedelta
 from inewave.newave.modelos.modif import USINA, CMONT, CFUGA
 from inewave.newave.modif import Modif
 from inewave.newave.exph import Exph
+from inewave.newave import Dger
+from inewave.libs.modelos.usinas_hidreletricas import (
+    VolumeReferencialPeriodo,
+    VolumeReferencialTipoPadrao,
+)
 from adequador.gtdp.copia_hidr_polinjus import (
     copia_hidr,
     copia_polinjus,
     copia_indices_newave,
     copia_volrefsaz,
-    copia_volumes_referencia_libs,
 )
 from adequador.utils.backup import converte_utf8
 from adequador.utils.configuracoes import Configuracoes
@@ -89,6 +93,43 @@ def adequa_expansoes(exph: Exph) -> bool:
     return False
 
 
+def gera_volumes_referencia_libs(diretorio: str):
+    dger = Dger.read(join(diretorio, "dger.dat"))
+    df = pd.read_csv(Configuracoes().arquivo_volumes_referencia_libs)
+
+    data_inicio_estudo = datetime(
+        dger.ano_inicio_estudo, dger.mes_inicio_estudo, 1
+    )
+    num_anos_estudo = dger.num_anos_estudo
+
+    data_fim_estudo = datetime(
+        data_inicio_estudo.year + num_anos_estudo - 1, 12, 1
+    )
+    meses = pd.date_range(data_inicio_estudo, data_fim_estudo, freq="MS")
+
+    with open(join(diretorio, "volumes-referencia.csv"), "w") as arq:
+        # Escreve o tipo de volume de referência
+        ri = VolumeReferencialTipoPadrao()
+        ri.tipo_referencia = 1
+        ri.write(arq)
+
+        for indice_mes in range(len(meses)):
+            for u in df["codigo_usina"].unique():
+                mes_inicio = meses[indice_mes]
+                mes_fim = meses[indice_mes]
+                r = VolumeReferencialPeriodo()
+                r.codigo_usina = u
+                r.data_inicio = mes_inicio
+                r.data_fim = mes_fim
+                r.volume_referencia = df.loc[
+                    (df["codigo_usina"] == u)
+                    & (df["mes"] == mes_inicio.month),
+                    "volume_referencia",
+                ].iloc[0]
+
+                r.write(arq)
+
+
 def adequa_cfuga_cmont_exph(diretorio: str):
     Log.log().info(f"Adequando GTDP...")
 
@@ -96,7 +137,7 @@ def adequa_cfuga_cmont_exph(diretorio: str):
     copia_polinjus(diretorio)
     copia_indices_newave(diretorio)
     copia_volrefsaz(diretorio)
-    copia_volumes_referencia_libs(diretorio)
+    gera_volumes_referencia_libs(diretorio)
 
     df = pd.read_csv(Configuracoes().arquivo_cfuga_cmont, sep=";")
     ano_caso, _, _ = dados_caso(diretorio)

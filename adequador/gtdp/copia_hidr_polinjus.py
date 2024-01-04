@@ -40,9 +40,3 @@ def copia_volrefsaz(diretorio: str):
     arquivo = "volref_saz.dat"
     arq_destino = join(diretorio, arquivo)
     copyfile(Configuracoes().arquivo_volrefsaz, arq_destino)
-
-
-def copia_volumes_referencia_libs(diretorio: str):
-    arquivo = "volumes-referencia.csv"
-    arq_destino = join(diretorio, arquivo)
-    copyfile(Configuracoes().arquivo_volumes_referencia_libs, arq_destino)
