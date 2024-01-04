@@ -36,6 +36,9 @@ def ajusta_volume_espera(diretorio: str):
         return
     idx = indices.index(caso)
     idx_linhas = list(range(idx, idx + num_casos_a_frente))
+    # Caso não tenha casos a frente suficientes na base de VE
+    if idx_linhas[-1] > df_ve.shape[0]:
+        return
     linhas_ve = df_ve.iloc[idx_linhas, :]
     linhas_ve = linhas_ve.loc[:].astype(float)
     s = f"{ano_seguinte}_{str(mes_seguinte).zfill(2)}"
