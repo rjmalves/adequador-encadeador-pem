@@ -142,6 +142,9 @@ def adequa_cfuga_cmont_exph(diretorio: str):
     df = pd.read_csv(Configuracoes().arquivo_cfuga_cmont, sep=";")
     ano_caso, _, _ = dados_caso(diretorio)
     ano = int(ano_caso)
+    if ano < 2023:
+        return
+
     anos_estudo = np.arange(ano, ano + NUM_ANOS_ESTUDO)
 
     arquivo = nome_arquivo_modif()
