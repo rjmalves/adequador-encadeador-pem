@@ -30,7 +30,11 @@ NUM_ANOS_ESTUDO = 5
 
 
 def adequa_usina(
-    codigo: int, df_usina: pd.DataFrame, modif: Modif, anos_estudo: np.ndarray
+    data_inicio_estudo: datetime,
+    codigo: int,
+    df_usina: pd.DataFrame,
+    modif: Modif,
+    anos_estudo: np.ndarray,
 ):
     r_usina = modif.usina(codigo=codigo)
     if r_usina is None:
@@ -41,7 +45,14 @@ def adequa_usina(
     df_ordenado = df_usina.sort_values("mes")
     for ano in anos_estudo:
         for _, linha in df_ordenado.iterrows():
-            adequa_cfuga(modif, codigo, ano, int(linha["mes"]), linha["cfuga"])
+            adequa_cfuga(
+                data_inicio_estudo,
+                modif,
+                codigo,
+                ano,
+                int(linha["mes"]),
+                linha["cfuga"],
+            )
     for ano in anos_estudo:
         for _, linha in df_ordenado.iterrows():
             adequa_cmont(modif, codigo, ano, int(linha["mes"]), linha["cmont"])
@@ -153,8 +164,10 @@ def adequa_cfuga_cmont_exph(diretorio: str):
     gera_volumes_referencia_libs(diretorio)
 
     df = pd.read_csv(Configuracoes().arquivo_cfuga_cmont, sep=";")
-    ano_caso, _, _ = dados_caso(diretorio)
+    ano_caso, mes_caso, _ = dados_caso(diretorio)
     ano = int(ano_caso)
+    mes = int(mes_caso)
+    data_inicio_estudo = datetime(ano, mes, 1)
     if ano < 2023:
         return
 
@@ -177,7 +190,7 @@ def adequa_cfuga_cmont_exph(diretorio: str):
     usinas = df["usina"].unique().tolist()
     for u in usinas:
         df_usina = df.loc[df["usina"] == u, :]
-        adequa_usina(u, df_usina, modif, anos_estudo)
+        adequa_usina(data_inicio_estudo, u, df_usina, modif, anos_estudo)
     modif.write(join(diretorio, arquivo))
 
     arquivo = nome_arquivo_exph()
