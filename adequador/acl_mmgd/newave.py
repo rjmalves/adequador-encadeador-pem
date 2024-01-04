@@ -857,6 +857,55 @@ class ConversorCargasPECNEWAVE:
         )
         patamar.write(join(self.__caminho_deck, self.__nome_patamar))
 
+    def __extrai_limite_intercambio_mw_patamar(self) -> pd.DataFrame:
+        """
+        Extrai o limite de intercâmbio em MW por patamar, considerando já
+        as profundidades.
+        """
+
+        sistema = Sistema.read(join(self.__caminho_deck, self.__nome_sistema))
+        patamar = Patamar.read(join(self.__caminho_deck, self.__nome_patamar))
+
+        df_limites = sistema.limites_intercambio
+        df_prof_interc = patamar.intercambio_patamares.copy()
+
+        # Objetivo final é um dataframe com
+        # submercado_de | submercado_para | sentido | data | patamar | valor
+
+        for idx, linha in df_prof_interc.iterrows():
+            if linha["submercado_de"] < linha["submercado_para"]:
+                filtro = (
+                    (df_limites["submercado_de"] == linha["submercado_para"])
+                    & (df_limites["submercado_para"] == linha["submercado_de"])
+                    & (df_limites["data"] == linha["data"])
+                    & (df_limites["sentido"] == 1)
+                )
+            else:
+                filtro = (
+                    (df_limites["submercado_de"] == linha["submercado_de"])
+                    & (
+                        df_limites["submercado_para"]
+                        == linha["submercado_para"]
+                    )
+                    & (df_limites["data"] == linha["data"])
+                    & (df_limites["sentido"] == 0)
+                )
+            df_prof_interc.loc[idx, "valor"] *= df_limites.loc[
+                filtro, "valor"
+            ].iloc[0]
+
+        return df_prof_interc
+
+    def __recalcula_limite_intercambio_medio(self):
+        """
+        Recalcula o limite de intercâmbio médio a partir do limite
+        em MW por patamar e das durações de cada patamar.
+
+        TODO - concluir
+        """
+        df_limites_patamar = self.__extrai_limite_intercambio_mw_patamar()
+        pass
+
 
 class DecompositorPequsiNEWAVE:
     def __init__(self, caso_referencia: str, caso: str) -> None:

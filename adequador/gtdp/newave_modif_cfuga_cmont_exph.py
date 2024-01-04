@@ -47,21 +47,34 @@ def adequa_usina(
             adequa_cmont(modif, codigo, ano, int(linha["mes"]), linha["cmont"])
 
 
-def adequa_cfuga(modif: Modif, codigo: int, ano: int, mes: int, valor: float):
+def adequa_cfuga(
+    data_inicio_estudo: datetime,
+    modif: Modif,
+    codigo: int,
+    ano: int,
+    mes: int,
+    valor: float,
+):
+    # Premissa:
+    # Não altera CFUGA para UHE 275 nos dois primeiro meses de estudo
+    mes_estagio = datetime(year=ano, month=mes, day=1)
+    delta_1mes = relativedelta(months=1)
+    if codigo == 275 and (
+        data_inicio_estudo <= mes_estagio <= data_inicio_estudo + delta_1mes
+    ):
+        return
     modificacoes_usina = modif.modificacoes_usina(codigo)
-    mes_anterior = datetime(year=ano, month=mes, day=1) - relativedelta(
-        months=1
-    )
+    mes_anterior = mes_estagio - delta_1mes
     anterior = modif.usina(codigo=codigo)
     for r in modificacoes_usina:
         if isinstance(r, CFUGA):
-            if r.data_inicio == datetime(year=ano, month=mes, day=1):
+            if r.data_inicio == mes_estagio:
                 modif.data.remove(r)
             elif r.data_inicio == mes_anterior:
                 anterior = r
     if not np.isnan(valor):
         r = CFUGA()
-        r.data_inicio = datetime(year=ano, month=mes, day=1)
+        r.data_inicio = mes_estagio
         r.nivel = valor
         modif.data.add_after(anterior, r)
 

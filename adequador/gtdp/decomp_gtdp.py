@@ -429,22 +429,25 @@ def adequa_cfuga_cmont(diretorio: str):
         if usina not in usinas_cmont_historico:
             # ------ Belo Monte>
             # Altera somente cmont(cotvol)
+
             cmont = df_cmont_cfuga.loc[
                 df_cmont_cfuga["usina"] == usina, "cmont"
             ].tolist()
             if any([not np.isnan(c) for c in cmont]):
                 altera_cotvol_usina(dadger, usina, meses, anos, inds, cmont)
+
             # ------ Tucurui:
             # Altera somente cfuga(jusmed)
-            # Só altera dados de Tucurí até o início da vigência do GTDP Ciclo 2: 2023.
-            if anodeck < 2023:
-                cfuga = df_cmont_cfuga.loc[
-                    df_cmont_cfuga["usina"] == usina, "cfuga"
-                ].tolist()
-                if any([not np.isnan(c) for c in cfuga]):
-                    altera_jusmed_usina(
-                        dadger, usina, meses, anos, inds, cfuga
-                    )
+            # --- IMPORTANTE ---
+            # Alteração desabilitada por premissa do backtest atual:
+            # manter os valores dos 2 primeiros meses (informação do agente),
+            # devido a conflito com requisitos de GHMIN em Dez/2023.
+
+            # cfuga = df_cmont_cfuga.loc[
+            #     df_cmont_cfuga["usina"] == usina, "cfuga"
+            # ].tolist()
+            # if any([not np.isnan(c) for c in cfuga]):
+            #     altera_jusmed_usina(dadger, usina, meses, anos, inds, cfuga)
         else:
             # ------ Jirau e Santo Antônio:
             # identifica dados do ciclo GTDP passado a serem utilizados para comparação
