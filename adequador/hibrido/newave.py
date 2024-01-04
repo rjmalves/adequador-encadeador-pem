@@ -54,7 +54,7 @@ class AdequaDeckHibridoNEWAVE:
             )
             data_fim = data_caso + relativedelta(months=numero_meses)
             ree.rees["mes_fim_individualizado"] = data_fim.month
-            ree.rees["ano_fim_ndividualizado"] = data_fim.year
+            ree.rees["ano_fim_individualizado"] = data_fim.year
             ree.write(join(self.__caminho_deck, self.__arquivos.ree))
 
     def __aplica_vazmaxt_usina(
