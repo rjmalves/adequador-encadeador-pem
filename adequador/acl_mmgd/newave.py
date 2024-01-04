@@ -577,7 +577,7 @@ class ConversorCargasPECNEWAVE:
         "MEDIUM": 3,
     }
     COL_PROFUNDIDADES_UFV = "PU_fv"
-    COL_CARGA_MMGD = "LOAD_MMGD"
+    COL_CARGA_MMGD = "LOAD_Liquida"
     COL_BASE_MMGD = "Base_MMGD"
 
     def __init__(
