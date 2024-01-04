@@ -168,9 +168,6 @@ def adequa_cfuga_cmont_exph(diretorio: str):
     ano = int(ano_caso)
     mes = int(mes_caso)
     data_inicio_estudo = datetime(ano, mes, 1)
-    if ano < 2023:
-        return
-
     anos_estudo = np.arange(ano, ano + NUM_ANOS_ESTUDO)
 
     arquivo = nome_arquivo_modif()
