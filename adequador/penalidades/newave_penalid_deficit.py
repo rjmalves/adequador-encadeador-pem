@@ -62,8 +62,6 @@ def corrige_penalid(diretorio: str):
 
     arquivo = nome_arquivo_penalid()
 
-    # TODO - trocar penalidades de cdef para hibrido
-
     df_deficit = pd.read_csv(Configuracoes().arquivo_custos_deficit, sep=";")
     anos = df_deficit["ano"].tolist()
     custo = df_deficit["custo"].tolist()
