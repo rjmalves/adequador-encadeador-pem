@@ -7,7 +7,7 @@ from adequador.utils.nomes import nome_arquivo_vazoes
 
 
 def obtem_nome_arquivo_vazoes(ano: str, mes: str, revisao: str):
-    return f"vazoes.{ano}_{mes.zfill(2)}_rv{revisao}"
+    return f"vazoes.{ano}_{mes.zfill(2)}_{revisao}"
 
 
 def atualiza_vazoes(diretorio: str):
