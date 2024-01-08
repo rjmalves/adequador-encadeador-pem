@@ -580,6 +580,12 @@ def ajusta_representacao_fontes(diretorio: str):
                 ultimo_registro_adicionado_vazao_lateral, vu_fontesC
             )
         ultimo_registro_adicionado_vazao_lateral = vu_fontesC
+        # Troca CQ 166 1 183 para CQ 166 1 146
+        cq_fontesC = dadger.cq(
+            codigo_restricao=166, estagio=1, codigo_usina=183
+        )
+        if cq_fontesC is not None:
+            cq_fontesC.codigo_usina = 146
         # Troca CQ 166 1 184 para CQ 166 1 146
         cq_fontesC = dadger.cq(
             codigo_restricao=166, estagio=1, codigo_usina=184
