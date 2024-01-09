@@ -588,6 +588,10 @@ def ajusta_representacao_fontes(diretorio: str):
             )
             if cq_fontesC is not None:
                 cq_fontesC.codigo_usina = 146
+            # Remove AC VERTJU das Fontes
+            r = dadger.ac(codigo_usina=cod, modificacao=ACVERTJU)
+            if r is not None:
+                dadger.data.remove(r)
 
         ### Alterações de Fontes BC -> AB
         # AC 184 NUMPOS 300 -> AC 147 NUMPOS 300
