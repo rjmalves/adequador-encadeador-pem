@@ -97,7 +97,7 @@ class ConversorCargasPECDECOMP:
         # partir de jan/2023, para não contabilizar PQ/MMGD de forma duplicada. Os
         # registros já existentes são identificados pelo mnemônico "gd" no final da string
         for registro in dadger.pq():
-            if "gd" in registro.nome:
+            if "gd" in registro.nome or "MMGD" in registro.nome:
                 dadger.data.remove(registro)
 
         # Constroi os registros PQ de MMGD, por mercado
