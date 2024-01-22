@@ -92,6 +92,14 @@ class ConversorCargasPECDECOMP:
         datas_fim = [
             data_base + timedelta(days=7 * i - 1) for i in estagios_semanais
         ]
+
+        # Exclui os registros PQ pré existentes com carga MMGD, contidos em decks a
+        # partir de jan/2023, para não contabilizar PQ/MMGD de forma duplicada. Os
+        # registros já existentes são identificados pelo mnemônico "gd" no final da string
+        for registro in dadger.pq():
+            if "gd" in registro.nome:
+                dadger.data.remove(registro)
+
         # Constroi os registros PQ de MMGD, por mercado
         # e por estágio
         ultimo_pq = dadger.pq()[-1]
