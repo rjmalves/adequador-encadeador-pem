@@ -29,9 +29,7 @@ def corrige_deficit_sistema(diretorio: str):
     sistema.numero_patamares_deficit = 1
     df_sistema = sistema.custo_deficit
 
-    if (
-        anodeck in anos
-    ):  # checa se faz parte dos anos com mais de 1 patamar de deficit
+    if anodeck in anos:  # checa se faz parte dos anos com mais de 1 patamar de deficit
         ind = anos.index(anodeck)
         # se existir, corrige
         for s in [1, 2, 3, 4]:
@@ -72,9 +70,7 @@ def corrige_penalid(diretorio: str):
     penalid = Penalid.read(join(diretorio, arquivo))
     df_pen = penalid.penalidades
 
-    if (
-        anodeck in anos
-    ):  # checa se faz parte dos anos com mais de 1 patamar de deficit
+    if anodeck in anos:  # checa se faz parte dos anos com mais de 1 patamar de deficit
         ind = anos.index(anodeck)
         penalidade = custo[ind]
 
@@ -82,9 +78,7 @@ def corrige_penalid(diretorio: str):
         rees_ghmin = [4, 5]
         penalidade_desvio = np.ceil(penalidade * 1.01)
 
-        df_pen.loc[
-            df_pen["variavel"] == "DESVIO", "valor_R$_MWh"
-        ] = penalidade_desvio
+        df_pen.loc[df_pen["variavel"] == "DESVIO", "valor_R$_MWh"] = penalidade_desvio
 
         for r in rees_vazmin:
             filtro_vazmin = df_pen.loc[
@@ -109,8 +103,7 @@ def corrige_penalid(diretorio: str):
 
         for r in rees_ghmin:
             filtro_ghmin = df_pen.loc[
-                (df_pen["codigo_ree_submercado"] == r)
-                & (df_pen["variavel"] == "GHMIN")
+                (df_pen["codigo_ree_submercado"] == r) & (df_pen["variavel"] == "GHMIN")
             ]
             if len(filtro_ghmin) == 0:
                 # necessario criar linha
@@ -139,13 +132,16 @@ def corrige_penalid(diretorio: str):
     cdef = sistema.custo_deficit["custo"].max()
     maxcvu = clast.usinas["valor"].max()
     mapa_fontes = {
-        "MAXCVU": maxcvu,
+        "MAXCVU": maxcvu * (1 + 0.12) ** (11 / 12),
         "CDEF": cdef,
     }
     mapa_valores = {
         linha["violacao"]: mapa_fontes[linha["fonte"]] * linha["fator"]
         for _, linha in df_valores.iterrows()
     }
+    if "DESVIO" in mapa_valores:
+        mapa_valores["DESVIO"] = int(mapa_valores["DESVIO"])
+
     rees = df_pen["codigo_ree_submercado"].dropna().unique().tolist()
     df_pen_novo = pd.DataFrame(
         columns=[
