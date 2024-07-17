@@ -45,7 +45,7 @@ class AdequaDeckHibridoNEWAVE:
         if numero_meses > 0:
             ree = Ree.read(join(self.__caminho_deck, self.__arquivos.ree))
             dger = Dger.read(join(self.__caminho_deck, self.__arquivos.dger))
-            dger.restricao_defluencia = 1
+            dger.restricao_defluencia = 0
             dger.restricao_turbinamento = 1
             data_caso = datetime(
                 year=dger.ano_inicio_estudo,
