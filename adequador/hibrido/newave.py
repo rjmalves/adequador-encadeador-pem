@@ -56,6 +56,7 @@ class AdequaDeckHibridoNEWAVE:
             ree.rees["mes_fim_individualizado"] = data_fim.month
             ree.rees["ano_fim_individualizado"] = data_fim.year
             ree.write(join(self.__caminho_deck, self.__arquivos.ree))
+            dger.write(join(self.__caminho_deck, self.__arquivos.dger))
 
     def __aplica_vazmaxt_usina(
         self, modif: Modif, df: pd.DataFrame, u: int, estagios: pd.Series
